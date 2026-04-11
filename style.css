@@ -1,0 +1,564 @@
+/* ============================================
+   🦴 骨与血 (Bone & Blood) - 主题样式
+   ============================================
+   所有颜色、字体均使用 CSS Variables
+   用户只需修改下方变量即可换肤
+   ============================================ */
+
+/* ---- 主题变量 ---- */
+:root {
+  /* 基础色板 */
+  --bb-bg-primary: #1a1a2e;
+  --bb-bg-secondary: #16213e;
+  --bb-bg-card: #0f3460;
+  --bb-bg-hover: #1a1a3e;
+  --bb-bg-input: #0d1b2a;
+
+  /* 强调色 */
+  --bb-accent: #e94560;
+  --bb-accent-glow: rgba(233, 69, 96, 0.4);
+  --bb-accent-secondary: #f5a623;
+
+  /* 文字色 */
+  --bb-text-primary: #eaeaea;
+  --bb-text-secondary: #a0a0b0;
+  --bb-text-muted: #6b6b80;
+
+  /* 边框与阴影 */
+  --bb-border: #2a2a4a;
+  --bb-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --bb-shadow-light: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+  /* 字体 */
+  --bb-font-main: 'Segoe UI', 'Noto Sans SC', sans-serif;
+  --bb-font-diary: 'Georgia', 'Noto Serif SC', serif;
+
+  /* 圆角 */
+  --bb-radius: 12px;
+  --bb-radius-sm: 8px;
+
+  /* 面板尺寸 */
+  --bb-panel-width: 380px;
+  --bb-panel-height: 600px;
+}
+
+/* ============================================
+   悬浮按钮 (The Catalyst)
+   ============================================ */
+
+#bb-float-button {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  z-index: 9998;
+
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+
+  background: var(--bb-bg-primary);
+  border: 2px solid var(--bb-accent);
+  box-shadow: 0 0 12px var(--bb-accent-glow);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+#bb-float-button:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 24px var(--bb-accent-glow);
+}
+
+#bb-float-button:active {
+  transform: scale(0.95);
+}
+
+/* ============================================
+   主面板 (The Device)
+   ============================================ */
+
+#bb-panel {
+  position: fixed;
+  bottom: 140px;
+  right: 20px;
+  z-index: 9999;
+
+  width: var(--bb-panel-width);
+  height: var(--bb-panel-height);
+
+  background: var(--bb-bg-primary);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius);
+  box-shadow: var(--bb-shadow);
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  font-family: var(--bb-font-main);
+  color: var(--bb-text-primary);
+
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+  transform-origin: bottom right;
+}
+
+/* 面板隐藏 */
+#bb-panel.bb-panel-hidden {
+  opacity: 0;
+  transform: scale(0.9) translateY(20px);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ---- 面板头部 ---- */
+
+.bb-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--bb-bg-secondary);
+  border-bottom: 1px solid var(--bb-border);
+  flex-shrink: 0;
+}
+
+.bb-panel-title {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.bb-panel-close {
+  background: none;
+  border: none;
+  color: var(--bb-text-secondary);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.bb-panel-close:hover {
+  color: var(--bb-accent);
+}
+
+/* ---- 面板内容区 ---- */
+
+.bb-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+/* 滚动条 */
+.bb-panel-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.bb-panel-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.bb-panel-content::-webkit-scrollbar-thumb {
+  background: var(--bb-border);
+  border-radius: 2px;
+}
+
+/* ---- 底部导航栏 ---- */
+
+.bb-panel-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 8px 4px;
+  background: var(--bb-bg-secondary);
+  border-top: 1px solid var(--bb-border);
+  flex-shrink: 0;
+}
+
+.bb-nav-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  padding: 6px 10px;
+  border-radius: var(--bb-radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0.5;
+}
+
+.bb-nav-btn:hover {
+  opacity: 0.8;
+  background: var(--bb-bg-hover);
+}
+
+.bb-nav-btn.bb-nav-active {
+  opacity: 1;
+  background: var(--bb-bg-card);
+  box-shadow: 0 0 8px var(--bb-accent-glow);
+}
+
+/* ---- Tab 内容通用 ---- */
+
+.bb-tab-content h3 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  color: var(--bb-accent);
+}
+
+.bb-hidden {
+  display: none !important;
+}
+
+.bb-empty-hint {
+  text-align: center;
+  color: var(--bb-text-muted);
+  font-size: 13px;
+  padding: 40px 0;
+}
+
+/* ============================================
+   🌟 唱片机 - 收藏卡片
+   ============================================ */
+
+.bb-record-card {
+  background: var(--bb-bg-card);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-sm);
+  padding: 14px;
+  margin-bottom: 12px;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.bb-record-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--bb-shadow-light);
+}
+
+.bb-record-card .bb-card-who {
+  font-size: 12px;
+  color: var(--bb-accent);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.bb-record-card .bb-card-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--bb-text-primary);
+  /* 最多显示6行 */
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.bb-record-card .bb-card-context {
+  font-size: 12px;
+  color: var(--bb-text-muted);
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--bb-border);
+  font-style: italic;
+  /* 最多显示2行 */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.bb-record-card .bb-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--bb-text-muted);
+}
+
+.bb-record-card .bb-card-delete {
+  background: none;
+  border: none;
+  color: var(--bb-text-muted);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.bb-record-card .bb-card-delete:hover {
+  color: var(--bb-accent);
+  background: rgba(233, 69, 96, 0.1);
+}
+
+/* ============================================
+   📖 日记本 - 信纸风格
+   ============================================ */
+
+.bb-diary-entry {
+  background: linear-gradient(135deg, #1c1c30, #1a1a2e);
+  border: 1px solid var(--bb-border);
+  border-left: 3px solid var(--bb-accent-secondary);
+  border-radius: var(--bb-radius-sm);
+  padding: 16px;
+  margin-bottom: 14px;
+  font-family: var(--bb-font-diary);
+}
+
+.bb-diary-entry .bb-diary-date {
+  font-size: 11px;
+  color: var(--bb-accent-secondary);
+  margin-bottom: 8px;
+}
+
+.bb-diary-entry .bb-diary-text {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--bb-text-primary);
+  white-space: pre-wrap;
+}
+
+/* ============================================
+   📻 情报站
+   ============================================ */
+
+.bb-intel-section {
+  margin-bottom: 16px;
+}
+
+.bb-intel-section h4 {
+  font-size: 14px;
+  color: var(--bb-accent-secondary);
+  margin: 0 0 8px 0;
+}
+
+.bb-intel-section > div {
+  background: var(--bb-bg-card);
+  border-radius: var(--bb-radius-sm);
+  padding: 12px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--bb-text-secondary);
+}
+
+.bb-intel-refresh-btn {
+  background: var(--bb-bg-card);
+  border: 1px solid var(--bb-border);
+  color: var(--bb-text-secondary);
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-top: 6px;
+  transition: all 0.2s;
+}
+
+.bb-intel-refresh-btn:hover {
+  color: var(--bb-accent);
+  border-color: var(--bb-accent);
+}
+
+/* ============================================
+   🦋 观测站 - 平行宇宙卡片
+   ============================================ */
+
+.bb-parallel-card {
+  background: linear-gradient(135deg, #1a1a3e, #2a1a2e);
+  border: 1px solid #3a2a4e;
+  border-radius: var(--bb-radius-sm);
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.bb-parallel-card .bb-parallel-origin {
+  font-size: 12px;
+  color: var(--bb-text-muted);
+  margin-bottom: 8px;
+  font-style: italic;
+}
+
+.bb-parallel-card .bb-parallel-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #d4a0ff;
+}
+
+/* ============================================
+   🃏 命运盘
+   ============================================ */
+
+.bb-big-button {
+  display: block;
+  width: 100%;
+  padding: 20px;
+  margin: 20px 0;
+  background: linear-gradient(135deg, var(--bb-accent), #c0392b);
+  border: none;
+  border-radius: var(--bb-radius);
+  color: white;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px var(--bb-accent-glow);
+}
+
+.bb-big-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px var(--bb-accent-glow);
+}
+
+.bb-big-button:active {
+  transform: translateY(0);
+}
+
+.bb-big-button.bb-loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.bb-fate-result {
+  background: var(--bb-bg-card);
+  border-radius: var(--bb-radius-sm);
+  padding: 16px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--bb-text-primary);
+  min-height: 60px;
+}
+
+/* ============================================
+   ⚙️ 设置面板
+   ============================================ */
+
+.bb-settings-form label {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.bb-settings-form label span {
+  display: block;
+  font-size: 13px;
+  color: var(--bb-text-secondary);
+  margin-bottom: 4px;
+}
+
+.bb-settings-form input[type="text"],
+.bb-settings-form input[type="password"],
+.bb-settings-form input[type="number"] {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--bb-bg-input);
+  border: 1px solid var(--bb-border);
+  border-radius: 6px;
+  color: var(--bb-text-primary);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.bb-settings-form input:focus {
+  border-color: var(--bb-accent);
+}
+
+.bb-button {
+  padding: 10px 20px;
+  background: var(--bb-accent);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.bb-button:hover {
+  opacity: 0.85;
+}
+
+/* ============================================
+   消息气泡内的注入按钮
+   ============================================ */
+
+.bb-msg-buttons {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.bb-msg-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 2px 4px;
+  opacity: 0.4;
+  transition: all 0.2s;
+}
+
+.bb-msg-btn:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+.bb-msg-btn.bb-collected {
+  opacity: 1;
+  filter: drop-shadow(0 0 4px var(--bb-accent-glow));
+}
+
+/* ============================================
+   导出按钮
+   ============================================ */
+
+.bb-export-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.bb-export-btn {
+  flex: 1;
+  padding: 6px 12px;
+  background: var(--bb-bg-card);
+  border: 1px solid var(--bb-border);
+  border-radius: 6px;
+  color: var(--bb-text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.bb-export-btn:hover {
+  color: var(--bb-accent);
+  border-color: var(--bb-accent);
+}
+
+/* ============================================
+   响应式 - 手机适配
+   ============================================ */
+
+@media (max-width: 600px) {
+  #bb-panel {
+    width: calc(100vw - 20px);
+    height: 70vh;
+    bottom: 80px;
+    right: 10px;
+    left: 10px;
+  }
+
+  #bb-float-button {
+    bottom: 20px;
+    right: 15px;
+  }
+}
