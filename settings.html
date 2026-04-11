@@ -5,6 +5,7 @@
       <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
     </div>
     <div class="inline-drawer-content">
+
       <!-- 开关 -->
       <div class="bb-ext-row">
         <label class="checkbox_label" for="bb-enabled">
@@ -19,8 +20,9 @@
       <h4>📡 副 API 配置</h4>
 
       <div class="bb-ext-row">
-        <label for="bb-api-endpoint">API Endpoint:</label>
-        <input id="bb-api-endpoint" type="text" class="text_pole" placeholder="https://api.openai.com/v1/chat/completions" />
+        <label for="bb-api-endpoint">API Base URL:</label>
+        <input id="bb-api-endpoint" type="text" class="text_pole" placeholder="https://api.openai.com/v1" />
+        <small style="color:#888;">填写到 /v1 即可，例如 https://api.openai.com/v1</small>
       </div>
 
       <div class="bb-ext-row">
@@ -29,8 +31,15 @@
       </div>
 
       <div class="bb-ext-row">
-        <label for="bb-api-model">Model:</label>
-        <input id="bb-api-model" type="text" class="text_pole" placeholder="gpt-4o-mini" />
+        <input id="bb-btn-test-api" class="menu_button" type="button" value="🔗 测试连接 & 获取模型" />
+        <span id="bb-api-status" style="margin-left:8px;font-size:13px;"></span>
+      </div>
+
+      <div class="bb-ext-row">
+        <label for="bb-api-model">选择模型:</label>
+        <select id="bb-api-model" class="text_pole" style="width:100%;padding:6px;">
+          <option value="">-- 请先测试连接 --</option>
+        </select>
       </div>
 
       <hr />
@@ -63,7 +72,7 @@
       <hr />
 
       <div class="bb-ext-row">
-        <span class="bb-ext-hint">💡 点击右下角 🦴 按钮打开主面板</span>
+        <span style="color:#888;font-size:12px;">💡 点击右下角 🦴 按钮打开主面板 | v0.2.0</span>
       </div>
     </div>
   </div>
