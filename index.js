@@ -269,22 +269,106 @@ function buildSettingsPanelHTML() {
             <option value="custom">✏️ 自定义</option>
           </select>
         </div>
+                <div id="bb-custom-style-names" style="display:none;margin-top:12px;padding:12px;background:#222;border:1px solid #444;border-radius:6px;">
+          <p style="font-size:12px;color:#aaa;margin-bottom:10px;">自定义各模块名称（支持emoji）:</p>
+          <div style="display:grid;grid-template-columns:1fr 2fr;gap:8px;font-size:11px;">
+            <label>首页:</label><input type="text" class="text_pole bb-custom-name" data-key="home" style="padding:4px;" />
+            <label>唱片机:</label><input type="text" class="text_pole bb-custom-name" data-key="scrapbook" style="padding:4px;" />
+            <label>日记本:</label><input type="text" class="text_pole bb-custom-name" data-key="diary" style="padding:4px;" />
+            <label>NPC:</label><input type="text" class="text_pole bb-custom-name" data-key="npc" style="padding:4px;" />
+            <label>环境雷达:</label><input type="text" class="text_pole bb-custom-name" data-key="weather" style="padding:4px;" />
+            <label>氛围心电图:</label><input type="text" class="text_pole bb-custom-name" data-key="vibe" style="padding:4px;" />
+            <label>平行宇宙:</label><input type="text" class="text_pole bb-custom-name" data-key="parallel" style="padding:4px;" />
+            <label>命运盘:</label><input type="text" class="text_pole bb-custom-name" data-key="fate" style="padding:4px;" />
+            <label>面对面沟通:</label><input type="text" class="text_pole bb-custom-name" data-key="ooc" style="padding:4px;" />
+            <label>世界频段:</label><input type="text" class="text_pole bb-custom-name" data-key="world" style="padding:4px;" />
+            <label>成就殿堂:</label><input type="text" class="text_pole bb-custom-name" data-key="achievements" style="padding:4px;" />
+          </div>
+          <button id="bb-save-custom-names" class="menu_button" style="width:100%;margin-top:10px;">💾 保存自定义名称</button>
+        </div>
 
-        <hr />
+
+               <hr />
         <h4 style="margin:8px 0 4px;">📝 预设管理</h4>
         <div style="margin:6px 0;">
           <label for="bb-active-preset" style="font-size:13px;">当前预设:</label>
           <select id="bb-active-preset" class="text_pole" style="width:100%;padding:6px;"></select>
         </div>
         <div style="display:flex;gap:4px;margin:6px 0;">
-          <input id="bb-btn-new-preset" class="menu_button" type="button" value="➕ 新建" />
-          <input id="bb-btn-edit-preset" class="menu_button" type="button" value="✏️ 编辑" />
-          <input id="bb-btn-del-preset" class="menu_button" type="button" value="🗑️ 删除" />
+          <input id="bb-btn-new-preset" class="menu_button" type="button" value="➕ 新建" style="flex:1;" />
+          <input id="bb-btn-del-preset" class="menu_button" type="button" value="🗑️ 删除" style="flex:1;" />
         </div>
         <div style="display:flex;gap:4px;margin:6px 0;">
-          <input id="bb-btn-import-preset" class="menu_button" type="button" value="📥 导入JSON" />
-          <input id="bb-btn-export-preset" class="menu_button" type="button" value="📤 导出JSON" />
+          <input id="bb-btn-import-preset" class="menu_button" type="button" value="📥 导入JSON" style="flex:1;" />
+          <input id="bb-btn-export-preset" class="menu_button" type="button" value="📤 导出JSON" style="flex:1;" />
         </div>
+        
+        <!-- 展开式编辑器 -->
+        <div style="margin-top:12px;">
+          <button id="bb-toggle-preset-editor" class="menu_button" style="width:100%;">✏️ 展开预设编辑器</button>
+        </div>
+        
+        <div id="bb-preset-editor" style="display:none;margin-top:12px;padding:12px;background:#222;border:1px solid #444;border-radius:6px;">
+          <div style="margin-bottom:10px;">
+            <label style="font-size:12px;color:#aaa;">预设名称:</label>
+            <input id="bb-preset-name" type="text" class="text_pole" style="width:100%;padding:6px;" />
+          </div>
+          
+          <div style="margin-bottom:10px;">
+            <label style="font-size:12px;color:#aaa;">全局指导:</label>
+            <textarea id="bb-preset-global" class="text_pole" rows="3" style="width:100%;font-size:12px;"></textarea>
+          </div>
+          
+          <div style="margin-bottom:10px;">
+            <label style="font-size:12px;color:#aaa;">禁词列表（逗号分隔）:</label>
+            <input id="bb-preset-blacklist" type="text" class="text_pole" style="width:100%;padding:6px;" placeholder="词1,词2,词3" />
+          </div>
+          
+          <details style="margin-bottom:10px;">
+            <summary style="cursor:pointer;color:var(--bb-primary);font-size:13px;font-weight:bold;">📖 提示词模板（点击展开）</summary>
+            <div style="margin-top:8px;display:flex;flex-direction:column;gap:8px;">
+              <div>
+                <label style="font-size:11px;color:#888;">日记:</label>
+                <textarea id="bb-preset-diary" class="text_pole" rows="2" style="width:100%;font-size:11px;"></textarea>
+              </div>
+              <div>
+                <label style="font-size:11px;color:#888;">总结:</label>
+                <textarea id="bb-preset-summary" class="text_pole" rows="2" style="width:100%;font-size:11px;"></textarea>
+              </div>
+              <div>
+                <label style="font-size:11px;color:#888;">环境:</label>
+                <textarea id="bb-preset-weather" class="text_pole" rows="2" style="width:100%;font-size:11px;"></textarea>
+              </div>
+              <div>
+                <label style="font-size:11px;color:#888;">氛围:</label>
+                <textarea id="bb-preset-vibe" class="text_pole" rows="2" style="width:100%;font-size:11px;"></textarea>
+              </div>
+              <div>
+                <label style="font-size:11px;color:#888;">NPC:</label>
+                <textarea id="bb-preset-npc" class="text_pole" rows="2" style="width:100%;font-size:11px;"></textarea>
+              </div>
+              <div>
+                <label style="font-size:11px;color:#888;">命运:</label>
+                <textarea id="bb-preset-fate" class="text_pole" rows="2" style="width:100%;font-size:11px;"></textarea>
+              </div>
+              <div>
+                <label style="font-size:11px;color:#888;">平行宇宙:</label>
+                <textarea id="bb-preset-butterfly" class="text_pole" rows="2" style="width:100%;font-size:11px;"></textarea>
+              </div>
+              <div>
+                <label style="font-size:11px;color:#888;">面对面沟通:</label>
+                <textarea id="bb-preset-ooc" class="text_pole" rows="2" style="width:100%;font-size:11px;"></textarea>
+              </div>
+              <div>
+                <label style="font-size:11px;color:#888;">世界频段:</label>
+                <textarea id="bb-preset-world" class="text_pole" rows="2" style="width:100%;font-size:11px;"></textarea>
+              </div>
+            </div>
+          </details>
+          
+          <button id="bb-save-preset-editor" class="menu_button" style="width:100%;background:#8b0000;color:#fff;font-weight:bold;">💾 保存当前预设</button>
+        </div>
+
 
         <hr />
         <h4 style="margin:8px 0 4px;">🎨 主题管理</h4>
@@ -436,6 +520,71 @@ function bindSettingsPanelEvents() {
   $('#bb-btn-weather').on('click', generateWeather);
   $('#bb-btn-vibe').on('click', generateVibe);
 }
+  // 预设编辑器展开/折叠
+  $('#bb-toggle-preset-editor').on('click', function () {
+    const editor = $('#bb-preset-editor');
+    if (editor.is(':visible')) {
+      editor.slideUp();
+      $(this).text('✏️ 展开预设编辑器');
+    } else {
+      loadPresetToEditor();
+      editor.slideDown();
+      $(this).text('🔼 收起编辑器');
+    }
+  });
+  
+  // 保存预设编辑器
+  $('#bb-save-preset-editor').on('click', savePresetFromEditor);
+  
+  // 删除【编辑】按钮绑定，因为已用展开式编辑器替代
+  // $('#bb-btn-edit-preset').off('click');
+// ============================================
+// 预设编辑器（v0.5.0）
+// ============================================
+
+function loadPresetToEditor() {
+  const preset = getActivePreset();
+  $('#bb-preset-name').val(preset.name);
+  $('#bb-preset-global').val(preset.global || '');
+  $('#bb-preset-blacklist').val((preset.blacklist || []).join(','));
+  
+  $('#bb-preset-diary').val(preset.prompts.diary || '');
+  $('#bb-preset-summary').val(preset.prompts.summary || '');
+  $('#bb-preset-weather').val(preset.prompts.weather || '');
+  $('#bb-preset-vibe').val(preset.prompts.vibe || '');
+  $('#bb-preset-npc').val(preset.prompts.npc || '');
+  $('#bb-preset-fate').val(preset.prompts.fate || '');
+  $('#bb-preset-butterfly').val(preset.prompts.butterfly || '');
+  $('#bb-preset-ooc').val(preset.prompts.ooc || '');
+  $('#bb-preset-world').val(preset.prompts.world || '');
+}
+
+function savePresetFromEditor() {
+  const s = getSettings();
+  const idx = s.active_preset;
+  
+  s.prompt_presets[idx] = {
+    name: $('#bb-preset-name').val() || '未命名预设',
+    global: $('#bb-preset-global').val(),
+    blacklist: $('#bb-preset-blacklist').val().split(',').map(w => w.trim()).filter(Boolean),
+    prompts: {
+      diary: $('#bb-preset-diary').val(),
+      summary: $('#bb-preset-summary').val(),
+      weather: $('#bb-preset-weather').val(),
+      vibe: $('#bb-preset-vibe').val(),
+      npc: $('#bb-preset-npc').val(),
+      fate: $('#bb-preset-fate').val(),
+      butterfly: $('#bb-preset-butterfly').val(),
+      ooc: $('#bb-preset-ooc').val(),
+      world: $('#bb-preset-world').val(),
+    },
+  };
+  
+  saveSettings();
+  refreshPresetSelector();
+  toastr.success('💾 预设已保存');
+}
+
 
 // ============================================
 // API 测试与调用
