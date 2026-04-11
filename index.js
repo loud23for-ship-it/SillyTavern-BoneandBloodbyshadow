@@ -3459,7 +3459,7 @@ jQuery(async () => {
   injectFloatingUI();
 
   // 6. 应用风格预设
-  applyStylePreset(s.style_preset || 'modern');
+  applyStylePreset(s.style_preset || 'gothic');  // ← 注意这里改回 'gothic'，因为你的默认是gothic
 
   // 7. 应用自定义CSS
   if (s.custom_css) {
@@ -3504,7 +3504,6 @@ jQuery(async () => {
   console.log('[BB] 骨与血 v0.7.0 initialized ✓');
 });
 
-console.log(`[骨与血] 🦴 index.js v${VERSION} 完整加载`);
 
 
 
