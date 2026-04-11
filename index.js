@@ -136,13 +136,242 @@ let oocSession = {
   active: false,
   history: [],
 };
+// ============================================
+// 移动端入口注入
+// ============================================
+
+/**
+ * 创建移动端悬浮球（备用入口）
+ */
+function createMobileFloatingButton() {
+  // 检测是否为移动设备或窄屏
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  const isNarrowScreen = window.innerWidth <= 768;
+  
+  if (!isMobile && !isNarrowScreen) {
+    $('#bb-mobile-float').remove();
+    return; // 桌面宽屏不显示
+  }
+  
+  // 避免重复创建
+  if ($('#bb-mobile-float').length > 0) return;
+  
+  const $float = $(`
+    <div id="bb-mobile-float" title="打开骨与血面板">
+      🦴
+    </div>
+  `);
+  
+  $('body').append($float);
+  
+  // 点击打开主面板
+  $float.on('click', function(e) {
+    e.stopPropagation();
+    $('#bb-main-button').click(); // 触发原有按钮逻辑
+  });
+  
+  // 拖拽功能
+  let isDragging = false;
+  let hasMoved = false;
+  let startX, startY, startLeft, startTop;
+  
+  $float.on('touchstart mousedown', function(e) {
+    isDragging = true;
+    hasMoved = false;
+    const touch = e.type === 'touchstart' ? e.touches[0] : e;
+    startX = touch.clientX;
+    startY = touch.clientY;
+    startLeft = parseInt($float.css('right')) || 20;
+    startTop = parseInt($float.css('bottom')) || 80;
+    e.preventDefault();
+  });
+  
+  $(document).on('touchmove.bbfloat mousemove.bbfloat', function(e) {
+    if (!isDragging) return;
+    
+    const touch = e.type === 'touchmove' ? e.touches[0] : e;
+    const deltaX = touch.clientX - startX;
+    const deltaY = -(touch.clientY - startY); // 反向，因为是bottom定位
+    
+    if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
+      hasMoved = true;
+    }
+    
+    $float.css({
+      right: Math.max(10, Math.min(window.innerWidth - 66, startLeft - deltaX)) + 'px',
+      bottom: Math.max(70, Math.min(window.innerHeight - 66, startTop + deltaY)) + 'px'
+    });
+  });
+  
+  $(document).on('touchend.bbfloat mouseup.bbfloat', function() {
+    if (isDragging) {
+      isDragging = false;
+      
+      if (hasMoved) {
+        // 吸附到左右边缘
+        const currentRight = parseInt($float.css('right'));
+        const screenWidth = $(window).width();
+        
+        if (currentRight > screenWidth / 2 - 28) {
+          $float.css('right', '20px');
+        } else {
+          $float.css('right', (screenWidth - 76) + 'px');
+        }
+        
+        // 保存位置
+        localStorage.setItem('bb_float_position', JSON.stringify({
+          right: $float.css('right'),
+          bottom: $float.css('bottom')
+        }));
+      }
+    }
+  });
+  
+  // 恢复上次位置
+  try {
+    const savedPos = localStorage.getItem('bb_float_position');
+    if (savedPos) {
+      const pos = JSON.parse(savedPos);
+      $float.css(pos);
+    }
+  } catch(e) {
+    console.warn('[骨与血] 恢复悬浮球位置失败:', e);
+  }
+  
+  console.log('[骨与血] 📱 移动端悬浮球已创建');
+}
+
+/**
+ * 注入到 SillyTavern 移动端菜单（主入口）
+ */
+function injectToMobileMenu() {
+  // 尝试多种可能的移动端菜单容器
+  const menuSelectors = [
+    '#top-settings-holder',          // 顶部设置区域
+    '#extensionsMenu',                // 扩展菜单
+    '#bg_menu_content',               // 背景菜单
+    '#right-nav-panel',               // 右侧导航
+    '.drawer-content',                // 抽屉式菜单
+    '#rm_button_panel',               // 角色管理按钮面板
+    '#top-bar .menu_button'           // 顶栏菜单按钮
+  ];
+  
+  let injected = false;
+  
+  // 遍历查找可用的菜单容器
+  for (const selector of menuSelectors) {
+    const $menu = $(selector);
+    if ($menu.length > 0 && $('#bb-mobile-menu-item').length === 0) {
+      
+      // 根据不同菜单结构创建不同样式的菜单项
+      let $menuItem;
+      
+      if (selector.includes('top-bar') || selector.includes('top-settings')) {
+        // 顶栏样式
+        $menuItem = $(`
+          <div id="bb-mobile-menu-item" class="inline-drawer-toggle" title="骨与血">
+            <div class="fa-solid fa-bone"></div>
+          </div>
+        `);
+      } else if (selector.includes('extensionsMenu')) {
+        // 扩展菜单样式
+        $menuItem = $(`
+          <div id="bb-mobile-menu-item" class="extensions_menu_button menu_button">
+            <i class="fa-solid fa-bone"></i>
+            <span>骨与血</span>
+          </div>
+        `);
+      } else {
+        // 通用列表样式
+        $menuItem = $(`
+          <div id="bb-mobile-menu-item" class="list-group-item flex-container flexGap5">
+            <div class="fa-solid fa-bone"></div>
+            <span>骨与血</span>
+          </div>
+        `);
+      }
+      
+      // 绑定点击事件
+      $menuItem.on('click', function(e) {
+        e.stopPropagation();
+        
+        // 触发原有主按钮
+        $('#bb-main-button').click();
+        
+        // 尝试关闭移动端菜单
+        setTimeout(() => {
+          $('.drawer-toggle:visible, #drawer-toggle:visible').click();
+          $('.inline-drawer-content.opened').removeClass('opened');
+        }, 100);
+      });
+      
+      // 注入到菜单
+      if (selector.includes('top-bar')) {
+        $menu.parent().prepend($menuItem); // 顶栏放前面
+      } else {
+        $menu.append($menuItem); // 其他放后面
+      }
+      
+      injected = true;
+      console.log(`[骨与血] 📱 已注入到移动端菜单: ${selector}`);
+      break;
+    }
+  }
+  
+  if (!injected) {
+    console.log('[骨与血] ⚠️ 未找到移动端菜单，仅使用悬浮球');
+  }
+  
+  return injected;
+}
+
+/**
+ * 综合移动端入口初始化
+ */
+function initMobileEntrance() {
+  // 1. 先尝试注入到原生菜单
+  const menuInjected = injectToMobileMenu();
+  
+  // 2. 创建悬浮球（作为备用或补充）
+  createMobileFloatingButton();
+  
+  // 3. 监听窗口大小变化
+  let resizeTimer;
+  $(window).on('resize.bbmobile', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      createMobileFloatingButton();
+      // 重新检查菜单注入（可能切换了视图）
+      if (!menuInjected) {
+        injectToMobileMenu();
+      }
+    }, 300);
+  });
+  
+  console.log('[骨与血] ✅ 移动端入口初始化完成');
+}
+
+/**
+ * Debounce 工具函数
+ */
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
 
 // ============================================
 // 入口
 // ============================================
 
 jQuery(async () => {
-  console.log('[骨与血] 🦴 v0.4.0 开始加载...');
+  console.log('[骨与血] 🦴 v0.5.1 开始加载...');
 
   // 1. 初始化设置
   if (!extension_settings[EXTENSION_NAME]) {
@@ -193,7 +422,10 @@ jQuery(async () => {
   // 14. 检查成就
   checkAchievements();
 
-  console.log('[骨与血] ✅ v0.4.0 加载完成！');
+  // 🆕 15. 初始化移动端入口（新增）
+  setTimeout(() => initMobileEntrance(), 1000);
+
+  console.log('[骨与血] ✅ v0.5.1 加载完成！');
 });
 
 // ============================================
