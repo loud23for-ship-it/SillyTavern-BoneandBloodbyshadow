@@ -1,1322 +1,325 @@
-/* ═══════════════════════════════════════════🦴 骨与血 (Bone & Blood) v6.1 — 主样式
-   ═══════════════════════════════════════════ */
+<!--============================================================骨与血 (Bone & Blood) v0.7.0 — settings.html
+     扩展设置面板 — 由 index.js 通过 fetch 注入到 #extensions_settings2
+     2026@SHADOW<安息之影>
+     ============================================================ -->
 
-/* ── CSS 变量（默认紫调主题） ── */
-:root {
-  --bb-primary: #c9a0dc;
-  --bb-primary-dark: #a374c0;
-  --bb-primary-light: #e0c8f0;
-  --bb-accent: #f0a8c8;
-  --bb-accent-dark: #d87ea8;
-  --bb-accent-light: #f8d0e0;
-  --bb-bg-deep: #0e0a14;
-  --bb-bg-panel: #1a1228;
-  --bb-bg-card: #2e2240;
-  --bb-bg-card-hover: #3a2e50;
-  --bb-bg-input: #241a36;
-  --bb-bg-secondary: #1e1630;
-  --bb-text: #d8cce8;
-  --bb-text-dim: #a898b8;
-  --bb-text-muted: #786898;
-  --bb-text-bright: #f0e8ff;
-  --bb-border: rgba(201, 160, 220, 0.15);
-  --bb-border-light: rgba(201, 160, 220, 0.08);
-  --bb-radius-sm: 4px;
-  --bb-radius-md: 8px;
-  --bb-radius-lg: 12px;
-  --bb-radius-xl: 16px;
-  --bb-radius-full: 50%;
-  --bb-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  --bb-font: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  --bb-transition: 0.2s ease;
-}
+<div id="bb-settings-panel" class="bb-settings-root">
+  <div class="inline-drawer">
+    <div class="inline-drawer-toggle inline-drawer-header">
+      <b>🦴 骨与血 Bone & Blood</b>
+      <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
+    </div>
+    <div class="inline-drawer-content">
 
-/* ── 工具类 ── */
-.bb-hidden { display: none !important; }
-.bb-text-primary { color: var(--bb-primary); }
-.bb-text-dim { color: var(--bb-text-dim); }
-.bb-text-muted { color: var(--bb-text-muted); }
-.bb-text-bright { color: var(--bb-text-bright); }
-.bb-text-bold { font-weight: bold; }
-.bb-text-center { text-align: center; }
-.bb-text-sm { font-size: 13px; }
-.bb-text-xs { font-size: 11px; }
-.bb-text-warning { color: orange; }
-.bb-text-success { color: #4caf50; }
-.bb-text-error { color: #e87878; }
-.bb-w-full { width: 100%; }
-.bb-flex-1 { flex: 1; }
-.bb-mt-xs { margin-top: 4px; }
-.bb-mt-sm { margin-top: 8px; }
-.bb-mt-md { margin-top: 12px; }
-.bb-mt-lg { margin-top: 16px; }
-.bb-mb-xs { margin-bottom: 4px; }
-.bb-mb-md { margin-bottom: 12px; }
-.bb-mx-sm { margin: 0 8px; }
-.bb-p-md { padding: 20px; }
-.bb-clickable { cursor: pointer; }
+      <!--── 基础开关 ── -->
+      <div class="bb-settings-section">
+        <h4>⚙️ 基础设置</h4>
+        <label class="checkbox_label">
+          <input type="checkbox" id="bb-enabled" />
+          <span>启用插件</span>
+        </label>
+        <label class="checkbox_label">
+          <input type="checkbox" id="bb-auto-diary" />
+          <span>自动生成日记</span>
+        </label>
+        <div class="bb-row">
+          <label style="white-space:nowrap;margin:0;">触发条数：</label>
+          <input type="number" id="bb-diary-trigger" class="text_pole" min="1" max="100" value="10" style="width:80px;" />
+        </div>
+      </div>
 
-/* ── 悬浮球 ── */
-.bb-trigger-btn,
-#bb-trigger-btn {
-  position: fixed;
-  bottom: 80px;
-  right: 20px;
-  width: 52px;
-  height: 52px;
-  border-radius: var(--bb-radius-full);
-  background: linear-gradient(135deg, var(--bb-primary-dark), var(--bb-accent-dark));
-  color: #fff;
-  font-size: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 10050;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 16px rgba(201, 160, 220, 0.3);
-  border: 2px solid rgba(255, 255, 255, 0.12);
-  transition: transform var(--bb-transition), box-shadow var(--bb-transition);animation: bb-float-pulse 3s ease-in-out infinite;user-select: none;
-}
-.bb-trigger-btn:hover { transform: scale(1.1); }
+      <!-- ── 副API配置 ── -->
+      <div class="bb-settings-section">
+        <h4>🔗 副API配置</h4>
+        <div class="bb-field">
+          <label class="bb-field-label">API Base URL</label>
+          <input type="text" id="bb-api-base" class="text_pole" placeholder="https://api.example.com/v1" />
+        </div>
+        <div class="bb-field">
+          <label class="bb-field-label">API Key</label>
+          <div class="bb-row">
+            <input type="password" id="bb-api-key" class="text_pole" placeholder="sk-..." style="flex:1;" />
+            <button id="bb-toggle-key-vis" class="menu_button" title="显示/隐藏">👁</button>
+          </div>
+        </div>
+        <div class="bb-field">
+          <label class="bb-field-label">模型名称</label>
+          <input type="text" id="bb-api-model" class="text_pole" placeholder="gpt-4o-mini" />
+        </div>
+        <button id="bb-test-api" class="menu_button">🧪 测试连接</button>
+      </div>
 
-/* ── 移动端悬浮球 ── */
-.bb-mobile-float {
-  position: fixed;
-  width: 48px;
-  height: 48px;
-  border-radius: var(--bb-radius-full);
-  background: linear-gradient(135deg, var(--bb-primary-dark), var(--bb-accent-dark));
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  color: #fff;
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 10060;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35), 0 0 16px rgba(201, 160, 220, 0.3);
-  touch-action: none;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-.bb-mobile-float.bb-dragging { opacity: 0.8; }
+      <!-- ── 通用提示词预设 ── -->
+      <div class="bb-settings-section">
+        <h4>📝 提示词预设</h4>
+        <div class="bb-field">
+          <label class="bb-field-label">当前预设</label>
+          <div class="bb-row">
+            <select id="bb-preset-select" class="text_pole" style="flex:1;"></select>
+            <button id="bb-preset-edit" class="menu_button" title="编辑">✏️</button>
+            <button id="bb-preset-delete" class="menu_button" title="删除">🗑️</button>
+          </div>
+        </div>
+        <div class="bb-btn-group">
+          <button id="bb-preset-new" class="menu_button">➕ 新建</button>
+          <button id="bb-preset-import" class="menu_button">📥 导入</button>
+          <button id="bb-preset-export" class="menu_button">📤 导出</button>
+        </div>
 
-/* ── 主面板 ── */
-.bb-main-panel,
-#bb-main-panel {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 520px;
-  max-width: 95vw;
-  max-height: 85vh;
-  background: var(--bb-bg-panel);
-  border: 1px solid var(--bb-border);
-  border-radius: var(--bb-radius-xl);
-  box-shadow: var(--bb-shadow);
-  z-index: 10040;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  font-family: var(--bb-font);
-  color: var(--bb-text);
-}
+        <!--预设编辑器（展开式） -->
+        <div id="bb-preset-editor" class="bb-preset-editor" style="display:none;">
+          <h5 id="bb-preset-editor-title">编辑预设</h5>
+          <div class="bb-field">
+            <label class="bb-field-label">预设名称</label>
+            <input type="text" id="bb-pe-name" class="text_pole" />
+          </div>
+          <div class="bb-field">
+            <label class="bb-field-label">全局系统提示词</label>
+            <textarea id="bb-pe-global" class="text_pole" rows="3" placeholder="所有AI调用共享的系统提示词..."></textarea>
+          </div>
+          <div class="bb-field">
+            <label class="bb-field-label">屏蔽词（逗号分隔）</label>
+            <input type="text" id="bb-pe-blacklist" class="text_pole" placeholder="词1,词2,词3" />
+          </div>
 
-.bb-panel-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 18px;
-  background: var(--bb-bg-secondary);
-  border-bottom: 1px solid var(--bb-border);
-}
-.bb-panel-title {
-  font-size: 16px;
-  font-weight: bold;
-  color: var(--bb-text-bright);
-}
-.bb-panel-close-btn,
-.bb-win-close-btn {
-  background: none;
-  border: none;
-  color: var(--bb-text-muted);
-  font-size: 16px;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: var(--bb-radius-sm);
-  transition: color var(--bb-transition), background var(--bb-transition);
-}
-.bb-panel-close-btn:hover,
-.bb-win-close-btn:hover {
-  color: var(--bb-accent);
-  background: rgba(255, 255, 255, 0.05);
-}
+          <hr class="bb-divider" />
+          <p style="font-size:11px;color:var(--bb-text-muted);margin:00 8px;">以下为各功能的专用提示词（留空则使用内置默认）：</p>
 
-/* ── Tab导航 ── */
-.bb-tab-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  padding: 10px 14px;
-  background: var(--bb-bg-secondary);
-  border-bottom: 1px solid var(--bb-border);
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.bb-tab-btn {
-  padding: 6px 12px;
-  font-size: 12px;
-  border: 1px solid transparent;
-  border-radius: var(--bb-radius-lg);
-  background: transparent;
-  color: var(--bb-text-dim);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all var(--bb-transition);
-  font-family: inherit;
-}
-.bb-tab-btn:hover {
-  background: var(--bb-bg-card);
-  color: var(--bb-text);
-}
-.bb-tab-btn.active {
-  background: linear-gradient(135deg, var(--bb-primary-dark), var(--bb-accent-dark));
-  color: #fff;
-  border-color: transparent;
-  font-weight: bold;
-}
+          <div class="bb-field">
+            <label class="bb-field-label">📖 日记</label>
+            <textarea id="bb-pe-diary" class="text_pole" rows="2"></textarea>
+          </div>
+          <div class="bb-field">
+            <label class="bb-field-label">📋 总结</label>
+            <textarea id="bb-pe-summary" class="text_pole" rows="2"></textarea>
+          </div>
+          <div class="bb-field">
+            <label class="bb-field-label">🌤环境</label>
+            <textarea id="bb-pe-weather" class="text_pole" rows="2"></textarea>
+          </div>
+          <div class="bb-field">
+            <label class="bb-field-label">🎭氛围</label>
+            <textarea id="bb-pe-vibe" class="text_pole" rows="2"></textarea>
+          </div>
+          <div class="bb-field">
+            <label class="bb-field-label">👥 NPC</label>
+            <textarea id="bb-pe-npc" class="text_pole" rows="2"></textarea>
+          </div>
+          <div class="bb-field">
+            <label class="bb-field-label">🎲 命运事件</label>
+            <textarea id="bb-pe-chaos" class="text_pole" rows="2"></textarea>
+          </div>
+          <div class="bb-field">
+            <label class="bb-field-label">🦋 平行宇宙</label>
+            <textarea id="bb-pe-parallel" class="text_pole" rows="2"></textarea>
+          </div>
+          <div class="bb-field">
+            <label class="bb-field-label">📡 世界频段</label>
+            <textarea id="bb-pe-world" class="text_pole" rows="2"></textarea>
+          </div>
+          <div class="bb-field">
+            <label class="bb-field-label">💌 情侣空间</label>
+            <textarea id="bb-pe-couple" class="text_pole" rows="2"></textarea>
+          </div>
 
-/* ── Tab内容区 ── */
-.bb-tab-content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
-}
-.bb-tab-pane { /* 默认显示 */ }
-.bb-tab-pane.active { display: block; }
+          <div class="bb-btn-group" style="margin-top:10px;">
+            <button id="bb-pe-save" class="menu_button bb-btn-primary">💾 保存</button>
+            <button id="bb-pe-cancel" class="menu_button">取消</button>
+          </div>
+        </div>
+      </div>
 
-/* ── 通用组件 ── */
-.bb-action-bar {
-  display: flex;
-  gap: 8px;
-  justify-content: flex-end;
-  margin-bottom: 12px;
-}
-.bb-action-bar.bb-action-center { justify-content: center; }
-.bb-action-bar.bb-action-wrap { flex-wrap: wrap; }
+      <!-- ── OOC独立预设 ── -->
+      <div class="bb-settings-section">
+        <h4>⭐ Burning Star Chat 预设</h4>
+        <p style="font-size:11px;color:var(--bb-text-muted);margin:0 0 8px;">破墙聊天室使用独立的预设，与角色扮演提示词分离。</p>
+        <div class="bb-field">
+          <label class="bb-field-label">当前OOC预设</label>
+          <div class="bb-row">
+            <select id="bb-ooc-preset-select" class="text_pole" style="flex:1;"></select>
+            <button id="bb-ooc-preset-edit" class="menu_button" title="编辑">✏️</button>
+            <button id="bb-ooc-preset-delete" class="menu_button" title="删除">🗑️</button>
+          </div>
+        </div>
+        <div class="bb-btn-group">
+          <button id="bb-ooc-preset-new" class="menu_button">➕ 新建</button>
+          <button id="bb-ooc-preset-import" class="menu_button">📥 导入</button>
+          <button id="bb-ooc-preset-export" class="menu_button">📤 导出</button>
+        </div>
 
-.bb-sm-btn {
-  padding: 6px 14px;
-  font-size: 12px;
-  border: 1px solid var(--bb-border);
-  border-radius: var(--bb-radius-md);
-  background: var(--bb-bg-card);
-  color: var(--bb-text);
-  cursor: pointer;
-  transition: all var(--bb-transition);
-  font-family: inherit;
-}
-.bb-sm-btn:hover {
-  background: var(--bb-bg-card-hover);
-  border-color: var(--bb-primary);
-}
-.bb-btn-xs { padding: 4px 8px; font-size: 11px; }
-.bb-btn-primary { background: var(--bb-primary-dark); color: #fff; border-color: var(--bb-primary); }
-.bb-btn-primary:hover { background: var(--bb-primary); }
-.bb-btn-accent { background: var(--bb-accent-dark); color: #fff; }
-.bb-btn-secondary { background: var(--bb-bg-card); }
-.bb-btn-danger { color: #e87878; }
+        <!-- OOC预设编辑器-->
+        <div id="bb-ooc-preset-editor" class="bb-preset-editor" style="display:none;">
+          <h5 id="bb-ooc-pe-title">编辑OOC预设</h5>
+          <div class="bb-field">
+            <label class="bb-field-label">预设名称</label>
+            <input type="text" id="bb-ooc-pe-name" class="text_pole" />
+          </div>
+          <div class="bb-field">
+            <label class="bb-field-label">系统提示词</label>
+            <textarea id="bb-ooc-pe-system" class="text_pole" rows="4" placeholder="你是角色的'真实人格'，现在脱离了剧本设定..."></textarea>
+          </div>
+          <div class="bb-field">
+            <label class="bb-field-label">温度 (Temperature)</label>
+            <input type="number" id="bb-ooc-pe-temp" class="text_pole" min="0" max="2" step="0.1" value="0.8" style="width:100px;" />
+          </div>
+          <div class="bb-field">
+            <label class="bb-field-label">最大Token数</label>
+            <input type="number" id="bb-ooc-pe-tokens" class="text_pole" min="50" max="8192" value="800" style="width:120px;" />
+          </div>
+          <div class="bb-btn-group" style="margin-top:10px;">
+            <button id="bb-ooc-pe-save" class="menu_button bb-btn-primary">💾 保存</button>
+            <button id="bb-ooc-pe-cancel" class="menu_button">取消</button>
+          </div>
+        </div>
+      </div>
 
-.bb-big-btn {
-  padding: 10px 20px;
-  font-size: 14px;
-  border: 1px solid var(--bb-primary);
-  border-radius: var(--bb-radius-md);
-  background: linear-gradient(135deg, var(--bb-primary-dark), var(--bb-accent-dark));
-  color: #fff;
-  cursor: pointer;
-  transition: all var(--bb-transition);
-  font-family: inherit;
-}
-.bb-big-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+      <!-- ── 生图API配置 ── -->
+      <div class="bb-settings-section">
+        <h4>🎨 生图配置</h4>
+        <div class="bb-field">
+          <label class="bb-field-label">生图提供商</label>
+          <select id="bb-img-provider" class="text_pole">
+            <option value="placeholder">占位图（无需API）</option>
+            <option value="novelai">NovelAI</option>
+            <option value="stablediffusion">Stable Diffusion WebUI</option>
+          </select>
+        </div>
+        <div id="bb-img-config-detail">
+          <div class="bb-field">
+            <label class="bb-field-label">生图API地址</label>
+            <input type="text" id="bb-img-api-base" class="text_pole" placeholder="http://127.0.0.1:7860" />
+          </div>
+          <div class="bb-field">
+            <label class="bb-field-label">生图API Key（如需要）</label>
+            <input type="password" id="bb-img-api-key" class="text_pole" placeholder="可选" />
+          </div>
+          <div class="bb-field">
+            <label class="bb-field-label">画风标签</label>
+            <input type="text" id="bb-img-artist-tags" class="text_pole" placeholder="masterpiece, best quality, ..." />
+          </div>
+          <div class="bb-field">
+            <label class="bb-field-label">负面提示词</label>
+            <textarea id="bb-img-negative" class="text_pole" rows="2" placeholder="lowres, bad anatomy, ..."></textarea>
+          </div>
+          <div class="bb-field">
+            <label class="bb-field-label">提示词模板（用{prompt} 占位）</label>
+            <textarea id="bb-img-template" class="text_pole" rows="2" placeholder="{prompt}, masterpiece, best quality"></textarea>
+          </div>
+          <label class="checkbox_label">
+            <input type="checkbox" id="bb-img-auto" />
+            <span>自动为日记/情书等生成配图</span>
+          </label>
+        </div>
+      </div>
 
-.bb-btn-row {
-  display: flex;
-  gap: 8px;
-}
-.bb-btn-group {
-  display: flex;
-  gap: 8px;
-}
-.bb-form-col {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+      <!-- ── 海报配置 ── -->
+      <div class="bb-settings-section">
+        <h4>🖼 语录海报配置</h4>
+        <div class="bb-field">
+          <label class="bb-field-label">默认背景图URL</label>
+          <input type="text" id="bb-poster-bg" class="text_pole" placeholder="https://..." />
+        </div>
+        <div class="bb-field">
+          <label class="bb-field-label">自定义字体URL（.woff2/.ttf）</label>
+          <input type="text" id="bb-poster-font-url" class="text_pole" placeholder="https://...font.woff2" />
+        </div>
+        <div class="bb-field">
+          <label class="bb-field-label">字体名称</label>
+          <input type="text" id="bb-poster-font-name" class="text_pole" placeholder="MyFont" />
+        </div>
+        <div class="bb-field">
+          <label class="bb-field-label">文字颜色</label>
+          <input type="color" id="bb-poster-text-color" value="#ffffff" style="width:60px;height:32px;" />
+        </div></div>
 
-.bb-input,
-.bb-select {
-  padding: 8px 12px;
-  background: var(--bb-bg-input);
-  border: 1px solid var(--bb-border);
-  color: var(--bb-text);
-  border-radius: var(--bb-radius-md);
-  font-size: 13px;
-  font-family: inherit;
-  width: 100%;
-  box-sizing: border-box;
-}
-.bb-input:focus,
-.bb-select:focus {
-  outline: none;
-  border-color: var(--bb-primary);
-}
-.bb-textarea {
-  padding: 8px 12px;
-  background: var(--bb-bg-input);
-  border: 1px solid var(--bb-border);
-  color: var(--bb-text);
-  border-radius: var(--bb-radius-md);
-  font-size: 13px;
-  font-family: inherit;
-  resize: vertical;
-  width: 100%;
-  box-sizing: border-box;
-}
-.bb-input-color {
-  width: 60px;
-  height: 36px;
-  border: 1px solid var(--bb-border);
-  border-radius: var(--bb-radius-md);
-  background: var(--bb-bg-input);
-  cursor: pointer;
-}
-.bb-label {
-  font-size: 13px;
-  color: var(--bb-text);
-  margin-bottom: -4px;
-}
+      <!-- ── 主页布局 ── -->
+      <div class="bb-settings-section">
+        <h4>🏠 主页布局</h4>
+        <div class="bb-layout-selector">
+          <div class="bb-layout-option" data-layout="together">
+            <span class="bb-layout-icon">👫</span>
+            <span>相伴</span>
+          </div>
+          <div class="bb-layout-option" data-layout="dashboard">
+            <span class="bb-layout-icon">📊</span>
+            <span>仪表盘</span>
+          </div>
+          <div class="bb-layout-option" data-layout="minimalist">
+            <span class="bb-layout-icon">🌙</span>
+            <span>极简</span>
+          </div>
+        </div>
+      </div>
 
-.bb-box {
-  background: var(--bb-bg-card);
-  border: 1px solid var(--bb-border);
-  border-radius: var(--bb-radius-md);
-  padding: 16px;
-  color: var(--bb-text);
-  line-height: 1.6;
-}
+      <!-- ── 风格预设 ── -->
+      <div class="bb-settings-section">
+        <h4>🎨 主题风格</h4>
+        <div class="bb-field">
+          <label class="bb-field-label">风格预设</label>
+          <select id="bb-style-preset" class="text_pole">
+            <option value="modern">现代（紫调）</option>
+            <option value="ancient">古风（暖金）</option>
+            <option value="gothic">哥特（暗红）</option>
+            <option value="custom">自定义</option>
+          </select>
+        </div>
+      </div>
 
-.bb-empty {
-  text-align: center;
-  color: var(--bb-text-muted);
-  padding: 30px 16px;
-  font-size: 13px;
-  line-height: 1.8;
-}
-.bb-empty-icon { font-size: 32px; display: block; margin-bottom: 8px; }
+      <!-- ── 自定义CSS ── -->
+      <div class="bb-settings-section">
+        <h4>✨ 自定义 CSS</h4>
+        <p style="font-size:11px;color:var(--bb-text-muted);margin:0 0 8px;">
+          在下方输入自定义CSS，可覆盖插件的任何样式。所有插件元素均以 <code>bb-</code> 或 <code>#bb-</code> 开头。
+        </p>
 
-.bb-section { margin-bottom: 16px; }
-.bb-section-title {
-  color: var(--bb-primary);
-  margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--bb-border);
-  font-size: 14px;
-}
-.bb-section-subtitle {
-  color: var(--bb-text);
-  font-size: 14px;
-  margin-bottom: 8px;
-}
+        <!-- 示例模板按钮 -->
+        <div class="bb-css-templates">
+          <button class="menu_button bb-css-tpl-btn" data-tpl="glow">✨ 发光边框</button>
+          <button class="menu_button bb-css-tpl-btn" data-tpl="round">🔵 圆润气泡</button>
+          <button class="menu_button bb-css-tpl-btn" data-tpl="transparent">🪟 毛玻璃</button>
+          <button class="menu_button bb-css-tpl-btn" data-tpl="pink">🌸 樱花粉</button>
+          <button class="menu_button bb-css-tpl-btn" data-tpl="cyberpunk">🌃 赛博朋克</button></div>
 
-.bb-scroll-list { max-height: 400px; overflow-y: auto; }
+        <textarea id="bb-custom-css" class="text_pole bb-css-editor" rows="8" placeholder="/* 在此输入自定义CSS */"></textarea>
 
-/* ── 模态框 ── */
-.bb-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 10100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-.bb-modal-content {
-  background: var(--bb-bg-panel);
-  border: 1px solid var(--bb-border);
-  border-radius: var(--bb-radius-xl);
-  padding: 24px;
-  max-width: 420px;
-  width: 100%;
-  box-shadow: var(--bb-shadow);
-  color: var(--bb-text);
-}
-.bb-modal-md { max-width: 500px; }
-.bb-modal-lg { max-width: 550px; max-height: 80vh; overflow-y: auto; }
-.bb-modal-scroll { max-height: 85vh; overflow-y: auto; }
-.bb-modal-title {
-  color: var(--bb-primary);
-  margin: 0 0 16px;
-  text-align: center;
-  font-size: 16px;
-}
+        <div class="bb-btn-group" style="margin-top:8px;">
+          <button id="bb-css-apply" class="menu_button bb-btn-primary">🎨 应用CSS</button>
+          <button id="bb-css-reset" class="menu_button bb-btn-danger">🗑 清空</button>
+          <button id="bb-css-copy-prompt" class="menu_button" title="复制AI提示词到剪贴板">📋 复制AI提示词</button>
+        </div>
 
-/* ── 主页── */
-.bb-home-card {
-  background: var(--bb-bg-card);
-  border-radius: var(--bb-radius-xl);
-  padding: 20px;
-  border: 1px solid var(--bb-border);
-  background-size: cover;
-  background-position: center;
-}
-.bb-home-top-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-.bb-home-user-side,
-.bb-home-char-side {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.bb-home-name-right { text-align: right; }
-.bb-home-name {
-  font-size: 16px;
-  font-weight: bold;
-  color: var(--bb-text-bright);
-}
-.bb-home-avatar {
-  width: 56px;
-  height: 56px;
-  border-radius: var(--bb-radius-full);
-  background: var(--bb-bg-secondary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  cursor: pointer;
-  overflow: hidden;
-  border: 2px solid var(--bb-border);
-  transition: border-color var(--bb-transition);
-}
-.bb-home-avatar:hover { border-color: var(--bb-primary); }
-.bb-avatar-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.bb-home-link-emoji {
-  font-size: 40px;
-  cursor: pointer;
-  user-select: none;
-}
-.bb-home-link-emoji-sm { font-size: 32px; cursor: pointer; }
-.bb-home-bubbles { margin-bottom: 20px; }
-.bb-home-bubble-left { display: flex; justify-content: flex-start; margin-bottom: 12px; }
-.bb-home-bubble-right { display: flex; justify-content: flex-end; }
-.bb-home-bubble {
-  background: var(--bb-bg-secondary);
-  padding: 10px 16px;
-  border-radius: var(--bb-radius-lg);
-  color: var(--bb-text);
-  font-size: 14px;
-  max-width: 70%;
-  cursor: text;
-}
-.bb-home-stats-row {
-  display: flex;
-  justify-content: space-around;
-  text-align: center;
-}
-.bb-stat-number {
-  font-size: 24px;
-  font-weight: bold;
-  color: var(--bb-primary);
-}
-.bb-stat-label {
-  font-size: 12px;
-  color: var(--bb-text-muted);margin-top: 4px;
-}
-.bb-home-radio {
-  margin-top: 16px;
-  text-align: center;
-}
-.bb-home-radio-label {
-  font-size: 14px;
-  color: var(--bb-text-muted);
-}
-.bb-home-radio-text {
-  font-size: 18px;
-  color: var(--bb-text-bright);
-  margin-top: 8px;
-  cursor: text;
-}
-.bb-home-actions {
-  margin-top: 16px;
-  display: flex;
-  gap: 8px;justify-content: center;
-  flex-wrap: wrap;
-}
+        <!-- AI提示词参考（折叠） -->
+        <details class="bb-css-ai-help" style="margin-top:10px;">
+          <summary style="font-size:12px;color:var(--bb-primary);cursor:pointer;font-weight:600;">💡 如何让AI帮你写CSS？
+          </summary>
+          <div class="bb-css-ai-prompt-box">
+            <p style="font-size:11px;color:var(--bb-text-dim);line-height:1.7;margin:8px 0;">
+              点击上方「📋 复制AI提示词」按钮，将提示词粘贴给任意AI（ChatGPT/Claude等），然后描述你想要的效果即可。
+              AI会返回可直接粘贴到上方编辑器的CSS代码。
+            </p>
+            <div id="bb-css-ai-prompt-preview" class="bb-css-prompt-preview">
+              <!-- 由JS动态填充 -->
+            </div>
+          </div>
+        </details>
+      </div>
 
-/*仪表盘 */
-.bb-dashboard-header { text-align: center; margin-bottom: 16px; }
-.bb-dashboard-avatar-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-}
-.bb-dashboard-names { margin-top: 8px; }
-.bb-dashboard-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-.bb-dash-card {
-  background: var(--bb-bg-secondary);
-  border-radius: var(--bb-radius-md);
-  padding: 14px;
-  text-align: center;
-  border: 1px solid var(--bb-border-light);
-}
-.bb-dash-icon { font-size: 20px; margin-bottom: 4px; }
-.bb-dash-value { font-size: 20px; font-weight: bold; color: var(--bb-primary); }
-.bb-dash-label { font-size: 11px; color: var(--bb-text-muted); margin-top: 2px; }
-.bb-quick-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+      <!-- ── 数据管理 ── -->
+      <div class="bb-settings-section">
+        <h4>💾 数据管理</h4>
+        <div class="bb-btn-group">
+          <button id="bb-export-md" class="menu_button">📄 导出Markdown</button>
+          <button id="bb-export-json" class="menu_button">📦 导出JSON</button>
+          <button id="bb-clear-data" class="menu_button bb-btn-danger">⚠️ 清空当前聊天数据</button>
+        </div>
+      </div>
 
-/* 极简*/
-.bb-mini-center { text-align: center; }
-.bb-mini-avatars {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  margin-bottom: 12px;
-}
-.bb-mini-avatar-large { width: 72px; height: 72px; font-size: 36px; }
-.bb-mini-link { font-size: 28px; cursor: pointer; }
-.bb-mini-names {
-  font-size: 16px;
-  font-weight: bold;
-  color: var(--bb-text-bright);
-  margin-bottom: 8px;
-}
-.bb-mini-sep { color: var(--bb-text-muted); margin: 0 8px; }
-.bb-mini-stats {
-  font-size: 13px;
-  color: var(--bb-text-dim);
-  margin-bottom: 12px;
-}
-.bb-mini-stats span + span { margin-left: 8px; }
-.bb-mini-radio {
-  font-size: 16px;
-  color: var(--bb-text-bright);
-  cursor: text;
-}
-
-/* ── 语录 ── */
-.bb-record-item {
-  background: var(--bb-bg-card);
-  border: 1px solid var(--bb-border-light);
-  border-radius: var(--bb-radius-md);
-  padding: 14px;
-  margin-bottom: 10px;
-  transition: border-color var(--bb-transition);
-}
-.bb-record-item:hover { border-color: var(--bb-primary); }
-.bb-record-text { color: var(--bb-text); line-height: 1.6; margin-bottom: 8px; }
-.bb-record-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 12px;
-  color: var(--bb-text-muted);
-}
-.bb-record-actions { display: flex; gap: 6px; }
-.bb-record-actions button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-  padding: 2px;
-}
-
-/* ── 日记 ── */
-.bb-diary-item {
-  background: var(--bb-bg-card);
-  border: 1px solid var(--bb-border-light);
-  border-radius: var(--bb-radius-md);
-  padding: 14px;
-  margin-bottom: 10px;
-}
-.bb-diary-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-  font-size: 13px;
-  color: var(--bb-primary);
-}
-.bb-diary-body { color: var(--bb-text); line-height: 1.6; font-size: 13px; }
-
-/* ── NPC ── */
-.bb-npc-card {
-  background: var(--bb-bg-card);
-  border: 1px solid var(--bb-border-light);
-  border-radius: var(--bb-radius-md);
-  padding: 14px;
-  margin-bottom: 10px;
-}
-.bb-npc-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-.bb-npc-name { color: var(--bb-primary); font-weight: bold; font-size: 15px; }
-.bb-npc-actions { display: flex; gap: 6px; }
-.bb-npc-body { color: var(--bb-text); line-height: 1.5; font-size: 13px; }
-.bb-npc-time { font-size: 11px; color: var(--bb-text-dim); margin-top: 6px; }
-
-/* ── 命运 ── */
-.bb-fate-dice-icon { font-size: 18px; margin-bottom: 16px; text-align: center; }
-.bb-fate-content { color: var(--bb-text); line-height: 1.6; margin-bottom: 16px; }
-.bb-fate-hint {
-  font-size: 12px;
-  color: var(--bb-text-muted);
-  border-top: 1px solid var(--bb-border);
-  padding-top: 12px;
-  margin-top: 12px;
-}
-.bb-fate-item-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-.bb-fate-item-body { color: var(--bb-text); line-height: 1.5; }
-
-/* ── 世界频段 ── */
-.bb-marquee-container {
-  overflow: hidden;
-  background: var(--bb-bg-card);
-  border-radius: var(--bb-radius-md);
-  padding: 10px 16px;
-  margin-bottom: 12px;
-  border: 1px solid var(--bb-border-light);
-}
-#bb-marquee {
-  white-space: nowrap;
-  animation: bb-scroll20s linear infinite;
-  color: var(--bb-primary);
-  font-size: 13px;
-}
-.bb-feed-item-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-.bb-feed-item-body { color: var(--bb-text); line-height: 1.5; }
-
-/* ── OOC 破墙聊天室（仿IM风格） ── */
-.bb-ooc-win,
-#bb-ooc-win {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 420px;
-  max-width: 95vw;
-  height: 600px;
-  max-height: 85vh;
-  background: var(--bb-bg-panel);
-  border: 1px solid var(--bb-border);
-  border-radius: var(--bb-radius-xl);
-  box-shadow: var(--bb-shadow);
-  z-index: 10055;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  font-family: var(--bb-font);
-}
-
-.bb-ooc-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  background: var(--bb-bg-secondary);
-  border-bottom: 1px solid var(--bb-border);
-}
-.bb-ooc-header-left { display: flex; align-items: center; gap: 10px; }
-.bb-ooc-header-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--bb-radius-full);
-  background: var(--bb-bg-card);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-}
-.bb-ooc-header-info { display: flex; flex-direction: column; }
-.bb-ooc-header-name {
-  font-size: 15px;
-  font-weight: bold;
-  color: var(--bb-text-bright);
-}
-.bb-ooc-header-status {
-  font-size: 11px;
-  color: #4caf50;
-}
-
-/*预设栏 */
-.bb-ooc-preset-bar {
-  background: var(--bb-bg-secondary);
-  border-bottom: 1px solid var(--bb-border-light);
-  padding: 6px 16px;
-}
-.bb-ooc-preset-toggle {
-  font-size: 12px;
-  color: var(--bb-text-muted);
-  cursor: pointer;
-  text-align: center;
-}
-.bb-ooc-preset-toggle:hover { color: var(--bb-primary); }
-.bb-ooc-preset-content {
-  padding-top: 8px;
-}
-.bb-ooc-preset-content .bb-select {
-  margin-bottom: 6px;
-}
-.bb-ooc-preset-actions {
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-}
-
-/* 消息列表 */
-.bb-ooc-messages,
-#bb-ooc-chat {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-/* 消息气泡 */
-.bb-ooc-msg {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 8px;max-width: 85%;
-}
-.bb-ooc-msg.bb-msg-user {
-  flex-direction: row-reverse;align-self: flex-end;
-}
-.bb-ooc-msg.bb-msg-ai {
-  align-self: flex-start;
-}
-.bb-ooc-msg.bb-msg-system {
-  align-self: center;
-  max-width: 90%;
-}
-.bb-ooc-msg-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--bb-radius-full);
-  background: var(--bb-bg-card);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  flex-shrink: 0;
-}
-.bb-ooc-msg-bubble {
-  padding: 10px 14px;
-  border-radius: var(--bb-radius-lg);
-  line-height: 1.5;
-  font-size: 14px;
-  word-break: break-word;
-}
-.bb-msg-user .bb-ooc-msg-bubble {
-  background: linear-gradient(135deg, var(--bb-primary-dark), var(--bb-accent-dark));
-  color: #fff;
-  border-bottom-right-radius: var(--bb-radius-sm);
-}
-.bb-msg-ai .bb-ooc-msg-bubble {
-  background: var(--bb-bg-card);
-  color: var(--bb-text);
-  border-bottom-left-radius: var(--bb-radius-sm);
-}
-.bb-bubble-system {
-  background: var(--bb-bg-secondary);
-  color: var(--bb-text-muted);
-  font-size: 12px;
-  padding: 6px 12px;
-  border-radius: var(--bb-radius-md);
-}
-.bb-ooc-msg-time {
-  font-size: 10px;
-  color: var(--bb-text-muted);
-  margin-top: 4px;
-}
-.bb-msg-user .bb-ooc-msg-time { text-align: right; }
-.bb-ooc-msg-name {
-  font-size: 11px;
-  color: var(--bb-text-muted);
-  margin-bottom: 4px;
-}
-.bb-ooc-msg-actions { margin-top: 4px; font-size: 12px; }
-
-/* OOC预览 */
-.bb-ooc-preview-box {
-  min-height: 200px;
-  max-height: 400px;
-  overflow-y: auto;
-}
-
-/* 输入区域 */
-.bb-ooc-input-area {
-  display: flex;
-  gap: 8px;
-  align-items: flex-end;
-  padding: 12px 16px;
-  background: var(--bb-bg-secondary);
-  border-top: 1px solid var(--bb-border);
-}
-.bb-ooc-input-wrapper {
-  flex: 1;position: relative;
-  display: flex;
-  align-items: flex-end;
-}
-.bb-ooc-input {
-  width: 100%;
-  padding: 10px 40px 10px 14px;
-  background: var(--bb-bg-input);
-  border: 1px solid var(--bb-border);
-  color: var(--bb-text);
-  border-radius: var(--bb-radius-lg);
-  font-size: 14px;
-  font-family: inherit;
-  resize: none;
-  min-height: 40px;
-  max-height: 120px;
-  box-sizing: border-box;
-}
-.bb-ooc-input:focus { outline: none; border-color: var(--bb-primary); }
-
-/* 表情包按钮 — 在输入框内右下角 */
-.bb-ooc-sticker-btn {
-  position: absolute;
-  right: 8px;
-  bottom: 8px;
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 2px;
-  line-height: 1;
-  opacity: 0.6;
-  transition: opacity var(--bb-transition);
-}
-.bb-ooc-sticker-btn:hover { opacity: 1; }
-
-/* 发送按钮 —圆形 */
-.bb-ooc-send-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--bb-radius-full);
-  background: linear-gradient(135deg, var(--bb-primary-dark), var(--bb-accent-dark));
-  border: none;
-  color: #fff;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: transform var(--bb-transition);
-}
-.bb-ooc-send-btn:hover { transform: scale(1.05); }
-
-/* 表情面板 — 向上弹出 */
-.bb-sticker-panel {
-  position: absolute;
-  bottom: 100%;
-  left: 0;
-  right: 0;
-  background: var(--bb-bg-panel);
-  border: 1px solid var(--bb-border);
-  border-radius: var(--bb-radius-lg);
-  box-shadow: var(--bb-shadow);
-  margin-bottom: 8px;
-  max-height: 280px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  z-index: 10;
-}
-.bb-sticker-picker {
-  position: absolute;
-  bottom: 100%;
-  left: 0;
-  right: 0;
-  background: var(--bb-bg-panel);
-  border: 1px solid var(--bb-border);
-  border-radius: var(--bb-radius-lg);
-  box-shadow: var(--bb-shadow);
-  margin-bottom: 8px;
-  max-height: 280px;
-  overflow: hidden;
-  z-index: 10;
-}
-.bb-sticker-tabs-row {
-  display: flex;
-  gap: 4px;
-  padding: 8px;
-  border-bottom: 1px solid var(--bb-border-light);
-  overflow-x: auto;
-}
-.bb-sticker-tab {
-  padding: 4px 10px;
-  font-size: 11px;
-  border-radius: var(--bb-radius-md);
-  background: var(--bb-bg-card);
-  color: var(--bb-text-dim);
-  cursor: pointer;
-  white-space: nowrap;
-}
-.bb-sticker-tab.active { background: var(--bb-primary-dark); color: #fff; }
-.bb-sticker-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  padding: 10px;
-  overflow-y: auto;
-  max-height: 200px;
-}
-.bb-sticker-item {
-  cursor: pointer;
-  border-radius: var(--bb-radius-md);
-  overflow: hidden;
-  transition: transform var(--bb-transition);
-}
-.bb-sticker-item:hover { transform: scale(1.1); }
-.bb-sticker-item img {
-  width: 100%;
-  height: 60px;
-  object-fit: cover;
-}
-.bb-sticker-img {
-  max-width: 120px;
-  max-height: 120px;
-  border-radius: var(--bb-radius-md);
-  vertical-align: middle;
-}
-.bb-sticker-manager-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.bb-sticker-manage-item {
-  position: relative;
-  text-align: center;
-}
-.bb-sticker-manage-img {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: var(--bb-radius-md);
-}
-.bb-sticker-manage-name {
-  font-size: 10px;
-  color: var(--bb-text-muted);
-  margin-top: 2px;
-}
-.bb-sticker-del {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  background: rgba(0, 0, 0, 0.7);
-  color: #e87878;
-  border-radius: var(--bb-radius-full);
-  width: 18px;
-  height: 18px;
-  font-size: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-/* ── 蝴蝶窗口 ── */
-.bb-sub-window,
-#bb-bf-win {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 460px;
-  max-width: 95vw;
-  height: 550px;
-  max-height: 80vh;
-  background: var(--bb-bg-panel);
-  border: 1px solid var(--bb-border);
-  border-radius: var(--bb-radius-xl);
-  box-shadow: var(--bb-shadow);
-  z-index: 10055;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-.bb-bf-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  background: var(--bb-bg-secondary);
-  border-bottom: 1px solid var(--bb-border);
-}
-.bb-bf-title { font-size: 16px; font-weight: bold; color: var(--bb-text-bright); }
-.bb-bf-origin {
-  background: var(--bb-bg-secondary);
-  padding: 12px;
-  border-bottom: 1px solid var(--bb-border);
-  color: var(--bb-text-muted);
-  font-size: 13px;
-  max-height: 80px;
-  overflow-y: auto;
-}
-.bb-bf-chat { flex: 1; overflow-y: auto; padding: 12px; }
-.bb-bf-input-area {
-  background: var(--bb-bg-secondary);
-  padding: 12px;
-  border-top: 1px solid var(--bb-border);
-  display: flex;
-  gap: 8px;
-}
-.bb-bf-msg { display: flex; margin-bottom: 12px; }
-.bb-bf-msg-user { justify-content: flex-end; }
-.bb-bf-msg-ai { justify-content: flex-start; }
-.bb-chat-bubble {
-  padding: 10px 14px;
-  border-radius: var(--bb-radius-lg);
-  max-width: 80%;
-  line-height: 1.5;
-  font-size: 14px;
-  word-break: break-word;
-}
-.bb-bubble-user {
-  background: linear-gradient(135deg, var(--bb-primary-dark), var(--bb-accent-dark));
-  color: #fff;
-  border-bottom-right-radius: var(--bb-radius-sm);
-}
-.bb-bubble-ai {
-  background: var(--bb-bg-card);
-  color: var(--bb-text);
-  border-bottom-left-radius: var(--bb-radius-sm);
-}
-
-/* ── 画廊 ── */
-.bb-gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 10px;
-}
-.bb-gallery-item {
-  position: relative;
-  border-radius: var(--bb-radius-md);
-  overflow: hidden;
-  background: var(--bb-bg-card);
-  border: 1px solid var(--bb-border-light);
-}
-.bb-gallery-item img {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  display: block;
-}
-.bb-gallery-caption {
-  padding: 6px 8px;
-  font-size: 11px;
-  color: var(--bb-text-muted);
-}
-.bb-gallery-actions {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  display: flex;
-  gap: 4px;
-}
-.bb-gallery-actions span {
-  background: rgba(0, 0, 0, 0.6);
-  border-radius: var(--bb-radius-sm);
-  padding: 2px 6px;
-  font-size: 14px;
-}
-
-/* ── 成就 ── */
-.bb-ach-summary {
-  text-align: center;
-  margin-bottom: 12px;
-  font-size: 14px;
-}
-.bb-ach-card {
-  background: var(--bb-bg-card);
-  border: 1px solid var(--bb-border-light);
-  border-radius: var(--bb-radius-md);
-  padding: 14px;
-  margin-bottom: 8px;
-  transition: border-color var(--bb-transition);
-}
-.bb-ach-unlocked { border-color: var(--bb-primary); }
-.bb-ach-locked { opacity: 0.6; }
-.bb-ach-row { display: flex; align-items: center; gap: 12px; }
-.bb-ach-icon { font-size: 32px; }
-.bb-ach-info { flex: 1; }
-.bb-ach-name { font-weight: bold; font-size: 15px; }
-.bb-ach-desc { color: var(--bb-text-muted); font-size: 13px; }
-.bb-ach-date { color: var(--bb-text-dim); font-size: 11px; margin-top: 4px; }
-
-.bb-achievement-popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  background: var(--bb-bg-panel);
-  border: 2px solid var(--bb-primary);
-  border-radius: var(--bb-radius-xl);
-  padding: 40px;
-  text-align: center;
-  z-index: 10200;
-  box-shadow: 0 0 60px rgba(201, 160, 220, 0.3);
-  transition: transform 0.3s ease;
-}
-.bb-achievement-popup.bb-ach-popup-show {
-  transform: translate(-50%, -50%) scale(1);
-}
-.bb-ach-popup-icon { font-size: 64px; margin-bottom: 16px; }
-.bb-ach-popup-title { color: var(--bb-primary); font-size: 24px; font-weight: bold; margin-bottom: 8px; }
-.bb-ach-popup-name { color: var(--bb-text-bright); font-size: 20px; margin-bottom: 8px; }
-.bb-ach-popup-desc { color: var(--bb-text-muted); font-size: 14px; }
-
-/* ── 情侣空间 ── */
-.bb-couple-container { }
-.bb-couple-tabs {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 12px;
-  flex-wrap: wrap;
-}
-.bb-couple-tab {
-  padding: 6px 12px;
-  font-size: 12px;
-  border-radius: var(--bb-radius-md);
-  background: var(--bb-bg-card);
-  color: var(--bb-text-dim);
-  cursor: pointer;
-  border: 1px solid transparent;
-  transition: all var(--bb-transition);
-}
-.bb-couple-tab.active {
-  background: var(--bb-primary-dark);
-  color: #fff;
-}
-.bb-couple-panel { }
-.bb-couple-panel.active { display: block; }
-.bb-couple-list { }
-
-.bb-letter-card {
-  background: var(--bb-bg-card);
-  border: 1px solid var(--bb-border-light);
-  border-radius: var(--bb-radius-md);
-  padding: 14px;
-  margin-bottom: 10px;
-}
-.bb-letter-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-.bb-letter-meta { display: flex; gap: 8px; align-items: center; }
-.bb-letter-body { color: var(--bb-text); line-height: 1.6; font-size: 14px; }
-.bb-letter-reply {
-  margin-top: 12px;
-  padding: 10px;
-  background: var(--bb-bg-secondary);
-  border-radius: var(--bb-radius-md);
-  border-left: 3px solid var(--bb-primary);
-}
-.bb-letter-reply-actions { margin-top: 8px; display: flex; gap: 8px; }
-
-.bb-anni-card {
-  background: var(--bb-bg-card);
-  border: 1px solid var(--bb-border-light);
-  border-radius: var(--bb-radius-md);
-  padding: 14px;
-  margin-bottom: 8px;
-}
-.bb-anni-row { display: flex; justify-content: space-between; align-items: center; }
-.bb-anni-name { color: var(--bb-primary); font-weight: bold; font-size: 16px; }
-.bb-anni-date { color: var(--bb-text-muted); font-size: 13px; margin-top: 4px; }
-
-/* ── 海报预览 ── */
-.bb-poster-preview {
-  position: relative;
-  width: 100%;
-  height: 300px;
-  border-radius: var(--bb-radius-md);
-  overflow: hidden;
-  margin: 12px 0;
-  background: #111;
-}
-.bb-poster-bg { position: absolute; inset: 0; }
-.bb-poster-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.5); }
-.bb-poster-text-wrap {
-  position: relative;
-  z-index: 1;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100%;
-}
-.bb-poster-quote {
-  font-size: 14px;
-  line-height: 1.8;
-  text-align: center;
-  word-wrap: break-word;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-}
-.bb-poster-author {
-  margin-top: 16px;
-  text-align: center;
-  font-size: 11px;
-  opacity: 0.7;
-}
-.bb-poster-brand {
-  margin-top: 4px;
-  text-align: center;
-  font-size: 9px;
-  opacity: 0.5;
-}
-
-/* ── 消息按钮 ── */
-.bb-msg-btns {
-  display: inline-flex;
-  gap: 4px;
-  margin-left: 6px;
-}
-.bb-btn-star,
-.bb-btn-butterfly {
-  cursor: pointer;
-  font-size: 14px;
-  opacity: 0.5;
-  transition: opacity var(--bb-transition);
-}
-.bb-btn-star:hover,
-.bb-btn-butterfly:hover { opacity: 1; }
-
-/* ── 扩展菜单 ── */
-.bb-ext-menu-item {
-  cursor: pointer;
-  padding: 8px 15px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.bb-ext-menu-icon { font-size: 16px; }
-
-/* ── 水印 ── */
-.bb-watermark {
-  position: fixed;
-  bottom: 4px;
-  right: 4px;
-  font-size: 9px;
-  color: rgba(255, 255, 255, 0.08);
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* ═══════════════════════════════════════════
-   移动端适配
-   ═══════════════════════════════════════════ */
-
-@media (max-width: 768px) {
-  .bb-main-panel,
-  #bb-main-panel {
-    width: 100vw;
-    max-width: 100vw;
-    max-height: 100vh;
-    height: 100vh;
-    border-radius: 0;
-    top: 0;
-    left: 0;
-    transform: none;
-  }
-
-  .bb-ooc-win,
-  #bb-ooc-win {
-    width: 100vw;
-    max-width: 100vw;
-    height: 100vh;
-    max-height: 100vh;
-    border-radius: 0;
-    top: 0;
-    left: 0;
-    transform: none;
-  }
-
-  .bb-sub-window,
-  #bb-bf-win {
-    width: 100vw;
-    max-width: 100vw;
-    height: 100vh;
-    max-height: 100vh;
-    border-radius: 0;
-    top: 0;
-    left: 0;
-    transform: none;
-  }
-
-  .bb-tab-nav {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding: 8px 10px;
-  }
-  .bb-tab-btn { font-size: 11px; padding: 5px 10px; }
-
-  .bb-trigger-btn,
-  #bb-trigger-btn { display: none !important; }
-
-  .bb-gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .bb-dashboard-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-
-  .bb-home-top-row { flex-direction: column; gap: 12px; }
-  .bb-home-link-emoji { font-size: 32px; }
-
-  .bb-modal-content { margin: 10px; padding: 16px; }
-}
-
-@media (max-width: 480px) {
-  .bb-tab-content { padding: 12px; }
-  .bb-gallery-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
-  .bb-sticker-grid { grid-template-columns: repeat(3, 1fr); }
-}
+      <!-- ── 关于 ── -->
+      <div class="bb-settings-section bb-about">
+        <p style="font-size:11px;color:var(--bb-text-muted);text-align:center;margin:0;">🦴骨与血 Bone & Blood v0.7.0<br/>
+          2026@SHADOW&lt;安息之影&gt;
+        </p>
+      </div></div>
+  </div>
+</div>
 
