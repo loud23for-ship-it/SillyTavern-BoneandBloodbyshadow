@@ -1,0 +1,79 @@
+/* 骨与血 — 哥特主题 */
+[data-bb-theme="gothic"] {
+  --bb-bg-primary: #0d0a0a;
+  --bb-bg-secondary: #151010;
+  --bb-bg-tertiary: #1a1212;
+  --bb-bg-card: rgba(25, 15, 15, 0.9);
+  --bb-bg-input: rgba(20, 12, 12, 0.9);
+  --bb-bg-hover: rgba(180, 40, 40, 0.1);
+  --bb-bg-active: rgba(180, 40, 40, 0.18);
+  --bb-bg-glass: rgba(20, 12, 12, 0.7);
+  --bb-border: rgba(120, 30, 30, 0.3);
+  --bb-border-light: rgba(120, 30, 30, 0.15);
+  --bb-border-focus: rgba(180, 50, 50, 0.5);
+  --bb-text-primary: #ddd0d0;
+  --bb-text-secondary: #b09898;
+  --bb-text-muted: #705858;
+  --bb-text-accent: #c84040;
+  --bb-accent: #a03030;
+  --bb-accent-light: #c84848;
+  --bb-accent-dark: #701818;
+  --bb-accent-glow: rgba(160, 48, 48, 0.4);
+  --bb-danger: #ff4444;
+  --bb-success: #40a040;
+}
+
+/* 哥特特殊装饰 */
+[data-bb-theme="gothic"] #bb-main-panel {
+  background-image:
+    radial-gradient(ellipse at top, rgba(120,30,30,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom, rgba(0,0,0,0.3) 0%, transparent 70%);
+}
+
+[data-bb-theme="gothic"] .bb-panel-header {
+  background: linear-gradient(180deg, #1a1010, #120a0a);
+  border-bottom: 1px solid rgba(120,30,30,0.3);
+}
+
+[data-bb-theme="gothic"] #bb-trigger-btn {
+  background: linear-gradient(135deg, #501010, #a03030);
+  border-color: rgba(180,50,50,0.3);
+}
+
+[data-bb-theme="gothic"] .bb-ooc-send-btn {
+  background: linear-gradient(135deg, #701818, #a03030);
+}
+
+[data-bb-theme="gothic"] .bb-msg-user .bb-ooc-msg-bubble {
+  background: linear-gradient(135deg, #701818, #a03030);
+}
+
+[data-bb-theme="gothic"] .bb-tab-btn.active {
+  background: linear-gradient(135deg, rgba(180,40,40,0.15), rgba(120,30,30,0.1));
+  border-color: rgba(180,50,50,0.4);
+}
+
+[data-bb-theme="gothic"] .bb-home-listen .bb-home-avatar {
+  border-color: var(--bb-accent-dark);
+  box-shadow: 0 0 25px rgba(160,48,48,0.4);
+}
+
+[data-bb-theme="gothic"] .bb-quote-item {
+  border-left-color: var(--bb-accent);
+}
+
+[data-bb-theme="gothic"] .bb-dice-display {
+  text-shadow: 0 0 20px rgba(160,48,48,0.6);
+}
+
+/* 哥特风微妙纹理 */
+[data-bb-theme="gothic"] .bb-tab-content {
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 40px,
+      rgba(120,30,30,0.02) 40px,
+      rgba(120,30,30,0.02) 41px
+    );
+}
