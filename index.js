@@ -845,11 +845,23 @@ async function loadSettingsHTML() {
     const resp = await fetch(url);
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const html = await resp.text();
-    $('#extensions_settings2').append(html);
-    console.log('[BB] settings.html loaded');
+    
+    // 兼容两种容器ID
+    const $target = $('#extensions_settings2').length > 0 
+      ? $('#extensions_settings2') 
+      : $('#extensions_settings');
+    
+    $target.append(html);
+    console.log('[BB] settings.html loaded successfully');
   } catch (err) {
-    console.error('[BB] Failed to load settings.html:', err);// 降级：使用内联最小设置
-    $('#extensions_settings2').append(`
+    console.error('[BB] Failed to load settings.html:', err);
+    
+    // 降级：使用内联最小设置（兼容两种容器）
+    const $target = $('#extensions_settings2').length > 0 
+      ? $('#extensions_settings2') 
+      : $('#extensions_settings');
+    
+    $target.append(`
       <div id="bb-settings-panel">
         <div class="inline-drawer">
           <div class="inline-drawer-toggle inline-drawer-header">
@@ -868,6 +880,7 @@ async function loadSettingsHTML() {
     `);
   }
 }
+
 
 // ============================================
 // 【替换】设置面板事件绑定 — 更新以匹配 settings.html 的ID
