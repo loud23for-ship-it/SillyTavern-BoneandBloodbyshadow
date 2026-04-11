@@ -1,157 +1,491 @@
-/* ============================================
-   🦴 骨与血 (Bone & Blood) v0.6.0 样式表
-   By SHADOW <安息之影> © 2026
-   ============================================ */
+/*============================================================骨与血 (Bone & Blood) v0.6.0 — style.css
+   2026@SHADOW<安息之影>
+   ============================================================ */
 
-/* ============================================
-   字体引入
-   ============================================ */
-
-/* 中文字体：思源黑体/霞鹜文楷 */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap');
-
-/* 英文字体：Cinzel (哥特感)/Crimson Text */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap');
-
-/* 等宽字体：JetBrains Mono */
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
-
-/* ============================================
-   全局变量
-   ============================================ */
-
+/* ────────────────────────────────────────────
+   0. CSS变量 / 主题令牌
+   ──────────────────────────────────────────── */
 :root {
-  /* 哥特风配色（默认） */
-  --bb-primary: #8b0000; /* 暗红 */
-  --bb-primary-dark: #600000;
-  --bb-primary-light: #a00000;
-  
-  --bb-bg-main: #1a1a1a;
-  --bb-bg-secondary: #222;
-  --bb-bg-dark: #000;
-  --bb-bg-card: #2a2a2a;
-  
-  --bb-border: #444;
-  --bb-border-light: #555;
-  --bb-border-primary: #8b0000;
-  
-  --bb-text: #ddd;
-  --bb-text-muted: #888;
-  --bb-text-dim: #666;
+  /* 主色调 */
+  --bb-primary: #c9a0dc;
+  --bb-primary-dark: #a374c0;
+  --bb-primary-light: #e8d5f5;
+  --bb-accent: #f0a8c8;
+  --bb-accent-dark: #d87ea8;
+  --bb-accent-light: #fce4ef;
+
+  /* 中性色 */
+  --bb-bg-deep: #1a1225;
+  --bb-bg-panel: #241a30;
+  --bb-bg-card: #2e2240;
+  --bb-bg-card-hover: #3a2d50;
+  --bb-bg-input: #1e1530;
+  --bb-bg-overlay: rgba(10, 6, 18, 0.82);
+
+  /* 文字*/
+  --bb-text: #e8e0f0;
+  --bb-text-dim: #a898b8;
+  --bb-text-muted: #786890;
   --bb-text-bright: #fff;
-  
-  /* 字体族 */
-  --bb-font-primary: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
-  --bb-font-title: 'Cinzel', 'ZCOOL XiaoWei', serif;
-  --bb-font-mono: 'JetBrains Mono', 'Consolas', monospace;
-  
-  /* 圆角 */
-  --bb-radius-sm: 4px;
-  --bb-radius-md: 8px;
-  --bb-radius-lg: 12px;
-  --bb-radius-xl: 16px;
-  
+
+  /* 边框 / 分割线 */
+  --bb-border: rgba(201, 160, 220, 0.18);
+  --bb-border-focus: rgba(201, 160, 220, 0.50);
+  --bb-divider: rgba(201, 160, 220, 0.10);
+
   /* 阴影 */
-  --bb-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --bb-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
-  --bb-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.8);
-  
-  /* 动画 */
-  --bb-transition: all 0.25s ease;
+  --bb-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --bb-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.35);
+  --bb-shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.50);
+  --bb-shadow-glow: 0 0 20px rgba(201, 160, 220, 0.20);
+
+  /* 圆角 */
+  --bb-radius-sm: 6px;
+  --bb-radius-md: 10px;
+  --bb-radius-lg: 16px;
+  --bb-radius-xl: 24px;
+  --bb-radius-full: 9999px;
+
+  /* 过渡 */
+  --bb-transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --bb-transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* 尺寸 */
+  --bb-panel-width: 420px;
+  --bb-panel-max-height: 88vh;
+  --bb-nav-height: 52px;
+  --bb-floating-size: 52px;
+
+  /* 层级 */
+  --bb-z-panel: 10010;
+  --bb-z-overlay: 10020;
+  --bb-z-modal: 10030;
+  --bb-z-toast: 10040;
+  --bb-z-floating: 10050;
+  --bb-z-achievement: 10060;
+
+  /* 状态色 */
+  --bb-success: #7ecfa0;
+  --bb-warning: #f0c878;
+  --bb-danger: #e87878;
+  --bb-info: #78b8e8;
+
+  /* 风格预设覆盖用*/
+  --bb-preset-bg: var(--bb-bg-panel);
+  --bb-preset-accent: var(--bb-primary);
+  --bb-preset-text: var(--bb-text);
 }
 
-/* 现代风配色 */
-.bb-style-modern {
-  --bb-primary: #4a90e2;
-  --bb-primary-dark: #3a7ac2;
-  --bb-primary-light: #5aa0f2;
-  --bb-bg-main: #2c2c2c;
-  --bb-bg-secondary: #333;
-}
+/* ────────────────────────────────────────────
+   0.1 风格预设主题覆盖
+   ──────────────────────────────────────────── */
 
-/* 古风配色 */
+/* 古风 */
 .bb-style-ancient {
-  --bb-primary: #d4a574; /* 古铜金 */
-  --bb-primary-dark: #b48554;
-  --bb-primary-light: #e4b584;
-  --bb-bg-main: #1e1810;
-  --bb-bg-secondary: #2a2318;
+  --bb-primary: #c8a87e;
+  --bb-primary-dark: #a08058;
+  --bb-primary-light: #e8d8c0;
+  --bb-accent: #d4a07a;
+  --bb-accent-dark: #b07850;
+  --bb-bg-deep: #1a1610;
+  --bb-bg-panel: #242018;
+  --bb-bg-card: #302820;
+  --bb-bg-card-hover: #3e3428;
+  --bb-bg-input: #1e1a14;
+  --bb-border: rgba(200, 168, 126, 0.18);
+  --bb-border-focus: rgba(200, 168, 126, 0.50);
+  --bb-text: #e8e0d0;
+  --bb-text-dim: #b8a890;
+  --bb-text-muted: #887860;
 }
 
-/* ============================================
-   悬浮按钮
-   ============================================ */
+/* 哥特 */
+.bb-style-gothic {
+  --bb-primary: #c85050;
+  --bb-primary-dark: #a03030;
+  --bb-primary-light: #e8a0a0;
+  --bb-accent: #d06070;
+  --bb-accent-dark: #a84050;
+  --bb-bg-deep: #120a0a;
+  --bb-bg-panel: #1e1214;
+  --bb-bg-card: #2a1a1e;
+  --bb-bg-card-hover: #382428;
+  --bb-bg-input: #160e10;
+  --bb-border: rgba(200, 80, 80, 0.18);
+  --bb-border-focus: rgba(200, 80, 80, 0.50);
+  --bb-text: #f0e0e0;
+  --bb-text-dim: #c0a0a0;
+  --bb-text-muted: #907070;
+}
 
-#bb-float-btn {
+/* ────────────────────────────────────────────
+   1. 设置面板（SillyTavern 扩展设置区）
+   ──────────────────────────────────────────── */
+#bb-settings-panel {
+  padding: 12px 0;
+  font-family: inherit;
+}
+
+#bb-settings-panel h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--bb-primary);
+  letter-spacing: 0.5px;
+}
+
+#bb-settings-panel .bb-settings-section {
+  background: var(--bb-bg-card);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-md);
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+#bb-settings-panel .bb-settings-section h4 {
+  margin: 0 0 10px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--bb-primary-light);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+#bb-settings-panel label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--bb-text);cursor: pointer;
+}
+
+#bb-settings-panel label input[type="checkbox"] {
+  accent-color: var(--bb-primary);
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+#bb-settings-panel input[type="text"],
+#bb-settings-panel input[type="password"],
+#bb-settings-panel input[type="number"],
+#bb-settings-panel input[type="url"],
+#bb-settings-panel select {
+  width: 100%;
+  padding: 8px 10px;
+  background: var(--bb-bg-input);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-sm);
+  color: var(--bb-text);
+  font-size: 13px;
+  margin-bottom: 8px;transition: border-color var(--bb-transition);
+  box-sizing: border-box;
+}
+
+#bb-settings-panel input:focus,
+#bb-settings-panel select:focus {
+  border-color: var(--bb-border-focus);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(201, 160, 220, 0.12);
+}
+
+#bb-settings-panel textarea {
+  width: 100%;
+  padding: 8px 10px;
+  background: var(--bb-bg-input);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-sm);
+  color: var(--bb-text);
+  font-size: 13px;
+  margin-bottom: 8px;
+  resize: vertical;
+  min-height: 60px;
+  font-family: inherit;
+  box-sizing: border-box;transition: border-color var(--bb-transition);
+}
+
+#bb-settings-panel textarea:focus {
+  border-color: var(--bb-border-focus);
+  outline: none;
+}
+
+#bb-settings-panel .bb-row {
+  display: flex;
+  gap: 8px;align-items: center;
+  margin-bottom: 8px;
+}
+
+#bb-settings-panel .bb-row input,
+#bb-settings-panel .bb-row select {
+  margin-bottom: 0;
+}
+
+#bb-settings-panel .bb-row input {
+  flex: 1;
+}
+
+#bb-settings-panel button {
+  padding: 7px 14px;
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-sm);
+  background: var(--bb-bg-card);
+  color: var(--bb-text);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all var(--bb-transition);
+  white-space: nowrap;
+}
+
+#bb-settings-panel button:hover {
+  background: var(--bb-bg-card-hover);
+  border-color: var(--bb-primary);
+  color: var(--bb-primary-light);
+}
+
+#bb-settings-panel button:active {
+  transform: scale(0.97);
+}
+
+#bb-settings-panel .bb-btn-primary {
+  background: var(--bb-primary-dark);
+  border-color: var(--bb-primary);color: var(--bb-text-bright);
+}
+
+#bb-settings-panel .bb-btn-primary:hover {
+  background: var(--bb-primary);
+}
+
+#bb-settings-panel .bb-btn-danger {
+  border-color: var(--bb-danger);
+  color: var(--bb-danger);
+}
+
+#bb-settings-panel .bb-btn-danger:hover {
+  background: rgba(232, 120, 120, 0.15);
+}
+
+#bb-settings-panel .bb-btn-group {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+/*预设列表 */
+#bb-settings-panel .bb-preset-list {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 8px;
+}
+
+#bb-settings-panel .bb-preset-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-radius: var(--bb-radius-sm);
+  cursor: pointer;
+  transition: background var(--bb-transition);
+  font-size: 13px;
+  color: var(--bb-text-dim);
+}
+
+#bb-settings-panel .bb-preset-item:hover {
+  background: var(--bb-bg-card-hover);
+}
+
+#bb-settings-panel .bb-preset-item.active {
+  background: rgba(201, 160, 220, 0.12);
+  color: var(--bb-primary-light);
+  font-weight: 600;
+}
+
+#bb-settings-panel .bb-preset-item .bb-preset-actions {
+  display: flex;
+  gap: 4px;
+}
+
+#bb-settings-panel .bb-preset-item .bb-preset-actions button {
+  padding: 2px 6px;
+  font-size: 11px;
+  border: none;
+  background: transparent;
+  color: var(--bb-text-muted);
+}
+
+#bb-settings-panel .bb-preset-item .bb-preset-actions button:hover {
+  color: var(--bb-primary);
+}
+
+/*预设编辑器（展开式） */
+#bb-settings-panel .bb-preset-editor {
+  background: var(--bb-bg-deep);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-md);
+  padding: 12px;
+  margin-top: 8px;
+}
+
+#bb-settings-panel .bb-preset-editor h5 {
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  color: var(--bb-primary);
+  font-weight: 600;
+}
+
+#bb-settings-panel .bb-preset-editor .bb-field {
+  margin-bottom: 10px;
+}
+
+#bb-settings-panel .bb-preset-editor .bb-field label {
+  display: block;
+  font-size: 11px;
+  color: var(--bb-text-muted);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/*生图配置区*/
+#bb-settings-panel .bb-img-config {
+  border-top: 1px solid var(--bb-divider);
+  padding-top: 12px;
+  margin-top: 12px;
+}
+
+/* 主页布局选择*/
+#bb-settings-panel .bb-layout-selector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+#bb-settings-panel .bb-layout-option {
+  flex: 1;
+  padding: 10px 8px;
+  text-align: center;
+  border: 2px solid var(--bb-border);
+  border-radius: var(--bb-radius-md);
+  cursor: pointer;
+  transition: all var(--bb-transition);
+  font-size: 12px;
+  color: var(--bb-text-dim);
+}
+
+#bb-settings-panel .bb-layout-option:hover {
+  border-color: var(--bb-primary);
+  color: var(--bb-text);
+}
+
+#bb-settings-panel .bb-layout-option.active {
+  border-color: var(--bb-primary);
+  background: rgba(201, 160, 220, 0.10);
+  color: var(--bb-primary-light);
+  font-weight: 600;
+}
+
+#bb-settings-panel .bb-layout-option .bb-layout-icon {
+  font-size: 24px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* 自定义CSS编辑器 */
+#bb-settings-panel .bb-css-editor {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  min-height: 120px;
+  tab-size: 2;
+}
+
+/* CSS示例模板按钮 */
+#bb-settings-panel .bb-css-templates {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+#bb-settings-panel .bb-css-templates button {
+  font-size: 11px;
+  padding: 4px 8px;
+}
+
+/*────────────────────────────────────────────
+   2. 悬浮球+ 主面板容器
+   ──────────────────────────────────────────── */
+
+/* 悬浮球 */
+#bb-floating-btn {
   position: fixed;
-  bottom: 20px;
+  bottom: 80px;
   right: 20px;
-  width: 56px;
-  height: 56px;
-  background: linear-gradient(135deg, var(--bb-bg-dark) 0%, var(--bb-primary-dark) 100%);
-  border: 2px solid var(--bb-primary);
-  border-radius: 50%;
+  width: var(--bb-floating-size);
+  height: var(--bb-floating-size);
+  border-radius: var(--bb-radius-full);
+  background: linear-gradient(135deg, var(--bb-primary-dark), var(--bb-accent-dark));
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
   cursor: pointer;
-  z-index: 9999;
-  box-shadow: var(--bb-shadow-lg);
-  transition: var(--bb-transition);
-  animation: bb-pulse 2s ease-in-out infinite;
+  z-index: var(--bb-z-floating);
+  box-shadow: var(--bb-shadow-md),0 0 16px rgba(201, 160, 220, 0.30);
+  transition: transform var(--bb-transition), box-shadow var(--bb-transition);
+  animation: bb-float-pulse 3s ease-in-out infinite;user-select: none;
+  -webkit-tap-highlight-color: transparent;touch-action: none;
 }
 
-#bb-float-btn:hover {
-  transform: scale(1.15) rotate(5deg);
-  box-shadow: 0 8px 32px rgba(139, 0, 0, 0.6);
-  border-color: var(--bb-primary-light);
+#bb-floating-btn:hover {
+  transform: scale(1.10);
+  box-shadow: var(--bb-shadow-lg), 0 0 28px rgba(201, 160, 220, 0.45);
 }
 
-#bb-float-btn:active {
-  transform: scale(0.95);
+#bb-floating-btn:active {
+  transform: scale(0.95);animation: none;
 }
 
-@keyframes bb-pulse {
-  0%, 100% {
-    box-shadow: 0 4px 12px rgba(139, 0, 0, 0.5);
-  }
-  50% {
-    box-shadow: 0 8px 24px rgba(139, 0, 0, 0.8);
-  }
+@keyframes bb-float-pulse {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
 }
 
-/* ============================================
-   主面板
-   ============================================ */
-
+/* 主面板 */
 #bb-main-panel {
-  font-family: var(--bb-font-primary);
-  color: var(--bb-text);
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 90%;
-  max-width: 900px;
-  height: 85%;
-  max-height: 750px;
-  background: var(--bb-bg-main);
-  border: 3px solid var(--bb-primary);
+  width: min(var(--bb-panel-width), 94vw);
+  max-height: var(--bb-panel-max-height);
+  background: var(--bb-bg-panel);
+  border: 1px solid var(--bb-border);
   border-radius: var(--bb-radius-lg);
-  box-shadow: var(--bb-shadow-lg);
-  z-index: 10000;
-  overflow: hidden;
-  display: flex;
+  box-shadow: var(--bb-shadow-lg), var(--bb-shadow-glow);
+  z-index: var(--bb-z-panel);
+  display: none;
   flex-direction: column;
-  animation: bb-panel-show 0.3s ease;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-@keyframes bb-panel-show {
+#bb-main-panel.bb-panel-open {
+  display: flex;
+  animation: bb-panel-enter0.3s ease-out;
+}
+
+@keyframes bb-panel-enter {
   from {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.9);
+    transform: translate(-50%, -50%) scale(0.92);
   }
   to {
     opacity: 1;
@@ -159,490 +493,571 @@
   }
 }
 
-/* 标题栏 */
-.bb-header {
-  background: linear-gradient(135deg, var(--bb-bg-dark) 0%, var(--bb-primary-dark) 100%);
-  color: var(--bb-text-bright);
-  padding: 14px 20px;
+/* 面板头部 */
+.bb-panel-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid var(--bb-primary);
-  font-family: var(--bb-font-title);
-  letter-spacing: 1px;
+  justify-content: space-between;
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--bb-divider);
+  flex-shrink: 0;
 }
 
-.bb-header > div:first-child {
-  font-size: 20px;
-  font-weight: bold;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-}
-
-#bb-close-btn {
-  background: none;
-  border: none;
-  color: var(--bb-text-bright);
-  font-size: 22px;
-  cursor: pointer;
-  transition: var(--bb-transition);
-  padding: 4px 8px;
-  line-height: 1;
-}
-
-#bb-close-btn:hover {
-  color: var(--bb-primary-light);
-  transform: rotate(90deg);
-}
-
-/* Tab 导航 */
-.bb-nav {
-  background: var(--bb-bg-secondary);
-  display: flex;
-  overflow-x: auto;
-  overflow-y: hidden;
-  border-bottom: 1px solid var(--bb-border);
-  scrollbar-width: thin;
-  scrollbar-color: var(--bb-primary) var(--bb-bg-dark);
-}
-
-.bb-nav::-webkit-scrollbar {
-  height: 6px;
-}
-
-.bb-nav::-webkit-scrollbar-track {
-  background: var(--bb-bg-dark);
-}
-
-.bb-nav::-webkit-scrollbar-thumb {
-  background: var(--bb-primary);
-  border-radius: 3px;
-}
-
-.bb-tab {
-  padding: 12px 18px;
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-  white-space: nowrap;
-  color: var(--bb-text-muted);
-  transition: var(--bb-transition);
-  user-select: none;
-  font-size: 14px;
-  font-weight: 500;
-  position: relative;
-}
-
-.bb-tab::before {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%) scaleX(0);
-  width: 80%;
-  height: 3px;
-  background: var(--bb-primary);
-  transition: transform 0.3s ease;
-}
-
-.bb-tab:hover {
-  background: rgba(139, 0, 0, 0.1);
-  color: var(--bb-text-bright);
-}
-
-.bb-tab.active {
-  background: var(--bb-bg-main);
-  color: var(--bb-primary);
-  border-bottom-color: var(--bb-primary);
-  font-weight: 700;
-}
-
-.bb-tab.active::before {
-  transform: translateX(-50%) scaleX(1);
-}
-
-/* 内容区 */
-.bb-content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px;
-  background: var(--bb-bg-main);
-  color: var(--bb-text);
-  line-height: 1.6;
-}
-
-.bb-content::-webkit-scrollbar {
-  width: 10px;
-}
-
-.bb-content::-webkit-scrollbar-track {
-  background: var(--bb-bg-dark);
-  border-radius: var(--bb-radius-sm);
-}
-
-.bb-content::-webkit-scrollbar-thumb {
-  background: var(--bb-primary);
-  border-radius: var(--bb-radius-sm);
-  border: 2px solid var(--bb-bg-dark);
-}
-
-.bb-content::-webkit-scrollbar-thumb:hover {
-  background: var(--bb-primary-light);
-}
-
-/* Tab 面板 */
-.bb-tab-panel {
-  display: none;
-  animation: bb-fade-in 0.3s ease;
-}
-
-.bb-tab-panel.active {
-  display: block;
-}
-
-@keyframes bb-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ============================================
-   按钮样式
-   ============================================ */
-
-.bb-sm-btn,
-.bb-big-btn {
-  font-family: var(--bb-font-primary);
-  border: none;
-  cursor: pointer;
-  transition: var(--bb-transition);
-  font-weight: 500;
-  outline: none;
-}
-
-.bb-sm-btn {
-  padding: 7px 14px;
-  background: var(--bb-bg-card);
-  color: var(--bb-text);
-  border: 1px solid var(--bb-border-light);
-  border-radius: var(--bb-radius-sm);
-  font-size: 13px;
-}
-
-.bb-sm-btn:hover {
-  background: var(--bb-primary);
-  border-color: var(--bb-primary);
-  color: var(--bb-text-bright);
-  transform: translateY(-2px);
-  box-shadow: var(--bb-shadow-sm);
-}
-
-.bb-sm-btn:active {
-  transform: translateY(0);
-}
-
-.bb-big-btn {
-  padding: 14px 32px;
-  background: linear-gradient(135deg, var(--bb-primary-dark) 0%, var(--bb-primary) 100%);
-  color: var(--bb-text-bright);
-  border-radius: var(--bb-radius-md);
+.bb-panel-header h2 {
+  margin: 0;
   font-size: 16px;
   font-weight: 700;
-  box-shadow: var(--bb-shadow-md);
-  letter-spacing: 1px;
+  color: var(--bb-primary-light);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.bb-big-btn:hover {
-  background: linear-gradient(135deg, var(--bb-primary) 0%, var(--bb-primary-light) 100%);
-  transform: scale(1.05);
-  box-shadow: 0 6px 24px rgba(139, 0, 0, 0.5);
-}
-
-.bb-big-btn:active {
-  transform: scale(0.98);
-}
-
-/* ============================================
-   首页（一起听界面）
-   ============================================ */
-
-.bb-home-card {
-  background: var(--bb-bg-secondary);
-  border: 2px solid var(--bb-border);
-  border-radius: var(--bb-radius-lg);
-  padding: 24px;
-  margin-bottom: 20px;
-  box-shadow: var(--bb-shadow-sm);
-}
-
-.bb-home-avatar {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
+.bb-panel-header h2 .bb-version {
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--bb-text-muted);
   background: var(--bb-bg-card);
-  border: 3px solid var(--bb-primary);
+  padding: 2px 6px;
+  border-radius: var(--bb-radius-full);
+}
+
+.bb-panel-close {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--bb-radius-full);
+  border: none;
+  background: transparent;
+  color: var(--bb-text-dim);
+  font-size: 18px;
   cursor: pointer;
-  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 36px;
-  transition: var(--bb-transition);
-  box-shadow: var(--bb-shadow-sm);
+  transition: all var(--bb-transition);
+  flex-shrink: 0;
 }
 
-.bb-home-avatar:hover {
-  transform: scale(1.1);
-  border-color: var(--bb-primary-light);
-  box-shadow: 0 4px 16px rgba(139, 0, 0, 0.6);
-}
-
-.bb-home-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-#bb-home-user-name,
-#bb-home-char-name {
-  font-size: 17px;
-  font-weight: bold;
-  color: var(--bb-text-bright);
-  margin-bottom: 4px;
-}
-
-#bb-home-link-emoji {
-  font-size: 48px;
-  cursor: pointer;
-  user-select: none;
-  transition: var(--bb-transition);
-  animation: bb-heart-beat 1.5s ease-in-out infinite;
-}
-
-#bb-home-link-emoji:hover {
-  transform: scale(1.2) rotate(10deg);
-}
-
-@keyframes bb-heart-beat {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-}
-
-#bb-home-user-bubble,
-#bb-home-char-bubble {
-  padding: 12px 16px;
-  border-radius: 18px;
-  max-width: 75%;
-  font-size: 14px;
-  cursor: text;
-  transition: var(--bb-transition);
-  line-height: 1.5;
-  word-wrap: break-word;
-}
-
-#bb-home-user-bubble {
+.bb-panel-close:hover {
   background: var(--bb-bg-card);
+  color: var(--bb-danger);
+}
+
+/*────────────────────────────────────────────
+   3. Tab导航
+   ──────────────────────────────────────────── */
+.bb-nav {
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 6px 10px;
+  gap: 2px;
+  border-bottom: 1px solid var(--bb-divider);
+  flex-shrink: 0;scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.bb-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.bb-tab {
+  padding: 7px 12px;
+  border-radius: var(--bb-radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--bb-text-muted);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all var(--bb-transition);
+  white-space: nowrap;
+  flex-shrink: 0;position: relative;
+}
+
+.bb-tab:hover {
   color: var(--bb-text);
-  border-radius: 18px 18px 18px 4px;
-  border: 1px solid var(--bb-border);
+  background: var(--bb-bg-card);
 }
 
-#bb-home-char-bubble {
-  background: var(--bb-primary);
-  color: var(--bb-text-bright);
-  border-radius: 18px 18px 4px 18px;
-  box-shadow: var(--bb-shadow-sm);
-}
-
-#bb-home-user-bubble:hover,
-#bb-home-char-bubble:hover {
-  box-shadow: var(--bb-shadow-md);
-  transform: translateY(-2px);
-}
-
-#bb-home-msg-count,
-#bb-home-time-count {
-  font-size: 28px;
-  font-weight: bold;
-  color: var(--bb-primary);
-  font-family: var(--bb-font-title);
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-#bb-home-radio-text {
-  font-size: 19px;
-  color: var(--bb-text-bright);
-  cursor: text;
-  text-align: center;
-  font-weight: 500;
-  letter-spacing: 1px;
-  transition: var(--bb-transition);
-}
-
-#bb-home-radio-text:hover {
+.bb-tab.active {
   color: var(--bb-primary-light);
-  text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+  background: rgba(201, 160, 220, 0.12);
+  font-weight: 600;
 }
 
-/* ============================================
-   卡片样式（通用）
-   ============================================ */
+.bb-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: var(--bb-primary);border-radius: 1px;
+}
 
-.bb-record-item,
-.bb-diary-item,
-.bb-npc-card,
-.bb-par-item {
-  background: var(--bb-bg-secondary);
+/* Tab 内容区*/
+.bb-tab-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--bb-bg-card-hover) transparent;
+}
+
+.bb-tab-content::-webkit-scrollbar {
+  width: 5px;
+}
+
+.bb-tab-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.bb-tab-content::-webkit-scrollbar-thumb {
+  background: var(--bb-bg-card-hover);
+  border-radius: 3px;
+}
+
+.bb-tab-content::-webkit-scrollbar-thumb:hover {
+  background: var(--bb-text-muted);
+}
+
+.bb-tab-pane {
+  display: none;
+}
+
+.bb-tab-pane.active {
+  display: block;animation: bb-fade-in 0.2s ease;
+}
+
+@keyframes bb-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ────────────────────────────────────────────
+   4. 通用组件样式
+   ──────────────────────────────────────────── */
+
+/* 卡片 */
+.bb-card {
+  background: var(--bb-bg-card);
   border: 1px solid var(--bb-border);
   border-radius: var(--bb-radius-md);
-  padding: 16px;
-  margin-bottom: 16px;
-  transition: var(--bb-transition);
+  padding: 14px;
+  margin-bottom: 10px;
+  transition: all var(--bb-transition);
+}
+
+.bb-card:hover {
+  border-color: var(--bb-border-focus);
   box-shadow: var(--bb-shadow-sm);
 }
 
-.bb-record-item:hover,
-.bb-diary-item:hover,
-.bb-npc-card:hover,
-.bb-par-item:hover {
-  border-color: var(--bb-primary);
-  box-shadow: var(--bb-shadow-md);
-  transform: translateX(4px);
-}
-
-.bb-record-header,
-.bb-diary-header,
-.bb-par-header {
+.bb-card-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--bb-border);
+  justify-content: space-between;
+  margin-bottom: 8px;
 }
 
-.bb-record-char,
-.bb-npc-card b {
-  color: var(--bb-primary);
-  font-weight: bold;
-  font-size: 15px;
+.bb-card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--bb-primary-light);
 }
 
-.bb-record-time {
-  font-size: 12px;
+.bb-card-meta {
+  font-size: 11px;
   color: var(--bb-text-muted);
 }
 
-.bb-record-text,
-.bb-diary-body,
-.bb-npc-body,
-.bb-par-body {
+.bb-card-body {
+  font-size: 13px;
   color: var(--bb-text);
-  line-height: 1.6;
-  white-space: pre-wrap;
-  word-wrap: break-word;
+  line-height: 1.65;
 }
 
-.bb-record-del,
-.bb-diary-del,
-.bb-npc-del,
-.bb-par-del,
-.bb-feed-del,
-.bb-fate-del {
+/* 按钮通用 */
+.bb-btn {
+  padding: 7px 14px;
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-sm);
+  background: var(--bb-bg-card);
+  color: var(--bb-text);
+  font-size: 12px;
   cursor: pointer;
-  font-size: 15px;
-  transition: var(--bb-transition);
-  padding: 4px;
+  transition: all var(--bb-transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
 }
 
-.bb-record-del:hover,
-.bb-diary-del:hover,
-.bb-npc-del:hover,
-.bb-par-del:hover,
-.bb-feed-del:hover,
-.bb-fate-del:hover {
-  transform: scale(1.3);
-  filter: brightness(1.5);
-}
-
-/* ============================================
-   信息框
-   ============================================ */
-
-.bb-box {
-  background: var(--bb-bg-secondary);
-  border: 2px solid var(--bb-border);
-  border-radius: var(--bb-radius-md);
-  padding: 18px;
-  min-height: 120px;
-  color: var(--bb-text);
-  line-height: 1.7;
-  box-shadow: var(--bb-shadow-sm);
-  transition: var(--bb-transition);
-}
-
-.bb-box:hover {
+.bb-btn:hover {
+  background: var(--bb-bg-card-hover);
   border-color: var(--bb-primary);
-  box-shadow: var(--bb-shadow-md);
+  color: var(--bb-primary-light);
 }
 
-#bb-fate-result {
-  background: linear-gradient(135deg, var(--bb-bg-secondary) 0%, var(--bb-bg-dark) 100%);
-  border: 2px solid var(--bb-primary);
-  border-radius: var(--bb-radius-lg);
-  padding: 24px;
-  margin-bottom: 20px;
-  min-height: 140px;
+.bb-btn:active {
+  transform: scale(0.97);
+}
+
+.bb-btn-sm {
+  padding: 4px 10px;
+  font-size: 11px;
+}
+
+.bb-btn-primary {
+  background: var(--bb-primary-dark);
+  border-color: var(--bb-primary);
+  color: var(--bb-text-bright);
+}
+
+.bb-btn-primary:hover {
+  background: var(--bb-primary);
+}
+
+.bb-btn-accent {
+  background: var(--bb-accent-dark);
+  border-color: var(--bb-accent);
+  color: var(--bb-text-bright);
+}
+
+.bb-btn-accent:hover {
+  background: var(--bb-accent);
+}
+
+.bb-btn-danger {
+  border-color: var(--bb-danger);
+  color: var(--bb-danger);
+}
+
+.bb-btn-danger:hover {
+  background: rgba(232, 120, 120, 0.15);
+}
+
+.bb-btn-ghost {
+  border: none;
+  background: transparent;
+  color: var(--bb-text-dim);
+}
+
+.bb-btn-ghost:hover {
+  color: var(--bb-primary);
+  background: rgba(201, 160, 220, 0.08);
+}
+
+.bb-btn-group {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.bb-btn-block {
+  width: 100%;
+  justify-content: center;
+}
+
+/*输入框通用 */
+.bb-input {
+  width: 100%;
+  padding: 8px 10px;
+  background: var(--bb-bg-input);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-sm);
   color: var(--bb-text);
-  text-align: center;
-  box-shadow: var(--bb-shadow-md);
+  font-size: 13px;
+  transition: border-color var(--bb-transition);
+  box-sizing: border-box;
 }
 
-.bb-fate-text {
-  font-size: 16px;
-  line-height: 1.8;
-  margin-bottom: 16px;
+.bb-input:focus {
+  border-color: var(--bb-border-focus);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(201, 160, 220, 0.12);
 }
 
-/* ============================================
-   空状态
-   ============================================ */
+.bb-textarea {
+  width: 100%;
+  padding: 8px 10px;
+  background: var(--bb-bg-input);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-sm);
+  color: var(--bb-text);
+  font-size: 13px;
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+  line-height: 1.6;
+  box-sizing: border-box;
+  transition: border-color var(--bb-transition);
+}
 
+.bb-textarea:focus {
+  border-color: var(--bb-border-focus);
+  outline: none;
+}
+
+.bb-select {
+  width: 100%;
+  padding: 8px 10px;
+  background: var(--bb-bg-input);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-sm);
+  color: var(--bb-text);
+  font-size: 13px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+/*标签 */
+.bb-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  background: rgba(201, 160, 220, 0.10);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-full);
+  font-size: 11px;
+  color: var(--bb-text-dim);
+}
+
+/* 空状态 */
 .bb-empty {
   text-align: center;
-  color: var(--bb-text-dim);
-  padding: 60px 20px;
-  font-size: 15px;
+  padding: 30px 20px;
+  color: var(--bb-text-muted);
+  font-size: 13px;
   line-height: 1.8;
 }
 
-/* ============================================
-   世界频段跑马灯
-   ============================================ */
-
-.bb-marquee-container {
-  background: var(--bb-bg-dark);
-  border: 2px solid var(--bb-primary);
-  border-radius: var(--bb-radius-md);
-  padding: 14px;
-  margin-bottom: 20px;
-  overflow: hidden;
-  position: relative;
-  height: 60px;
-  box-shadow: var(--bb-shadow-md);
+.bb-empty-icon {
+  font-size: 36px;
+  display: block;
+  margin-bottom: 10px;
+  opacity: 0.5;
 }
 
-#bb-marquee {
-  white-space: nowrap;
-  animation: bb-scroll 25s linear infinite;
-  color: var(--bb-text-bright);
-  font-size: 16px;
-  font-weight: 500;
+/* 分割线 */
+.bb-divider {
+  border: none;
+  border-top: 1px solid var(--bb-divider);
+  margin: 14px 0;
+}
+
+/*加载指示 */
+.bb-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px;
+  color: var(--bb-text-muted);
+  font-size: 13px;
+}
+
+.bb-loading::before {
+  content: '';
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--bb-border);
+  border-top-color: var(--bb-primary);
+  border-radius: 50%;
+  animation: bb-spin 0.8s linear infinite;
+}
+
+@keyframes bb-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 字段组*/
+.bb-field {
+  margin-bottom: 12px;
+}
+
+.bb-field-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--bb-text-muted);
+  margin-bottom: 4px;
+  text-transform: uppercase;
   letter-spacing: 0.5px;
-  line-height: 32px;
+}
+
+/* 行布局 */
+.bb-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.bb-row-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 面板底部 */
+.bb-panel-footer {
+  padding: 10px 16px;
+  border-top: 1px solid var(--bb-divider);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.bb-panel-footer .bb-copyright {
+  font-size: 10px;
+  color: var(--bb-text-muted);opacity: 0.6;
+}
+/* ────────────────────────────────────────────
+   5. 首页 — 三种布局
+   ──────────────────────────────────────────── */
+
+/* 5.1 Together（默认 — 双头像并排） */
+.bb-home-together {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 0;
+}
+
+.bb-home-together .bb-home-bg {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.15;
+  pointer-events: none;
+  border-radius: var(--bb-radius-lg);
+}
+
+.bb-home-together .bb-home-avatars {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.bb-home-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--bb-radius-full);
+  object-fit: cover;
+  border: 3px solid var(--bb-primary);
+  box-shadow: 0 0 16px rgba(201, 160, 220, 0.30);
+  cursor: pointer;
+  transition: all var(--bb-transition);background: var(--bb-bg-card);
+}
+
+.bb-home-avatar:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 24px rgba(201, 160, 220, 0.50);
+}
+
+.bb-home-link-emoji {
+  font-size: 28px;
+  cursor: pointer;
+  transition: transform var(--bb-transition);user-select: none;
+}
+
+.bb-home-link-emoji:hover {
+  transform: scale(1.2) rotate(10deg);
+}
+
+.bb-home-together .bb-home-names {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.bb-home-together .bb-home-names h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--bb-text);
+}
+
+.bb-home-together .bb-home-names .bb-home-sub {
+  font-size: 12px;
+  color: var(--bb-text-muted);
+  margin-top: 2px;
+}
+
+.bb-home-together .bb-home-bubbles {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.bb-home-bubble {
+  flex: 1;
+  background: var(--bb-bg-card);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-md);
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--bb-text-dim);
+  line-height: 1.6;
+  cursor: pointer;
+  transition: all var(--bb-transition);
+  min-height: 40px;
+  word-break: break-word;
+}
+
+.bb-home-bubble:hover {
+  border-color: var(--bb-primary);
+  background: var(--bb-bg-card-hover);
+}
+
+.bb-home-bubble.bb-bubble-user {
+  border-left: 3px solid var(--bb-primary);
+}
+
+.bb-home-bubble.bb-bubble-char {
+  border-left: 3px solid var(--bb-accent);
+}
+
+.bb-home-radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bb-bg-card);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-full);
+  padding: 6px 14px;
+  font-size: 12px;
+  color: var(--bb-text-dim);
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.bb-home-radio .bb-radio-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.bb-home-radio .bb-radio-text {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.bb-home-radio .bb-radio-scroll {
+  display: inline-block;
+  animation: bb-scroll 12s linear infinite;
 }
 
 @keyframes bb-scroll {
@@ -650,218 +1065,1224 @@
   100% { transform: translateX(-100%); }
 }
 
-.bb-marquee-container:hover #bb-marquee {
-  animation-play-state: paused;
+.bb-home-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
 }
 
-/* ============================================
-   成就卡片
-   ============================================ */
+/* 5.2 Dashboard（仪表盘） */
+.bb-home-dashboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 6px 0;
+}
 
-#bb-ach-list > div {
-  background: var(--bb-bg-secondary);
+.bb-home-dashboard .bb-dash-card {
+  background: var(--bb-bg-card);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-md);
+  padding: 12px;
+  cursor: pointer;
+  transition: all var(--bb-transition);
+}
+
+.bb-home-dashboard .bb-dash-card:hover {
+  border-color: var(--bb-primary);
+  transform: translateY(-2px);box-shadow: var(--bb-shadow-sm);
+}
+
+.bb-home-dashboard .bb-dash-card .bb-dash-icon {
+  font-size: 22px;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.bb-home-dashboard .bb-dash-card .bb-dash-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--bb-text);
+  margin-bottom: 4px;
+}
+
+.bb-home-dashboard .bb-dash-card .bb-dash-value {
+  font-size: 11px;
+  color: var(--bb-text-muted);
+  line-height: 1.5;
+}
+
+.bb-home-dashboard .bb-dash-card.bb-dash-wide {
+  grid-column: 1 / -1;
+}
+
+.bb-home-dashboard .bb-dash-header {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.bb-home-dashboard .bb-dash-header .bb-home-avatar {
+  width: 50px;
+  height: 50px;
+}
+
+.bb-home-dashboard .bb-dash-header-info h3 {
+  margin: 0;
+  font-size: 15px;
+  color: var(--bb-text);
+}
+
+.bb-home-dashboard .bb-dash-header-info p {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: var(--bb-text-muted);
+}
+
+/* 5.3 Minimalist（极简） */
+.bb-home-minimalist {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 16px;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.bb-home-minimalist .bb-home-avatar {
+  width: 100px;
+  height: 100px;
+  border-width: 2px;
+}
+
+.bb-home-minimalist .bb-mini-name {
+  font-size: 20px;
+  font-weight: 300;
+  color: var(--bb-text);
+  letter-spacing: 2px;
+}
+
+.bb-home-minimalist .bb-mini-quote {
+  font-size: 13px;
+  color: var(--bb-text-muted);
+  font-style: italic;
+  max-width: 280px;
+  line-height: 1.7;
+  cursor: pointer;
+}
+
+.bb-home-minimalist .bb-mini-divider {
+  width: 40px;
+  height: 1px;
+  background: var(--bb-border);
+}
+
+.bb-home-minimalist .bb-mini-stats {
+  display: flex;
+  gap: 20px;
+  font-size: 11px;
+  color: var(--bb-text-muted);
+}
+
+.bb-home-minimalist .bb-mini-stat-num {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--bb-primary);
+  display: block;
+}
+
+/* 首页背景设置 */
+.bb-home-bg-setting {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--bb-divider);
+}
+
+/*────────────────────────────────────────────
+   6. 语录（骨）Tab
+   ──────────────────────────────────────────── */
+.bb-record-item {
+  background: var(--bb-bg-card);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-md);
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  position: relative;
+  transition: all var(--bb-transition);
+}
+
+.bb-record-item:hover {
+  border-color: var(--bb-border-focus);
+}
+
+.bb-record-item .bb-record-text {
+  font-size: 13px;
+  color: var(--bb-text);
+  line-height: 1.7;
+  margin-bottom: 6px;
+  word-break: break-word;
+}
+
+.bb-record-item .bb-record-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--bb-text-muted);
+}
+
+.bb-record-item .bb-record-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.bb-record-item .bb-record-actions button {
+  padding: 2px 6px;
+  border: none;
+  background: transparent;
+  color: var(--bb-text-muted);
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: var(--bb-radius-sm);
+  transition: all var(--bb-transition);
+}
+
+.bb-record-item .bb-record-actions button:hover {
+  color: var(--bb-primary);background: rgba(201, 160, 220, 0.08);
+}
+
+.bb-record-item .bb-record-actions button.bb-btn-del:hover {
+  color: var(--bb-danger);
+  background: rgba(232, 120, 120, 0.08);
+}
+
+/* 语录海报按钮 */
+.bb-record-item .bb-poster-btn {
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity var(--bb-transition);
+}
+
+.bb-record-item .bb-poster-btn:hover {
+  opacity: 1;
+}
+
+/*────────────────────────────────────────────
+   7. 日记（血）Tab
+   ──────────────────────────────────────────── */
+.bb-diary-item {
+  background: var(--bb-bg-card);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-md);
+  padding: 14px;
+  margin-bottom: 10px;
+  border-left: 3px solid var(--bb-accent);
+}
+
+.bb-diary-item .bb-diary-date {
+  font-size: 11px;
+  color: var(--bb-text-muted);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bb-diary-item .bb-diary-content {
+  font-size: 13px;
+  color: var(--bb-text);
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+
+/*────────────────────────────────────────────
+   8. 总结 / 环境 / 氛围 Tab
+   ──────────────────────────────────────────── */
+.bb-summary-content,
+.bb-weather-content,
+.bb-vibe-content {
+  background: var(--bb-bg-card);
   border: 1px solid var(--bb-border);
   border-radius: var(--bb-radius-md);
   padding: 16px;
-  margin-bottom: 14px;
-  transition: var(--bb-transition);
-}
-
-#bb-ach-list > div:hover {
-  border-color: var(--bb-primary);
-  transform: translateX(4px);
-  box-shadow: var(--bb-shadow-sm);
-}
-
-.bb-achievement-popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  width: 420px;
-  background: linear-gradient(135deg, var(--bb-bg-dark) 0%, var(--bb-primary-dark) 100%);
-  border: 4px solid var(--bb-primary);
-  border-radius: var(--bb-radius-xl);
-  padding: 32px;
-  z-index: 99999;
-  text-align: center;
-  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.9);
-  transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-}
-
-.bb-achievement-popup::before {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  background: linear-gradient(45deg, var(--bb-primary), var(--bb-primary-light), var(--bb-primary));
-  border-radius: var(--bb-radius-xl);
-  z-index: -1;
-  opacity: 0.3;
-  animation: bb-glow 2s ease-in-out infinite;
-}
-
-@keyframes bb-glow {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.6; }
-}
-
-/* ============================================
-   蝴蝶窗口 & 破墙窗口
-   ============================================ */
-
-#bb-bf-win,
-#bb-ooc-win {
-  font-family: var(--bb-font-primary);
+  font-size: 13px;
   color: var(--bb-text);
+  line-height: 1.75;
+  white-space: pre-wrap;min-height: 60px;
+}
+
+.bb-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.bb-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--bb-primary-light);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ────────────────────────────────────────────
+   9. NPC 追踪 Tab
+   ──────────────────────────────────────────── */
+.bb-npc-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.bb-npc-card {
+  background: var(--bb-bg-card);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-md);
+  padding: 12px 14px;
+  transition: all var(--bb-transition);
+}
+
+.bb-npc-card:hover {
+  border-color: var(--bb-border-focus);
+}
+
+.bb-npc-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--bb-accent);
+  margin-bottom: 4px;
+}
+
+.bb-npc-detail {
+  font-size: 12px;
+  color: var(--bb-text-dim);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.bb-npc-add {
+  margin-top: 10px;
+}
+
+.bb-npc-add .bb-row {
+  margin-bottom: 8px;
+}
+
+/* ────────────────────────────────────────────
+   10. 命运之轮 Tab
+   ──────────────────────────────────────────── */
+.bb-fate-current {
+  background: var(--bb-bg-card);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-md);
+  padding: 16px;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.bb-fate-current .bb-fate-event {
+  font-size: 14px;
+  color: var(--bb-text);
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+
+.bb-fate-history {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.bb-fate-history-item {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--bb-divider);
+  font-size: 12px;
+  color: var(--bb-text-dim);
+  line-height: 1.5;
+}
+
+.bb-fate-history-item:last-child {
+  border-bottom: none;
+}
+
+.bb-fate-history-item .bb-fate-time {
+  font-size: 10px;
+  color: var(--bb-text-muted);
+  display: block;
+  margin-top: 2px;
+}
+
+/* ────────────────────────────────────────────
+   11. 平行宇宙 Tab
+   ──────────────────────────────────────────── */
+.bb-parallel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bb-parallel-item {
+  background: var(--bb-bg-card);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-md);
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all var(--bb-transition);
+}
+
+.bb-parallel-item:hover {
+  border-color: var(--bb-primary);
+  background: var(--bb-bg-card-hover);
+}
+
+.bb-parallel-item .bb-parallel-original {
+  font-size: 12px;
+  color: var(--bb-text-muted);
+  margin-bottom: 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px dashed var(--bb-divider);
+  line-height: 1.5;
+}
+
+.bb-parallel-item .bb-parallel-alt {
+  font-size: 13px;
+  color: var(--bb-text);
+  line-height: 1.65;
+}
+
+.bb-parallel-item .bb-parallel-meta {
+  font-size: 10px;
+  color: var(--bb-text-muted);
+  margin-top: 6px;
+}
+
+/* ────────────────────────────────────────────
+   12. 世界频段 Tab
+   ──────────────────────────────────────────── */
+.bb-feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bb-feed-item {
+  background: var(--bb-bg-card);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-md);
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--bb-text);
+  line-height: 1.6;
+  border-left: 3px solid var(--bb-info);
+}
+
+.bb-feed-item .bb-feed-source {
+  font-size: 11px;
+  color: var(--bb-text-muted);
+  margin-top: 4px;
+  font-style: italic;
+}
+
+/* ────────────────────────────────────────────
+   13. 成就 Tab
+   ──────────────────────────────────────────── */
+.bb-achievement-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.bb-achievement-item {
+  background: var(--bb-bg-card);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-md);
+  padding: 12px;
+  text-align: center;
+  transition: all var(--bb-transition);
+  opacity: 0.45;
+}
+
+.bb-achievement-item.unlocked {
+  opacity: 1;
+  border-color: var(--bb-warning);
+  background: rgba(240, 200, 120, 0.06);
+}
+
+.bb-achievement-item .bb-ach-icon {
+  font-size: 26px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.bb-achievement-item .bb-ach-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--bb-text);
+  margin-bottom: 2px;
+}
+
+.bb-achievement-item .bb-ach-desc {
+  font-size: 10px;
+  color: var(--bb-text-muted);
+  line-height: 1.4;
+}
+
+.bb-achievement-item.unlocked .bb-ach-name {
+  color: var(--bb-warning);
+}
+
+/* ────────────────────────────────────────────
+   14. 画廊 Tab
+   ──────────────────────────────────────────── */
+.bb-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.bb-gallery-item {
+  position: relative;
+  border-radius: var(--bb-radius-md);
+  overflow: hidden;
+  border: 1px solid var(--bb-border);
+  aspect-ratio: 1;
+  cursor: pointer;
+  transition: all var(--bb-transition);background: var(--bb-bg-card);
+}
+
+.bb-gallery-item:hover {
+  border-color: var(--bb-primary);
+  transform: scale(1.03);
+  box-shadow: var(--bb-shadow-md);
+}
+
+.bb-gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;display: block;
+}
+
+.bb-gallery-item .bb-gallery-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.7));
+  padding: 20px 8px 8px;
+  opacity: 0;
+  transition: opacity var(--bb-transition);
+}
+
+.bb-gallery-item:hover .bb-gallery-overlay {
+  opacity: 1;
+}
+
+.bb-gallery-item .bb-gallery-overlay .bb-gallery-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.bb-gallery-item .bb-gallery-overlay button {
+  padding: 3px 6px;
+  border: none;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  font-size: 11px;
+  border-radius: var(--bb-radius-sm);
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: background var(--bb-transition);
+}
+
+.bb-gallery-item .bb-gallery-overlay button:hover {
+  background: rgba(255,255,255,0.30);
+}
+
+.bb-gallery-prompt {
+  font-size: 10px;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/*画廊空状态 */
+.bb-gallery-empty {
+  grid-column: 1 / -1;
+}
+
+/* 画廊顶部操作栏 */
+.bb-gallery-toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+/*────────────────────────────────────────────
+   15. 情侣空间 Tab
+   ──────────────────────────────────────────── */
+
+/* 子Tab导航 */
+.bb-couple-nav {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 14px;
+  background: var(--bb-bg-card);
+  border-radius: var(--bb-radius-full);
+  padding: 4px;
+  border: 1px solid var(--bb-border);
+}
+
+.bb-couple-tab {
+  flex: 1;
+  padding: 7px 10px;
+  border: none;
+  border-radius: var(--bb-radius-full);
+  background: transparent;
+  color: var(--bb-text-muted);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all var(--bb-transition);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.bb-couple-tab:hover {
+  color: var(--bb-text);
+}
+
+.bb-couple-tab.active {
+  background: var(--bb-primary-dark);
+  color: var(--bb-text-bright);
+  font-weight: 600;
+}
+
+.bb-couple-pane {
+  display: none;
+}
+
+.bb-couple-pane.active {
+  display: block;
+  animation: bb-fade-in 0.2s ease;
+}
+
+/* 15.1 留言板 */
+.bb-msg-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;margin-bottom: 12px;
+}
+
+.bb-msg-item {
+  background: var(--bb-bg-card);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-md);
+  padding: 10px 14px;
+  position: relative;
+}
+
+.bb-msg-item .bb-msg-from {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--bb-accent);
+  margin-bottom: 4px;
+}
+
+.bb-msg-item .bb-msg-text {
+  font-size: 13px;
+  color: var(--bb-text);
+  line-height: 1.65;
+}
+
+.bb-msg-item .bb-msg-time {
+  font-size: 10px;
+  color: var(--bb-text-muted);
+  margin-top: 4px;
+}
+
+.bb-msg-item .bb-msg-del {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border: none;
+  background: transparent;
+  color: var(--bb-text-muted);
+  cursor: pointer;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity var(--bb-transition);
+}
+
+.bb-msg-item:hover .bb-msg-del {
+  opacity: 1;
+}
+
+.bb-msg-item .bb-msg-del:hover {
+  color: var(--bb-danger);
+}
+
+.bb-msg-input-area {
+  display: flex;
+  gap: 8px;
+}
+
+.bb-msg-input-area .bb-input {
+  flex: 1;
+}
+
+/*15.2 情书 */
+.bb-letter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.bb-letter-card {
+  background: var(--bb-bg-card);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-md);
+  padding: 14px;
+  position: relative;
+  transition: all var(--bb-transition);
+}
+
+.bb-letter-card:hover {
+  border-color: var(--bb-accent);
+}
+
+.bb-letter-card .bb-letter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.bb-letter-card .bb-letter-from-to {
+  font-size: 12px;
+  color: var(--bb-accent);
+  font-weight: 600;
+}
+
+.bb-letter-card .bb-letter-time {
+  font-size: 10px;
+  color: var(--bb-text-muted);
+}
+
+.bb-letter-card .bb-letter-content {
+  font-size: 13px;
+  color: var(--bb-text);
+  line-height: 1.75;
+  white-space: pre-wrap;padding: 10px;background: var(--bb-bg-deep);
+  border-radius: var(--bb-radius-sm);border-left: 3px solid var(--bb-accent);
+  margin-bottom: 8px;
+}
+
+.bb-letter-card .bb-letter-reply {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--bb-divider);
+}
+
+.bb-letter-card .bb-letter-reply-label {
+  font-size: 11px;
+  color: var(--bb-text-muted);
+  margin-bottom: 4px;
+  font-style: italic;
+}
+
+.bb-letter-card .bb-letter-reply-content {
+  font-size: 13px;
+  color: var(--bb-text-dim);
+  line-height: 1.7;
+  white-space: pre-wrap;
+  padding: 8px 10px;
+  background: rgba(201, 160, 220, 0.05);
+  border-radius: var(--bb-radius-sm);border-left: 3px solid var(--bb-primary);
+}
+
+.bb-letter-card .bb-letter-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+/* 15.3 纪念日 */
+.bb-anni-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.bb-anni-card {
+  background: var(--bb-bg-card);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-md);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all var(--bb-transition);
+}
+
+.bb-anni-card:hover {
+  border-color: var(--bb-accent);
+}
+
+.bb-anni-card .bb-anni-info {
+  flex: 1;
+}
+
+.bb-anni-card .bb-anni-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--bb-text);
+  margin-bottom: 2px;
+}
+
+.bb-anni-card .bb-anni-date {
+  font-size: 11px;
+  color: var(--bb-text-muted);
+}
+
+.bb-anni-card .bb-anni-days {
+  text-align: right;
+}
+
+.bb-anni-card .bb-anni-days-num {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--bb-accent);
+  line-height: 1;
+}
+
+.bb-anni-card .bb-anni-days-label {
+  font-size: 10px;
+  color: var(--bb-text-muted);
+}
+
+.bb-anni-card .bb-anni-del {
+  margin-left: 10px;
+  border: none;
+  background: transparent;
+  color: var(--bb-text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  transition: color var(--bb-transition);
+}
+
+.bb-anni-card .bb-anni-del:hover {
+  color: var(--bb-danger);
+}
+
+.bb-anni-add {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.bb-anni-add input[type="date"] {
+  padding: 6px 8px;
+  background: var(--bb-bg-input);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-sm);
+  color: var(--bb-text);
+  font-size: 12px;
+}
+
+.bb-anni-add input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.7);
+}
+
+/* 15.4 照片墙 */
+.bb-photo-wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.bb-photo-item {
+  position: relative;
+  border-radius: var(--bb-radius-md);
+  overflow: hidden;
+  border: 1px solid var(--bb-border);
+  aspect-ratio: 1;
+  cursor: pointer;
+  transition: all var(--bb-transition);background: var(--bb-bg-card);
+}
+
+.bb-photo-item:hover {
+  border-color: var(--bb-accent);
+  transform: scale(1.04);
+}
+
+.bb-photo-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.bb-photo-item .bb-photo-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.65));
+  padding: 16px 6px 6px;
+  font-size: 10px;
+  color: rgba(255,255,255,0.85);
+  opacity: 0;
+  transition: opacity var(--bb-transition);
+}
+
+.bb-photo-item:hover .bb-photo-caption {
+  opacity: 1;
+}
+
+.bb-photo-item .bb-photo-del {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--bb-radius-full);
+  border: none;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--bb-transition);
+}
+
+.bb-photo-item:hover .bb-photo-del {
+  opacity: 1;
+}
+
+.bb-photo-item .bb-photo-del:hover {
+  background: var(--bb-danger);
+}
+
+.bb-photo-toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+/* ────────────────────────────────────────────
+   16. 破墙聊天室 (Burning Star Chat)
+   ──────────────────────────────────────────── */
+#bb-ooc-win {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 90%;
-  max-width: 650px;
-  height: 75%;
-  max-height: 600px;
-  background: var(--bb-bg-main);
-  border: 3px solid var(--bb-primary);
+  width: min(460px, 94vw);
+  height: min(600px, 85vh);
+  background: var(--bb-bg-panel);
+  border: 1px solid var(--bb-border);
   border-radius: var(--bb-radius-lg);
   box-shadow: var(--bb-shadow-lg);
-  z-index: 10001;
+  z-index: var(--bb-z-overlay);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#bb-ooc-win.bb-ooc-open {
+  display: flex;animation: bb-panel-enter 0.3s ease-out;
+}
+
+/*聊天室头部 */
+.bb-ooc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--bb-divider);
+  background: linear-gradient(135deg, rgba(201, 160, 220, 0.08), rgba(240, 168, 200, 0.05));
+  flex-shrink: 0;
+}
+
+.bb-ooc-header h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--bb-primary-light);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bb-ooc-header .bb-ooc-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.bb-ooc-header button {
+  padding: 5px 8px;
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-sm);
+  background: transparent;
+  color: var(--bb-text-dim);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all var(--bb-transition);
+}
+
+.bb-ooc-header button:hover {
+  border-color: var(--bb-primary);
+  color: var(--bb-primary-light);
+}
+
+/* 聊天消息区*/
+.bb-ooc-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
-  animation: bb-panel-show 0.3s ease;
+  gap: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--bb-bg-card-hover) transparent;
 }
 
-.bb-bf-header,
-.bb-ooc-header {
-  background: linear-gradient(135deg, var(--bb-bg-dark) 0%, var(--bb-primary-dark) 100%);
+.bb-ooc-messages::-webkit-scrollbar {
+  width: 4px;
+}
+
+.bb-ooc-messages::-webkit-scrollbar-thumb {
+  background: var(--bb-bg-card-hover);
+  border-radius: 2px;
+}
+
+/* 聊天气泡 */
+.bb-chat-bubble {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: var(--bb-radius-md);
+  font-size: 13px;
+  line-height: 1.7;
+  word-break: break-word;
+  position: relative;
+}
+
+.bb-chat-bubble p {
+  margin: 0 0 6px 0;
+}
+
+.bb-chat-bubble p:last-child {
+  margin-bottom: 0;
+}
+
+/* 用户气泡 */
+.bb-bubble-user {
+  align-self: flex-end;
+  background: linear-gradient(135deg, var(--bb-primary-dark), rgba(201, 160, 220, 0.35));
   color: var(--bb-text-bright);
-  padding: 14px 18px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 2px solid var(--bb-primary);
-  font-weight: bold;
-  font-size: 16px;
+  border-bottom-right-radius: 4px;
 }
 
-#bb-bf-close,
-#bb-ooc-close {
-  background: none;
-  border: none;
-  color: var(--bb-text-bright);
-  font-size: 20px;
-  cursor: pointer;
-  transition: var(--bb-transition);
-  padding: 4px 8px;
+/* AI气泡 */
+.bb-bubble-ai {
+  align-self: flex-start;
+  background: var(--bb-bg-card);
+  border: 1px solid var(--bb-border);
+  color: var(--bb-text);
+  border-bottom-left-radius: 4px;
 }
 
-#bb-bf-close:hover,
-#bb-ooc-close:hover {
+/* 系统气泡 */
+.bb-bubble-system {
+  align-self: center;
+  background: transparent;
+  color: var(--bb-text-muted);
+  font-size: 11px;
+  text-align: center;
+  padding: 4px 12px;
+  max-width: 100%;
+}
+
+/* 气泡内的HTML渲染 */
+.bb-chat-bubble strong {
   color: var(--bb-primary-light);
-  transform: rotate(90deg);
+  font-weight: 600;
 }
 
-#bb-bf-origin {
-  background: var(--bb-bg-secondary);
-  padding: 14px;
-  border-bottom: 1px solid var(--bb-border);
+.bb-chat-bubble em {
+  font-style: italic;
+  color: var(--bb-accent-light);
+}
+
+.bb-chat-bubble code {
+  background: rgba(0,0,0,0.25);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family:'Consolas', monospace;font-size: 12px;
+}
+
+.bb-chat-bubble a {
+  color: var(--bb-info);
+  text-decoration: underline;
+}
+
+/* 气泡内表情包 */
+.bb-chat-bubble .bb-sticker-inline {
+  display: inline-block;
+  max-width: 100px;
+  max-height: 100px;
+  border-radius: var(--bb-radius-sm);
+  vertical-align: middle;
+  margin: 2px;
+}
+
+/* 气泡时间戳 */
+.bb-chat-bubble .bb-bubble-time {
+  font-size: 10px;
+  color: rgba(255,255,255,0.4);
+  margin-top: 4px;
+  text-align: right;
+}
+
+.bb-bubble-ai .bb-bubble-time {
+  color: var(--bb-text-muted);
+}
+
+/*聊天室空状态 */
+.bb-ooc-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 30px;
   color: var(--bb-text-muted);
   font-size: 13px;
-  max-height: 90px;
-  overflow-y: auto;
+  line-height: 1.8;
+}
+
+.bb-ooc-empty-icon {
+  font-size: 40px;
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.4;
+}
+
+/* 聊天输入区 */
+.bb-ooc-input-area {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--bb-divider);
+  background: var(--bb-bg-deep);
+  flex-shrink: 0;
+}
+
+.bb-ooc-input-area textarea {
+  flex: 1;
+  padding: 8px 10px;
+  background: var(--bb-bg-input);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-md);
+  color: var(--bb-text);
+  font-size: 13px;
+  resize: none;
+  max-height: 100px;
+  min-height: 38px;
+  font-family: inherit;
   line-height: 1.5;
+  transition: border-color var(--bb-transition);
 }
 
-#bb-bf-chat,
-#bb-ooc-chat {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
-  background: var(--bb-bg-main);
-}
-
-#bb-bf-chat::-webkit-scrollbar,
-#bb-ooc-chat::-webkit-scrollbar {
-  width: 8px;
-}
-
-#bb-bf-chat::-webkit-scrollbar-track,
-#bb-ooc-chat::-webkit-scrollbar-track {
-  background: var(--bb-bg-dark);
-}
-
-#bb-bf-chat::-webkit-scrollbar-thumb,
-#bb-ooc-chat::-webkit-scrollbar-thumb {
-  background: var(--bb-primary);
-  border-radius: 4px;
-}
-
-#bb-bf-input,
-#bb-ooc-input {
-  flex: 1;
-  padding: 10px 14px;
-  background: var(--bb-bg-card);
-  border: 1px solid var(--bb-border-light);
-  color: var(--bb-text);
-  border-radius: var(--bb-radius-sm);
-  font-family: var(--bb-font-primary);
-  font-size: 14px;
+.bb-ooc-input-area textarea:focus {
+  border-color: var(--bb-border-focus);
   outline: none;
-  transition: var(--bb-transition);
 }
 
-#bb-bf-input:focus,
-#bb-ooc-input:focus {
-  border-color: var(--bb-primary);
-  box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.2);
+.bb-ooc-input-btns {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
 }
 
-#bb-bf-send,
-#bb-ooc-send {
-  padding: 10px 20px;
-  background: var(--bb-primary);
-  color: var(--bb-text-bright);
-  border: none;
-  border-radius: var(--bb-radius-sm);
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 14px;
-  transition: var(--bb-transition);
-}
-
-#bb-bf-send:hover,
-#bb-ooc-send:hover {
-  background: var(--bb-primary-light);
-  transform: scale(1.05);
-}
-
-#bb-bf-export {
-  padding: 10px 14px;
+.bb-ooc-input-btns button {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--bb-radius-md);
+  border: 1px solid var(--bb-border);
   background: var(--bb-bg-card);
-  color: var(--bb-text);
-  border: 1px solid var(--bb-border-light);
-  border-radius: var(--bb-radius-sm);
+  color: var(--bb-text-dim);
+  font-size: 16px;
   cursor: pointer;
-  transition: var(--bb-transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--bb-transition);
 }
 
-#bb-bf-export:hover {
-  background: var(--bb-primary);
+.bb-ooc-input-btns button:hover {
   border-color: var(--bb-primary);
-  color: var(--bb-text-bright);
+  color: var(--bb-primary-light);
+  background: var(--bb-bg-card-hover);
 }
 
-/* 气泡样式 */
-#bb-bf-chat > div,
-#bb-ooc-chat > div,
-#bb-ooc-preview > div {
-  animation: bb-bubble-in 0.3s ease;
+.bb-ooc-send-btn {
+  background: var(--bb-primary-dark) !important;
+  border-color: var(--bb-primary) !important;
+  color: var(--bb-text-bright) !important;
 }
 
-@keyframes bb-bubble-in {
+.bb-ooc-send-btn:hover {
+  background: var(--bb-primary) !important;
+}
+
+/* ────────────────────────────────────────────
+   17. 蝴蝶窗口
+   ──────────────────────────────────────────── */
+#bb-bf-win {
+  position: fixed;
+  bottom: 140px;
+  right: 20px;
+  width: 320px;
+  max-height: 400px;
+  background: var(--bb-bg-panel);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-lg);
+  box-shadow: var(--bb-shadow-lg);
+  z-index: var(--bb-z-overlay);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#bb-bf-win.bb-bf-open {
+  display: flex;
+  animation: bb-slide-up 0.3s ease-out;
+}
+
+@keyframes bb-slide-up {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -869,1193 +2290,1186 @@
   }
 }
 
-/* ============================================
-   消息按钮（🌟🦋）
-   ============================================ */
-
-.bb-msg-btns {
-  display: inline-flex;
-  gap: 4px;
-  margin-left: 6px;
-  font-size: 16px;
-  vertical-align: middle;
+.bb-bf-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--bb-divider);
+  flex-shrink: 0;
 }
 
-.bb-btn-star,
-.bb-btn-butterfly {
-  cursor: pointer;
-  transition: var(--bb-transition);
-  display: inline-block;
-  padding: 2px;
-}
-
-.bb-btn-star:hover {
-  transform: scale(1.3) rotate(15deg);
-  filter: brightness(1.5) drop-shadow(0 0 8px gold);
-}
-
-.bb-btn-butterfly:hover {
-  transform: scale(1.3);
-  filter: brightness(1.3) drop-shadow(0 0 8px purple);
-}
-
-/* ============================================
-   设置面板样式
-   ============================================ */
-
-#bb-extension-settings {
-  font-family: var(--bb-font-primary);
-}
-
-#bb-extension-settings .inline-drawer-content {
-  padding: 16px;
-  background: var(--bb-bg-main);
-  border-radius: var(--bb-radius-md);
-}
-
-#bb-extension-settings h4 {
-  color: var(--bb-primary);
-  font-family: var(--bb-font-title);
-  font-weight: 700;
-  margin: 12px 0 8px;
-  padding-bottom: 6px;
-  border-bottom: 2px solid var(--bb-border);
-  letter-spacing: 0.5px;
-}
-
-#bb-extension-settings label {
-  color: var(--bb-text);
+.bb-bf-header h4 {
+  margin: 0;
   font-size: 13px;
+  color: var(--bb-primary-light);
+}
+
+.bb-bf-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--bb-text);
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.bb-bf-footer {
+  padding: 8px 14px;
+  border-top: 1px solid var(--bb-divider);
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* ────────────────────────────────────────────
+   18. 表情包系统
+   ──────────────────────────────────────────── */
+
+/* 表情包选择器（弹出面板） */
+.bb-sticker-picker {
+  position: fixed;
+  z-index: var(--bb-z-modal);
+  width: min(340px, 90vw);
+  max-height: 360px;
+  background: var(--bb-bg-panel);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-lg);
+  box-shadow: var(--bb-shadow-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;animation: bb-fade-in 0.2s ease;
+}
+
+.bb-sticker-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--bb-divider);flex-shrink: 0;
+}
+
+.bb-sticker-picker-header h4 {
+  margin: 0;
+  font-size: 13px;
+  color: var(--bb-primary-light);
+}
+
+.bb-sticker-picker-header button {
+  border: none;
+  background: transparent;
+  color: var(--bb-text-dim);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* 表情包分类Tab */
+.bb-sticker-pack-tabs {
+  display: flex;
+  overflow-x: auto;
+  gap: 2px;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--bb-divider);flex-shrink: 0;scrollbar-width: none;
+}
+
+.bb-sticker-pack-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.bb-sticker-pack-tab {
+  padding: 4px 10px;
+  border: none;
+  border-radius: var(--bb-radius-full);
+  background: transparent;
+  color: var(--bb-text-muted);
+  font-size: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--bb-transition);
+}
+
+.bb-sticker-pack-tab:hover {
+  color: var(--bb-text);
+}
+
+.bb-sticker-pack-tab.active {
+  background: var(--bb-primary-dark);
+  color: var(--bb-text-bright);
+}
+
+/* 表情包网格 */
+.bb-sticker-grid {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  gap: 6px;
+  align-content: start;
+}
+
+.bb-sticker-item {
+  aspect-ratio: 1;
+  border-radius: var(--bb-radius-sm);
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all var(--bb-transition);
+  background: var(--bb-bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bb-sticker-item:hover {
+  border-color: var(--bb-primary);
+  transform: scale(1.08);
+}
+
+.bb-sticker-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  padding: 4px;
+}
+
+/* 表情包管理器（模态） */
+.bb-sticker-manager {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.bb-sticker-manage-pack {
+  margin-bottom: 16px;
+}
+
+.bb-sticker-manage-pack-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;padding-bottom: 6px;
+  border-bottom: 1px solid var(--bb-divider);
+}
+
+.bb-sticker-manage-pack-header h5 {
+  margin: 0;
+  font-size: 13px;
+  color: var(--bb-primary-light);font-weight: 600;
+}
+
+.bb-sticker-manage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 6px;
+}
+
+.bb-sticker-manage-item {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: var(--bb-radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--bb-border);
+  background: var(--bb-bg-card);
+}
+
+.bb-sticker-manage-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;display: block;
+  padding: 4px;
+}
+
+.bb-sticker-manage-item .bb-sticker-del {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--bb-radius-full);
+  border: none;
+  background: rgba(232, 120, 120, 0.85);
+  color: #fff;
+  font-size: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--bb-transition);
+}
+
+.bb-sticker-manage-item:hover .bb-sticker-del {
+  opacity: 1;
+}
+
+.bb-sticker-add-area {
+  margin-top: 10px;
+  padding: 10px;
+  background: var(--bb-bg-deep);
+  border-radius: var(--bb-radius-md);
+  border: 1px dashed var(--bb-border);
+}
+
+.bb-sticker-add-area .bb-row {
+  margin-bottom: 6px;
+}
+
+/*────────────────────────────────────────────
+   19. 模态窗口（通用）
+   ──────────────────────────────────────────── */
+.bb-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--bb-bg-overlay);
+  z-index: var(--bb-z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: bb-overlay-in 0.2s ease;
+}
+
+@keyframes bb-overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.bb-modal-content {
+  background: var(--bb-bg-panel);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-lg);
+  box-shadow: var(--bb-shadow-lg);
+  width: min(480px, 94vw);
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 20px;
+  animation: bb-modal-in 0.25s ease-out;
+}
+
+@keyframes bb-modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.bb-modal-content h3 {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--bb-primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bb-modal-content h3 button {
+  border: none;
+  background: transparent;
+  color: var(--bb-text-dim);
+  font-size: 18px;
+  cursor: pointer;
+  transition: color var(--bb-transition);
+}
+
+.bb-modal-content h3 button:hover {
+  color: var(--bb-danger);
+}
+
+.bb-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--bb-divider);
+}
+
+/*头像选择模态 */
+.bb-avatar-modal .bb-avatar-preview {
+  width: 100px;
+  height: 100px;
+  border-radius: var(--bb-radius-full);
+  object-fit: cover;
+  border: 3px solid var(--bb-primary);
+  display: block;
+  margin: 0 auto 16px;
+  background: var(--bb-bg-card);
+}
+
+.bb-avatar-modal .bb-avatar-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/*────────────────────────────────────────────
+   20. 海报编辑器 / 预览
+   ──────────────────────────────────────────── */
+.bb-poster-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.bb-poster-preview-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  border-radius: var(--bb-radius-md);
+  overflow: hidden;
+  border: 1px solid var(--bb-border);
+  background: var(--bb-bg-card);
+}
+
+.bb-poster-preview-wrap canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.bb-poster-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bb-poster-controls .bb-field {
+  margin-bottom: 0;
+}
+
+.bb-poster-bg-presets {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.bb-poster-bg-preset {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--bb-radius-sm);
+  border: 2px solid var(--bb-border);
+  cursor: pointer;
+  overflow: hidden;
+  transition: all var(--bb-transition);background-size: cover;
+  background-position: center;
+}
+
+.bb-poster-bg-preset:hover {
+  border-color: var(--bb-primary);
+  transform: scale(1.08);
+}
+
+.bb-poster-bg-preset.active {
+  border-color: var(--bb-primary);
+  box-shadow: 0 0 8px rgba(201, 160, 220, 0.40);
+}
+
+/* ────────────────────────────────────────────
+   21. 成就解锁弹窗
+   ──────────────────────────────────────────── */
+.bb-achievement-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  z-index: var(--bb-z-achievement);
+  background: linear-gradient(135deg, var(--bb-bg-panel), var(--bb-bg-card));
+  border: 2px solid var(--bb-warning);
+  border-radius: var(--bb-radius-xl);
+  padding: 30px 40px;
+  text-align: center;
+  box-shadow: 0 0 60px rgba(240, 200, 120, 0.30), var(--bb-shadow-lg);
+  opacity: 0;
+  animation: bb-achievement-in 0.5s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes bb-achievement-in {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.bb-achievement-popup .bb-ach-popup-icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 10px;
+  animation: bb-ach-bounce 0.6s ease 0.3s both;
+}
+
+@keyframes bb-ach-bounce {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+.bb-achievement-popup .bb-ach-popup-label {
+  font-size: 11px;
+  color: var(--bb-warning);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+
+.bb-achievement-popup .bb-ach-popup-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--bb-text-bright);
+  margin-bottom: 6px;
+}
+
+.bb-achievement-popup .bb-ach-popup-desc {
+  font-size: 13px;
+  color: var(--bb-text-dim);
+}
+
+/*成就弹窗淡出*/
+.bb-achievement-popup.bb-ach-out {
+  animation: bb-achievement-out 0.4s ease-in forwards;
+}
+
+@keyframes bb-achievement-out {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8) translateY(-20px);
+  }
+}
+
+/* ────────────────────────────────────────────
+   22. 消息按钮（🌟🦋）
+   ──────────────────────────────────────────── */
+.bb-msg-btn {
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 4px;
+  border: none;
+  background: transparent;
+  transition: all var(--bb-transition);
+  opacity: 0.6;
+  display: inline-flex;
+  align-items: center;
+}
+
+.bb-msg-btn:hover {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+/* ────────────────────────────────────────────
+   23. 导出面板
+   ──────────────────────────────────────────── */
+.bb-export-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bb-export-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: var(--bb-bg-card);
+  border: 1px solid var(--bb-border);
+  border-radius: var(--bb-radius-md);
+  cursor: pointer;
+  transition: all var(--bb-transition);
+}
+
+.bb-export-option:hover {
+  border-color: var(--bb-primary);
+  background: var(--bb-bg-card-hover);
+}
+
+.bb-export-option .bb-export-label {
+  font-size: 13px;
+  color: var(--bb-text);
   font-weight: 500;
 }
 
-#bb-extension-settings input[type="text"],
-#bb-extension-settings input[type="password"],
-#bb-extension-settings input[type="number"],
-#bb-extension-settings select,
-#bb-extension-settings textarea {
-  background: var(--bb-bg-card);
-  border: 1px solid var(--bb-border-light);
-  color: var(--bb-text);
-  border-radius: var(--bb-radius-sm);
-  padding: 8px 12px;
-  font-family: var(--bb-font-primary);
-  transition: var(--bb-transition);
-}
-
-#bb-extension-settings input:focus,
-#bb-extension-settings select:focus,
-#bb-extension-settings textarea:focus {
-  border-color: var(--bb-primary);
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.2);
-}
-
-#bb-extension-settings textarea {
-  font-family: var(--bb-font-mono);
-  font-size: 12px;
-  line-height: 1.5;
-  resize: vertical;
-}
-
-#bb-extension-settings .menu_button {
-  background: var(--bb-primary);
-  color: var(--bb-text-bright);
-  border: none;
-  border-radius: var(--bb-radius-sm);
-  padding: 8px 16px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: var(--bb-transition);
-  font-family: var(--bb-font-primary);
-}
-
-#bb-extension-settings .menu_button:hover {
-  background: var(--bb-primary-light);
-  transform: translateY(-2px);
-  box-shadow: var(--bb-shadow-sm);
-}
-
-#bb-extension-settings .menu_button:active {
-  transform: translateY(0);
-}
-
-#bb-api-status {
-  padding: 8px 12px;
-  border-radius: var(--bb-radius-sm);
-  font-size: 13px;
-  line-height: 1.5;
-  background: var(--bb-bg-secondary);
-  border: 1px solid var(--bb-border);
-}
-
-#bb-extension-settings hr {
-  border: none;
-  border-top: 1px solid var(--bb-border);
-  margin: 16px 0;
-}
-
-#bb-extension-settings small {
-  color: var(--bb-text-muted);
+.bb-export-option .bb-export-desc {
   font-size: 11px;
-  font-style: italic;
+  color: var(--bb-text-muted);
+  margin-top: 2px;
 }
 
-#bb-extension-settings code {
-  background: var(--bb-bg-dark);
+.bb-export-option .bb-export-icon {
+  font-size: 20px;
+  opacity: 0.6;
+}
+/* ────────────────────────────────────────────
+   24. 移动端导航栏按钮
+   ──────────────────────────────────────────── */
+#bb-nav-button {
+  /* 完全独立样式，不使用SillyTavern class */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: var(--bb-radius-sm);
+  background: transparent;
+  color: var(--bb-primary);
+  font-size: 20px;
+  cursor: pointer;
+  transition: all var(--bb-transition);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  padding: 0;
+  margin: 0 2px;
+  flex-shrink: 0;position: relative;
+  z-index: 1;
+}
+
+#bb-nav-button:hover,
+#bb-nav-button:active {
+  background: rgba(201, 160, 220, 0.12);
   color: var(--bb-primary-light);
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-family: var(--bb-font-mono);
-  font-size: 12px;
 }
 
-/* ============================================
-   响应式布局
-   ============================================ */
+/* 防止触发SillyTavern的drawer */
+#bb-nav-button * {
+  pointer-events: none;
+}
 
+/* ────────────────────────────────────────────
+   25. 移动端悬浮球（inline style为主，此处补充动画）
+   ──────────────────────────────────────────── */
+.bb-mobile-float {
+  animation: bb-float-pulse 3s ease-in-out infinite;-webkit-tap-highlight-color: transparent;
+}
+
+.bb-mobile-float.bb-dragging {
+  animation: none;
+  transition: none !important;
+}
+
+/*────────────────────────────────────────────
+   26. 版权水印
+   ──────────────────────────────────────────── */
+.bb-watermark {
+  position: fixed;
+  bottom: 8px;
+  right: 12px;
+  font-size: 9px;
+  color: var(--bb-text-muted);
+  opacity: 0.25;
+  pointer-events: none;
+  z-index: 1;letter-spacing: 0.5px;
+  font-family: 'Consolas', monospace;
+}
+
+/* ────────────────────────────────────────────
+   27. 图片查看器（点击放大）
+   ──────────────────────────────────────────── */
+.bb-img-viewer {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.90);
+  z-index: var(--bb-z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+  animation: bb-overlay-in 0.2s ease;
+}
+
+.bb-img-viewer img {
+  max-width: 92vw;
+  max-height: 92vh;
+  object-fit: contain;
+  border-radius: var(--bb-radius-md);
+  box-shadow: var(--bb-shadow-lg);
+}
+
+/* ────────────────────────────────────────────
+   28.滚动条全局美化（面板内部）
+   ──────────────────────────────────────────── */
+#bb-main-panel *::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+#bb-main-panel *::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#bb-main-panel *::-webkit-scrollbar-thumb {
+  background: var(--bb-bg-card-hover);
+  border-radius:2px;
+}
+
+#bb-main-panel *::-webkit-scrollbar-thumb:hover {
+  background: var(--bb-text-muted);
+}
+
+/* ────────────────────────────────────────────
+   29. 工具类
+   ──────────────────────────────────────────── */
+.bb-hidden {
+  display: none !important;
+}
+
+.bb-text-center {
+  text-align: center;
+}
+
+.bb-text-right {
+  text-align: right;
+}
+
+.bb-mt-sm { margin-top: 6px; }
+.bb-mt-md { margin-top: 12px; }
+.bb-mt-lg { margin-top: 20px; }
+.bb-mb-sm { margin-bottom: 6px; }
+.bb-mb-md { margin-bottom: 12px; }
+.bb-mb-lg { margin-bottom: 20px; }
+.bb-p-sm { padding: 6px; }
+.bb-p-md { padding: 12px; }
+
+.bb-flex { display: flex; }
+.bb-flex-col { flex-direction: column; }
+.bb-flex-center { align-items: center; justify-content: center; }
+.bb-flex-between { justify-content: space-between; }
+.bb-flex-wrap { flex-wrap: wrap; }
+.bb-gap-sm { gap: 6px; }
+.bb-gap-md { gap: 10px; }
+.bb-flex-1 { flex: 1; }
+
+.bb-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bb-no-select {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ────────────────────────────────────────────
+   30. 响应式设计
+   ──────────────────────────────────────────── */
+
+/* ── 平板 & 小桌面 ── */
 @media (max-width: 768px) {
-  #bb-main-panel {
-    width: 95%;
-    height: 90%;
-    max-height: none;
+  :root {
+    --bb-panel-width: 100vw;
+    --bb-panel-max-height: 100vh;
   }
 
-  .bb-header > div:first-child {
-    font-size: 16px;
+  #bb-main-panel {
+    top: 0;
+    left: 0;
+    transform: none;
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+    border: none;
+  }
+
+  #bb-main-panel.bb-panel-open {
+    animation: none;
+  }
+
+  .bb-panel-header {
+    padding: 12px 14px 8px;
+  }
+
+  .bb-panel-header h2 {
+    font-size: 15px;
+  }
+
+  /* Tab横向滚动 */
+  .bb-nav {
+    padding: 4px 8px;
+    gap: 1px;
   }
 
   .bb-tab {
-    padding: 10px 14px;
-    font-size: 13px;
+    padding: 6px 10px;
+    font-size: 11px;
   }
 
-  .bb-content {
+  .bb-tab-content {
     padding: 12px;
+  }
+
+  /* 首页适配 */
+  .bb-home-together .bb-home-bubbles {
+    flex-direction: column;
+  }
+
+  .bb-home-dashboard {
+    grid-template-columns: 1fr1fr;
+    gap: 8px;
+  }
+
+  .bb-home-avatar {
+    width: 64px;
+    height: 64px;
+  }
+
+  /* 破墙聊天室全屏 */
+  #bb-ooc-win {
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    transform: none;
+    border-radius: 0;
+    border: none;
+  }
+
+  /* 蝴蝶窗口适配 */
+  #bb-bf-win {
+    right: 10px;
+    bottom: 120px;
+    width: calc(100vw - 20px);
+  }
+
+  /* 画廊 */
+  .bb-gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  /* 情侣空间照片墙 */
+  .bb-photo-wall {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+
+  /* 成就网格 */
+  .bb-achievement-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  /* 模态窗口 */
+  .bb-modal-content {
+    width: 94vw;
+    max-height: 90vh;
+    padding: 16px;
+  }
+
+  /* 表情包选择器 */
+  .bb-sticker-picker {
+    width: min(320px, 92vw);
+  }
+
+  .bb-sticker-grid {
+    grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+  }
+
+  /* 悬浮球位置 */
+  #bb-floating-btn {
+    bottom: 70px;
+    right: 14px;
+    width: 46px;
+    height: 46px;
+    font-size: 20px;
+  }
+
+  /* 海报预览 */
+  .bb-poster-preview-wrap {
+    max-width: 100%;}
+}
+
+/* ── 手机竖屏 ── */
+@media (max-width: 480px) {
+  .bb-panel-header h2 {
+    font-size: 14px;
+  }
+
+  .bb-panel-header h2 .bb-version {
+    display: none;
+  }
+
+  .bb-tab {
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+
+  .bb-tab-content {
+    padding: 10px;
+  }
+
+  /* 首页 */
+  .bb-home-together .bb-home-avatars {
+    gap: 14px;
   }
 
   .bb-home-avatar {
     width: 56px;
     height: 56px;
-    font-size: 28px;
   }
 
-  #bb-home-user-name,
-  #bb-home-char-name {
-    font-size: 15px;
+  .bb-home-link-emoji {
+    font-size: 22px;
   }
 
-  #bb-home-link-emoji {
-    font-size: 36px;
-  }
-
-  #bb-home-msg-count,
-  #bb-home-time-count {
-    font-size: 24px;
-  }
-
-  #bb-home-radio-text {
-    font-size: 16px;
-  }
-
-  .bb-sm-btn {
-    padding: 6px 10px;
-    font-size: 12px;
-  }
-
-  .bb-big-btn {
-    padding: 12px 24px;
+  .bb-home-together .bb-home-names h3 {
     font-size: 14px;
   }
 
-  #bb-bf-win,
-  #bb-ooc-win {
-    width: 95%;
-    height: 85%;
+  .bb-home-dashboard {
+    grid-template-columns: 1fr;
   }
 
-  .bb-achievement-popup {
-    width: 90%;
-    padding: 24px;
+  .bb-home-dashboard .bb-dash-card.bb-dash-wide {
+    grid-column: 1;
   }
 
-  .bb-achievement-popup > div:first-child {
-    font-size: 48px;
-  }
-}
-
-@media (max-width: 480px) {
-  #bb-float-btn {
-    width: 48px;
-    height: 48px;
-    font-size: 24px;
-    bottom: 16px;
-    right: 16px;
+  .bb-home-minimalist .bb-home-avatar {
+    width: 80px;
+    height: 80px;
   }
 
-  .bb-header {
-    padding: 10px 14px;
+  .bb-home-minimalist .bb-mini-name {
+    font-size: 17px;
   }
 
-  .bb-header > div:first-child {
-    font-size: 14px;
-  }
-
-  #bb-close-btn {
-    font-size: 18px;
-  }
-
-  .bb-tab {
-    padding: 8px 12px;
-    font-size: 12px;
-  }
-
-  .bb-content {
+  /*卡片 */
+  .bb-card {
     padding: 10px;
   }
 
-  .bb-home-card {
-    padding: 16px;
+  /* 按钮 */
+  .bb-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  /* 情侣空间 */
+  .bb-couple-nav {
+    padding: 3px;
+  }
+
+  .bb-couple-tab {
+    padding: 5px 6px;
+    font-size: 11px;
+  }
+
+  .bb-anni-card .bb-anni-days-num {
+    font-size: 18px;
+  }
+
+  /* 画廊 */
+  .bb-gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 6px;
+  }
+
+  /* 照片墙 */
+  .bb-photo-wall {
+    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+    gap: 6px;
+  }
+
+  /* 成就 */
+  .bb-achievement-grid {
+    gap: 4px;
+  }
+
+  .bb-achievement-item {
+    padding: 8px;
+  }
+
+  .bb-achievement-item .bb-ach-icon {
+    font-size: 22px;
+  }
+
+  .bb-achievement-item .bb-ach-name {
+    font-size: 11px;
+  }
+
+  .bb-achievement-item .bb-ach-desc {
+    font-size: 9px;
+  }
+
+  /*聊天气泡 */
+  .bb-chat-bubble {
+    max-width: 90%;padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  /*聊天输入区 */
+  .bb-ooc-input-area {
+    padding: 8px 10px;
+  }
+
+  .bb-ooc-input-btns button {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+
+  /* 成就弹窗 */
+  .bb-achievement-popup {
+    padding: 24px 28px;
+  }
+
+  .bb-achievement-popup .bb-ach-popup-icon {
+    font-size: 40px;
+  }
+
+  .bb-achievement-popup .bb-ach-popup-name {
+    font-size: 16px;
+  }
+
+  /* 表情包 */
+  .bb-sticker-picker {
+    width: 92vw;
+    max-height: 320px;
+  }
+
+  .bb-sticker-grid {
+    grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+    gap: 4px;
+  }
+
+  /* 模态 */
+  .bb-modal-content {
+    padding: 14px;
+  }
+
+  .bb-modal-content h3 {
+    font-size: 14px;
+  }
+
+  /*悬浮球 */
+  #bb-floating-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+    bottom: 65px;
+    right: 12px;
+  }
+}
+
+/* ── 极小屏幕 ── */
+@media (max-width: 360px) {
+  .bb-tab {
+    padding: 4px 6px;
+    font-size: 10px;
+  }
+
+  .bb-tab-content {
+    padding: 8px;
   }
 
   .bb-home-avatar {
     width: 48px;
     height: 48px;
-    font-size: 24px;
   }
 
-  #bb-home-user-name,
-  #bb-home-char-name {
-    font-size: 14px;
+  .bb-home-together .bb-home-avatars {
+    gap: 10px;
   }
 
-  #bb-home-link-emoji {
-    font-size: 32px;
-  }
-
-  #bb-home-user-bubble,
-  #bb-home-char-bubble {
-    font-size: 13px;
-    padding: 10px 12px;
-  }
-
-  .bb-record-item,
-  .bb-diary-item,
-  .bb-npc-card,
-  .bb-par-item {
-    padding: 12px;
-  }
-
-  .bb-sm-btn {
-    padding: 5px 8px;
-    font-size: 11px;
-  }
-
-  .bb-big-btn {
-    padding: 10px 20px;
-    font-size: 13px;
-  }
-
-  #bb-marquee {
-    font-size: 14px;
-  }
-
-  .bb-achievement-popup {
-    width: 92%;
-    padding: 20px;
-  }
-
-  .bb-achievement-popup > div:first-child {
-    font-size: 40px;
-    margin-bottom: 12px;
-  }
-
-  .bb-achievement-popup > div:nth-child(2) {
+  .bb-home-link-emoji {
     font-size: 18px;
   }
 
-  .bb-achievement-popup > div:nth-child(3) {
-    font-size: 16px;
+  .bb-home-together .bb-home-names h3 {
+    font-size: 13px;
   }
 
-  .bb-achievement-popup > div:nth-child(4) {
+  .bb-home-bubble {
+    font-size: 11px;
+    padding: 8px 10px;
+  }
+
+  .bb-record-item {
+    padding: 8px 10px;
+  }
+
+  .bb-record-item .bb-record-text {
     font-size: 12px;
   }
-}
 
-/* ============================================
-   特殊效果
-   ============================================ */
-
-/* 血滴效果（哥特风） */
-@keyframes bb-blood-drip {
-  0% {
-    transform: translateY(0) scaleY(1);
-    opacity: 1;
+  .bb-diary-item {
+    padding: 10px;
   }
-  100% {
-    transform: translateY(20px) scaleY(1.5);
-    opacity: 0;
+
+  .bb-gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
   }
-}
 
-.bb-header::after {
-  content: '';
-  position: absolute;
-  bottom: -6px;
-  left: 10%;
-  width: 4px;
-  height: 6px;
-  background: var(--bb-primary);
-  border-radius: 0 0 50% 50%;
-  animation: bb-blood-drip 2s ease-in-out infinite;
-  animation-delay: 0.5s;
-}
-
-/* 悬浮粒子效果 */
-@keyframes bb-particle-float {
-  0%, 100% {
-    transform: translateY(0) translateX(0);
-    opacity: 0.3;
+  .bb-photo-wall {
+    grid-template-columns: repeat(3, 1fr);
   }
-  50% {
-    transform: translateY(-20px) translateX(10px);
-    opacity: 0.7;
+
+  .bb-achievement-grid {
+    grid-template-columns: 1fr 1fr;
   }
-}
 
-#bb-main-panel::before {
-  content: '💀';
-  position: absolute;
-  top: 20%;
-  right: 5%;
-  font-size: 24px;
-  opacity: 0.1;
-  animation: bb-particle-float 4s ease-in-out infinite;
-  pointer-events: none;
-}
-
-#bb-main-panel::after {
-  content: '🦴';
-  position: absolute;
-  bottom: 15%;
-  left: 8%;
-  font-size: 20px;
-  opacity: 0.1;
-  animation: bb-particle-float 5s ease-in-out infinite;
-  animation-delay: 1s;
-  pointer-events: none;
-}
-
-/* 文字闪烁效果（命运盘） */
-@keyframes bb-text-glow {
-  0%, 100% {
-    text-shadow: 0 0 5px rgba(139, 0, 0, 0.5);
+  .bb-couple-tab {
+    font-size: 10px;padding: 4px 4px;
   }
-  50% {
-    text-shadow: 0 0 20px rgba(139, 0, 0, 0.8), 0 0 30px rgba(139, 0, 0, 0.6);
+
+  .bb-chat-bubble {
+    max-width: 92%;
+    font-size: 12px;padding: 7px 10px;
+  }
+
+  .bb-ooc-header h3 {
+    font-size: 13px;
+  }
+
+  #bb-floating-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    bottom: 60px;
+    right: 10px;
+  }
+
+  .bb-sticker-grid {
+    grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
   }
 }
 
-#bb-fate-result .bb-fate-text {
-  animation: bb-text-glow 2s ease-in-out infinite;
-}
-
-/* 边框呼吸效果 */
-@keyframes bb-border-pulse {
-  0%, 100% {
-    border-color: var(--bb-primary);
-    box-shadow: 0 0 10px rgba(139, 0, 0, 0.3);
+/* ── 横屏手机 ── */
+@media (max-height: 500px) and (orientation: landscape) {
+  #bb-main-panel {
+    max-height: 100vh;
   }
-  50% {
-    border-color: var(--bb-primary-light);
-    box-shadow: 0 0 20px rgba(139, 0, 0, 0.6);
+
+  .bb-panel-header {
+    padding: 8px 14px 6px;
   }
-}
 
-#bb-main-panel,
-#bb-bf-win,
-#bb-ooc-win {
-  animation: bb-border-pulse 3s ease-in-out infinite;
-}
-
-/* 加载动画 */
-@keyframes bb-loading {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.bb-loading {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 3px solid var(--bb-border);
-  border-top-color: var(--bb-primary);
-  border-radius: 50%;
-  animation: bb-loading 0.8s linear infinite;
-}
-
-/* ============================================
-   导出栏样式
-   ============================================ */
-
-.bb-export-bar {
-  display: flex;
-  gap: 8px;
-  justify-content: flex-end;
-  margin-bottom: 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--bb-border);
-}
-
-/* ============================================
-   NPC 卡片增强
-   ============================================ */
-
-.bb-npc-card {
-  position: relative;
-  overflow: hidden;
-}
-
-.bb-npc-card::before {
-  content: '👤';
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 48px;
-  opacity: 0.05;
-  pointer-events: none;
-}
-
-.bb-npc-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.bb-npc-body {
-  color: var(--bb-text);
-  line-height: 1.6;
-  margin-bottom: 8px;
-}
-
-.bb-npc-time {
-  font-size: 11px;
-  color: var(--bb-text-dim);
-  font-style: italic;
-}
-
-/* ============================================
-   世界频段列表样式
-   ============================================ */
-
-#bb-world-feed-list > div {
-  background: var(--bb-bg-secondary);
-  border: 1px solid var(--bb-border);
-  border-left: 4px solid var(--bb-primary);
-  border-radius: var(--bb-radius-sm);
-  padding: 14px;
-  margin-bottom: 12px;
-  transition: var(--bb-transition);
-}
-
-#bb-world-feed-list > div:hover {
-  border-left-width: 6px;
-  transform: translateX(2px);
-  box-shadow: var(--bb-shadow-sm);
-}
-
-/* ============================================
-   命运历史列表样式
-   ============================================ */
-
-#bb-fate-history-list > div {
-  position: relative;
-  padding-left: 16px;
-}
-
-#bb-fate-history-list > div::before {
-  content: '🎲';
-  position: absolute;
-  left: -8px;
-  top: 12px;
-  font-size: 18px;
-  opacity: 0.6;
-}
-
-/* ============================================
-   平行宇宙样式增强
-   ============================================ */
-
-.bb-par-item {
-  position: relative;
-  padding-left: 20px;
-  border-left: 4px solid var(--bb-primary);
-}
-
-.bb-par-item::before {
-  content: '🦋';
-  position: absolute;
-  left: -16px;
-  top: 16px;
-  font-size: 24px;
-  animation: bb-butterfly-fly 3s ease-in-out infinite;
-}
-
-@keyframes bb-butterfly-fly {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
+  .bb-nav {
+    padding: 3px 8px;
   }
-  25% {
-    transform: translateY(-5px) rotate(5deg);
+
+  .bb-tab {
+    padding: 4px 8px;
   }
-  75% {
-    transform: translateY(5px) rotate(-5deg);
+
+  .bb-tab-content {
+    padding: 8px12px;
+  }
+
+  .bb-home-minimalist {
+    min-height: 200px;
+    gap: 10px;
+    padding: 10px 0;
+  }
+
+  .bb-home-minimalist .bb-home-avatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .bb-achievement-popup {
+    padding: 16px 24px;
+  }
+
+  .bb-achievement-popup .bb-ach-popup-icon {
+    font-size: 32px;
   }
 }
 
-.bb-par-origin {
-  background: var(--bb-bg-dark);
-  padding: 10px;
-  border-left: 3px solid var(--bb-primary);
-  margin-bottom: 10px;
-  font-size: 13px;
-  color: var(--bb-text-muted);
-  border-radius: var(--bb-radius-sm);
-  font-style: italic;
+/* ────────────────────────────────────────────
+   31. 暗色模式增强（SillyTavern 自身暗色时）
+   ──────────────────────────────────────────── */
+body.dark-mode #bb-main-panel,
+body[data-theme="dark"] #bb-main-panel {
+  /* 已经是暗色设计，无需额外处理 */
 }
 
-/* ============================================
-   OOC 预览样式
-   ============================================ */
-
-#bb-ooc-preview {
-  background: var(--bb-bg-secondary);
-  border: 2px solid var(--bb-border);
-  border-radius: var(--bb-radius-md);
-  padding: 16px;
-  min-height: 200px;
-  max-height: 400px;
-  overflow-y: auto;
-  color: var(--bb-text);
+/* 亮色模式兼容（罕见但防御性） */
+body.light-mode #bb-main-panel,
+body[data-theme="light"] #bb-main-panel {
+  --bb-bg-deep: #f5f0fa;
+  --bb-bg-panel: #fff;
+  --bb-bg-card: #f0eaf5;
+  --bb-bg-card-hover: #e8e0f0;
+  --bb-bg-input: #f8f5fc;
+  --bb-text: #2a2035;
+  --bb-text-dim: #5a4870;
+  --bb-text-muted: #8878a0;
+  --bb-text-bright: #1a1025;
+  --bb-border: rgba(100, 60, 140, 0.15);
+  --bb-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --bb-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.12);
+  --bb-shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.18);
 }
 
-#bb-ooc-preview::-webkit-scrollbar {
-  width: 8px;
-}
-
-#bb-ooc-preview::-webkit-scrollbar-track {
-  background: var(--bb-bg-dark);
-}
-
-#bb-ooc-preview::-webkit-scrollbar-thumb {
-  background: var(--bb-primary);
-  border-radius: 4px;
-}
-
-/* ============================================
-   日记本样式增强
-   ============================================ */
-
-.bb-diary-item {
-  position: relative;
-  background: linear-gradient(135deg, var(--bb-bg-secondary) 0%, var(--bb-bg-card) 100%);
-}
-
-.bb-diary-item::before {
-  content: '📖';
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  font-size: 36px;
-  opacity: 0.1;
-  pointer-events: none;
-}
-
-.bb-diary-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--bb-border);
-}
-
-.bb-diary-header span:first-child {
-  color: var(--bb-primary);
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.bb-diary-body {
-  color: var(--bb-text);
-  line-height: 1.8;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  font-size: 14px;
-}
-
-/* ============================================
-   唱片机（语录）样式增强
-   ============================================ */
-
-.bb-record-item {
-  position: relative;
-  background: var(--bb-bg-secondary);
-  border-left: 4px solid var(--bb-primary);
-  transition: var(--bb-transition);
-}
-
-.bb-record-item:hover {
-  border-left-width: 6px;
-  background: var(--bb-bg-card);
-}
-
-.bb-record-item::before {
-  content: '🌟';
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  font-size: 24px;
-  opacity: 0.15;
-  pointer-events: none;
-}
-
-/* ============================================
-   成就计数器样式
-   ============================================ */
-
-#bb-ach-count {
-  color: var(--bb-primary);
-  font-weight: bold;
-  font-size: 18px;
-  font-family: var(--bb-font-title);
-}
-
-#bb-ach-total {
-  color: var(--bb-text-muted);
-  font-size: 16px;
-}
-
-/* ============================================
-   工具提示样式
-   ============================================ */
-
-[title] {
-  position: relative;
-  cursor: help;
-}
-
-/* ============================================
-   代码块样式（预设编辑器）
-   ============================================ */
-
-#bb-custom-css,
-#bb-extension-settings textarea {
-  scrollbar-width: thin;
-  scrollbar-color: var(--bb-primary) var(--bb-bg-dark);
-}
-
-#bb-custom-css::-webkit-scrollbar,
-#bb-extension-settings textarea::-webkit-scrollbar {
-  width: 8px;
-}
-
-#bb-custom-css::-webkit-scrollbar-track,
-#bb-extension-settings textarea::-webkit-scrollbar-track {
-  background: var(--bb-bg-dark);
-}
-
-#bb-custom-css::-webkit-scrollbar-thumb,
-#bb-extension-settings textarea::-webkit-scrollbar-thumb {
-  background: var(--bb-primary);
-  border-radius: 4px;
-}
-
-/* ============================================
-   选择框样式
-   ============================================ */
-
-#bb-extension-settings select {
-  cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b0000' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  padding-right: 30px;
-}
-
-#bb-extension-settings select:hover {
-  border-color: var(--bb-primary);
-}
-
-/* ============================================
-   复选框样式
-   ============================================ */
-
-#bb-extension-settings input[type="checkbox"] {
-  cursor: pointer;
-  width: 18px;
-  height: 18px;
-  accent-color: var(--bb-primary);
-}
-
-.checkbox_label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.checkbox_label:hover {
-  color: var(--bb-primary-light);
-}
-
-/* ============================================
-   隐藏元素动画
-   ============================================ */
-
-.bb-hidden {
-  display: none;
-}
-
-.bb-fade-out {
-  animation: bb-fade-out 0.3s ease forwards;
-}
-
-@keyframes bb-fade-out {
-  from {
-    opacity: 1;
-    transform: scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-}
-
-/* ============================================
-   打印样式
-   ============================================ */
-
+/* ────────────────────────────────────────────
+   32. 打印样式（导出用）
+   ──────────────────────────────────────────── */
 @media print {
-  #bb-float-btn,
+  #bb-floating-btn,
   #bb-main-panel,
+  #bb-ooc-win,
   #bb-bf-win,
-  #bb-ooc-win {
+  #bb-nav-button,
+  .bb-mobile-float,
+  .bb-watermark,
+  .bb-achievement-popup,
+  .bb-sticker-picker,
+  .bb-modal-overlay {
     display: none !important;
   }
 }
 
-/* ============================================
-   深色模式增强（如果酒馆有主题切换）
-   ============================================ */
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bb-bg-main: #0d0d0d;
-    --bb-bg-secondary: #1a1a1a;
-    --bb-bg-dark: #000;
-  }
-}
-
-/* ============================================
-   高对比度模式支持
-   ============================================ */
-
-@media (prefers-contrast: high) {
-  :root {
-    --bb-border: #666;
-    --bb-border-light: #777;
-    --bb-text: #fff;
-    --bb-text-muted: #aaa;
-  }
-}
-
-/* ============================================
-   减少动画（无障碍支持）
-   ============================================ */
-
+/* ────────────────────────────────────────────
+   33. 减少动画偏好
+   ──────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-}
 
-/* ============================================
-   版权标记
-   ============================================ */
-
-#bb-main-panel::after {
-  content: '© 2026 SHADOW <安息之影>';
-  position: absolute;
-  bottom: 8px;
-  right: 16px;
-  font-size: 10px;
-  color: var(--bb-text-dim);
-  opacity: 0.5;
-  pointer-events: none;
-  font-family: var(--bb-font-mono);
-  letter-spacing: 0.5px;
-}
-
-/* ============================================
-   自定义主题类（供用户CSS覆盖）
-   ============================================ */
-
-/* 用户可以通过自定义CSS覆盖以下类 */
-.bb-custom-theme-primary {
-  color: var(--bb-primary) !important;
-}
-
-.bb-custom-theme-bg {
-  background: var(--bb-bg-main) !important;
-}
-
-.bb-custom-theme-border {
-  border-color: var(--bb-primary) !important;
-}
-/* ============================================
-   v0.5.0 响应式增强
-   ============================================ */
-
-/* 弹窗样式 */
-.bb-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
-  z-index: 99999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: bb-fade-in 0.2s ease;
-}
-
-.bb-modal-content {
-  background: var(--bb-bg-main);
-  border: 3px solid var(--bb-primary);
-  border-radius: var(--bb-radius-lg);
-  padding: 24px;
-  width: 90%;
-  max-width: 420px;
-  box-shadow: var(--bb-shadow-lg);
-  animation: bb-panel-show 0.3s ease;
-}
-
-@media (max-width: 480px) {
-  .bb-modal-content {
-    padding: 20px;
-    max-width: 95%;
+  #bb-floating-btn {
+    animation: none;
   }
-  
-     /* ============================================
-   移动端入口样式
-   ============================================ */
 
-/* 悬浮球 */
-#bb-mobile-float {
-  display: none; /* 默认隐藏 */
-  position: fixed;
-  bottom: 80px;
-  right: 20px;
-  width: 56px;
-  height: 56px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 50%;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 0 0 0 rgba(102, 126, 234, 0.4);
-  cursor: pointer;
-  z-index: 9999;
-  transition: transform 0.2s, box-shadow 0.2s;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  animation: bb-float-pulse 2s infinite;
-}
-
-/* 移动端显示悬浮球 */
-@media (max-width: 768px) {
-  #bb-mobile-float {
-    display: flex !important;
+  .bb-home-radio .bb-radio-scroll {
+    animation: none;
   }
 }
 
-/* 悬浮球脉动动画 */
-@keyframes bb-float-pulse {
-  0%, 100% {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 0 0 0 rgba(102, 126, 234, 0.4);
-  }
-  50% {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 0 0 10px rgba(102, 126, 234, 0);
-  }
-}
+/* ────────────────────────────────────────────
+   34. 自定义CSS注入点
+   用户通过设置面板输入的自定义CSS会被注入到<style id="bb-custom-css"> 中，优先级高于以上所有规则
+   ──────────────────────────────────────────── */
 
-/* 悬浮球按下效果 */
-#bb-mobile-float:active {
-  transform: scale(0.9);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-}
+/* ============================================================
+   END OF style.css —骨与血(Bone & Blood) v0.6.0
+   2026@SHADOW<安息之影>
+   ============================================================ */
 
-/* 移动端菜单项样式 */
-#bb-mobile-menu-item {
-  cursor: pointer;
-  transition: background 0.2s;
-  min-height: 44px; /* 最小触摸目标 */
-  display: flex;
-  align-items: center;
-  padding: 8px 12px;
-  gap: 10px;
-}
-
-#bb-mobile-menu-item:active {
-  background: rgba(102, 126, 234, 0.2);
-}
-
-#bb-mobile-menu-item .fa-bone {
-  font-size: 18px;
-  color: #667eea;
-}
-
-/* 顶栏样式适配 */
-#top-bar #bb-mobile-menu-item,
-#top-settings-holder #bb-mobile-menu-item {
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  justify-content: center;
-  border-radius: 8px;
-}
-
-/* 主面板移动端全屏优化 */
-@media (max-width: 768px) {
-  #bb-main-panel {
-    width: 100vw !important;
-    height: 100vh !important;
-    max-width: 100vw !important;
-    max-height: 100vh !important;
-    border-radius: 0 !important;
-    left: 0 !important;
-    top: 0 !important;
-    transform: none !important;
-  }
-  
-  .bb-tab-header {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
-  }
-  
-  .bb-tab-header::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
-  }
-  
-  .bb-tab-btn {
-    flex-shrink: 0;
-    min-width: 80px;
-    font-size: 12px;
-    padding: 8px 10px;
-  }
-  
-  .bb-tab-content {
-    height: calc(100vh - 130px) !important;
-    overflow-y: auto !important;
-    -webkit-overflow-scrolling: touch;
-  }
-  
-  /* 防止悬浮球遮挡关闭按钮 */
-  #bb-main-panel .bb-panel-close {
-    z-index: 10000;
-  }
-}
-
-/* 横屏模式优化 */
-@media (max-width: 768px) and (orientation: landscape) {
-  #bb-mobile-float {
-    bottom: 20px;
-    width: 48px;
-    height: 48px;
-    font-size: 24px;
-  }
-  
-  .bb-tab-content {
-    height: calc(100vh - 110px) !important;
-  }
-}
-
-/* 超小屏幕（<= 360px）优化 */
-@media (max-width: 360px) {
-  #bb-mobile-float {
-    width: 48px;
-    height: 48px;
-    font-size: 24px;
-    bottom: 70px;
-    right: 15px;
-  }
-  
-  .bb-tab-btn {
-    min-width: 70px;
-    font-size: 11px;
-    padding: 6px 8px;
-  }
-}
-
-/* ============================================
-   v6.0 画廊样式
-   ============================================ */
-
-#bb-gallery-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 12px;
-}
-
-#bb-gallery-list > div {
-  background: var(--bb-bg-secondary);
-  border: 1px solid var(--bb-border);
-  border-radius: var(--bb-radius-md);
-  overflow: hidden;
-  transition: var(--bb-transition);
-}
-
-#bb-gallery-list > div:hover {
-  border-color: var(--bb-primary);
-  box-shadow: var(--bb-shadow-md);
-  transform: translateY(-4px);
-}
-
-#bb-gallery-list img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  display: block;
-  transition: transform0.3s ease;
-}
-
-#bb-gallery-list > div:hover img {
-  transform: scale(1.05);
-}
-
-@media (max-width: 480px) {
-  #bb-gallery-list {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 8px;
-  }
-
-  #bb-gallery-list img {
-    height: 140px;
-  }
-}
-
-/* ============================================
-   v6.0 情侣空间样式
-   ============================================ */
-
-#bb-tab-couple {
-  font-family: var(--bb-font-primary);
-}
-
-#bb-pet-display {
-  font-size: 48px;
-  animation: bb-pet-bounce 2s ease-in-out infinite;
-  display: inline-block;
-}
-
-@keyframes bb-pet-bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-#bb-pet-display:hover {
-  animation: bb-pet-spin 0.5s ease;
-}
-
-@keyframes bb-pet-spin {
-  0% { transform: rotate(0deg) scale(1); }
-  50% { transform: rotate(15deg) scale(1.2); }
-  100% { transform: rotate(0deg) scale(1); }
-}
-
-/*心情按钮 */
-.bb-mood-btn {
-  transition: var(--bb-transition);
-}
-
-.bb-mood-btn:hover {
-  transform: scale(1.15) !important;
-}
-
-.bb-mood-btn:active {
-  transform: scale(0.95) !important;
-}
-
-/*纪念日数字高亮 */
-#bb-anniversary-display span {
-  color: var(--bb-primary);
-  font-weight: bold;
-  font-size: 18px;
-  font-family: var(--bb-font-title);
-}
-
-/*小纸条列表 */
-#bb-love-notes-list > div {
-  transition: var(--bb-transition);
-}
-
-#bb-love-notes-list > div:hover {
-  border-left-color: var(--bb-primary-light);
-  transform: translateX(4px);
-}
-
-/* 心情日记标签 */
-#bb-mood-diary-list > div {
-  transition: var(--bb-transition);
-}
-
-#bb-mood-diary-list > div:hover {
-  background: var(--bb-bg-card);
-  transform: scale(1.05);
-}
-
-/* ============================================
-   v6.0 时间线布局样式
-   ============================================ */
-
-#bb-tab-home .bb-timeline-node {
-  position: absolute;
-  left: -41px;
-  top: 0;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 3px solid var(--bb-bg-main);
-}
-
-/*============================================
-   v6.0卡片布局响应式
-   ============================================ */
-
-@media (max-width: 480px) {
-  #bb-tab-home [style*="grid-template-columns:1fr 1fr"] {
-    grid-template-columns: 1fr !important;
-  }
-
-  #bb-tab-home [style*="grid-template-columns: 1fr 1fr 1fr"] {
-    grid-template-columns: 1fr 1fr !important;
-  }
-}
-
-/* ============================================
-   v6.0 结束标记
-   ============================================ */
-
-/* 🦴 骨与血 v0.6.0 样式表结束 */
 
