@@ -3466,6 +3466,240 @@ body[data-theme="light"] #bb-main-panel {
    34. 自定义CSS注入点
    用户通过设置面板输入的自定义CSS会被注入到<style id="bb-custom-css"> 中，优先级高于以上所有规则
    ──────────────────────────────────────────── */
+/* ============================================================v0.7.0 补丁样式
+   ============================================================ */
+
+/* ── 语录编辑模式 ── */
+.bb-record-editor {
+  margin-top: 8px;
+}
+
+.bb-record-editor .bb-record-edit-area {
+  width: 100%;
+  min-height: 80px;
+  font-size: 13px;
+  line-height: 1.65;
+  font-family: inherit;
+  white-space: pre-wrap;
+}
+
+.bb-record-item .bb-record-edit-btn {
+  font-size: 12px;
+}
+
+/*已编辑标记 */
+.bb-record-item[data-edited="true"] .bb-record-meta::after {
+  content: '(已编辑)';
+  font-size: 10px;
+  color: var(--bb-text-muted);
+  margin-left: 6px;
+  font-style: italic;
+}
+
+/* ── 扩展菜单项 ── */
+#bb-ext-menu-item {
+  transition: background var(--bb-transition);border-radius: var(--bb-radius-sm);
+  margin: 2px 4px;
+}
+
+#bb-ext-menu-item:hover {
+  background: rgba(201, 160, 220, 0.12);
+}
+
+/* ── settings.html 内的样式增强 ── */
+.bb-settings-root .inline-drawer-content {
+  padding: 8px 0;
+}
+
+.bb-settings-root .bb-settings-section {
+  background: var(--bb-bg-card, rgba(46, 34, 64, 0.5));
+  border: 1px solid var(--bb-border, rgba(201, 160, 220, 0.18));
+  border-radius: var(--bb-radius-md, 10px);
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.bb-settings-root .bb-settings-section h4 {
+  margin: 0 0 10px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--bb-primary-light, #e8d5f5);
+  letter-spacing: 0.5px;
+}
+
+.bb-settings-root .bb-field {
+  margin-bottom: 10px;
+}
+
+.bb-settings-root .bb-field-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--bb-text-muted, #786890);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bb-settings-root .bb-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.bb-settings-root .bb-btn-group {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.bb-settings-root .bb-btn-primary {
+  background: var(--bb-primary-dark, #a374c0) !important;
+  border-color: var(--bb-primary, #c9a0dc) !important;
+  color: #fff !important;
+}
+
+.bb-settings-root .bb-btn-danger {
+  border-color: var(--bb-danger, #e87878) !important;
+  color: var(--bb-danger, #e87878) !important;
+}
+
+.bb-settings-root .bb-divider {
+  border: none;
+  border-top: 1px solid var(--bb-divider, rgba(201, 160, 220, 0.10));
+  margin: 12px 0;
+}
+
+/*预设编辑器 */
+.bb-settings-root .bb-preset-editor {
+  background: var(--bb-bg-deep, #1a1225);
+  border: 1px solid var(--bb-border, rgba(201, 160, 220, 0.18));
+  border-radius: var(--bb-radius-md, 10px);
+  padding: 14px;
+  margin-top: 10px;
+}
+
+.bb-settings-root .bb-preset-editor h5 {
+  margin: 0 0 10px 0;
+  font-size: 13px;
+  color: var(--bb-primary, #c9a0dc);
+  font-weight: 600;
+}
+
+/*布局选择器 */
+.bb-settings-root .bb-layout-selector {
+  display: flex;
+  gap: 8px;
+}
+
+.bb-settings-root .bb-layout-option {
+  flex: 1;
+  padding: 12px 8px;
+  text-align: center;
+  border: 2px solid var(--bb-border, rgba(201, 160, 220, 0.18));
+  border-radius: var(--bb-radius-md, 10px);
+  cursor: pointer;
+  transition: all0.25s ease;
+  background: transparent;
+}
+
+.bb-settings-root .bb-layout-option:hover {
+  border-color: var(--bb-primary, #c9a0dc);
+}
+
+.bb-settings-root .bb-layout-option.active {
+  border-color: var(--bb-primary, #c9a0dc);
+  background: rgba(201, 160, 220, 0.10);
+}
+
+.bb-settings-root .bb-layout-option .bb-layout-icon {
+  font-size: 24px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* CSS模板按钮 */
+.bb-settings-root .bb-css-templates {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.bb-settings-root .bb-css-templates .menu_button {
+  font-size: 11px;
+  padding: 4px 8px;
+}
+
+/* CSS编辑器 */
+.bb-settings-root .bb-css-editor {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;
+  font-size: 12px !important;
+  line-height: 1.5 !important;
+  min-height: 120px;
+  tab-size: 2;
+  white-space: pre;
+}
+
+/* AI提示词帮助 */
+.bb-settings-root .bb-css-ai-help {
+  background: var(--bb-bg-card, rgba(46, 34, 64, 0.5));
+  border: 1px solid var(--bb-border, rgba(201, 160, 220, 0.18));
+  border-radius: var(--bb-radius-sm, 6px);
+  padding: 10px;
+}
+
+.bb-settings-root .bb-css-ai-help summary {
+  outline: none;
+}
+
+.bb-settings-root .bb-css-prompt-preview {
+  background: var(--bb-bg-deep, #1a1225);
+  border: 1px solid var(--bb-border, rgba(201, 160, 220, 0.18));
+  border-radius: var(--bb-radius-sm, 6px);
+  padding: 10px;
+  font-family: 'Consolas', monospace;
+  font-size: 11px;
+  color: var(--bb-text-dim, #a898b8);
+  line-height: 1.5;
+  max-height: 200px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* 关于区域 */
+.bb-settings-root .bb-about {
+  text-align: center;
+  opacity: 0.7;
+}
+
+/*── 响应式补丁 ── */
+@media (max-width: 768px) {
+  .bb-settings-root .bb-layout-selector {
+    gap: 4px;
+  }
+
+  .bb-settings-root .bb-layout-option {
+    padding: 8px 4px;
+    font-size: 11px;
+  }
+
+  .bb-settings-root .bb-layout-option .bb-layout-icon {
+    font-size: 20px;
+  }
+
+  .bb-settings-root .bb-css-templates {
+    gap: 3px;
+  }
+
+  .bb-settings-root .bb-css-templates .menu_button {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+}
+
 
 /* ============================================================
    END OF style.css —骨与血(Bone & Blood) v0.6.0
