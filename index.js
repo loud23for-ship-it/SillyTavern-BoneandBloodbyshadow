@@ -3078,33 +3078,119 @@ function renderCouplePhotos() {
 
 //── API调用 ──
 
-async function testAPIConnection() {
+async function fetchModelList() {
   const s = getSettings();
-  const base = s.api_base.replace(/\/+$/, '');
+  const base = s.api_base?.replace(/\/+$/, '');
   const key = s.api_key;
-  if (!base || !key) { toastr.warning('请先填写 API Base和 Key'); return; }
-  $('#bb-api-status').html('<span class="bb-text-warning">⏳ 连接中...</span>');
+  if (!base || !key) {
+    toastr.warning('请先填写 API 地址和 Key');
+    return;
+  }
+
+  $('#bb-api-status').html('<span class="bb-text-warning">⏳ 正在获取模型列表...</span>');
+  $('#bb-fetch-models').prop('disabled', true);
+
   try {
-    const url = base.includes('/v1') ? `${base}/models` : `${base}/v1/models`;
-    const res = await fetch(url, { headers: { Authorization: `Bearer ${key}` } });
-    if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-    const json = await res.json();
-    const models = json.data || json.models || [];
-    if (models.length === 0) throw new Error('未找到可用模型');
-    $('#bb-api-model').empty();
-    models.forEach((m) => {
-      const id = m.id || m;
-      $('#bb-api-model').append(`<option value="${id}">${id}</option>`);
+    //尝试多种常见的模型列表端点
+    let models = [];
+    const urls = [];
+
+    if (base.includes('/v1')) {
+      urls.push(`${base}/models`);
+    } else {
+      urls.push(`${base}/v1/models`);urls.push(`${base}/models`);
+    }
+
+    let lastError = null;
+    for (const url of urls) {
+      try {
+        const res = await fetch(url, {
+          headers: { Authorization: `Bearer ${key}` },
+        });
+        if (!res.ok) {
+          lastError = new Error(`${res.status} ${res.statusText}`);
+          continue;
+        }
+        const json = await res.json();
+
+        //兼容多种API返回格式
+        if (json.data && Array.isArray(json.data)) {
+          models = json.data;
+        } else if (json.models && Array.isArray(json.models)) {
+          models = json.models;
+        } else if (Array.isArray(json)) {
+          models = json;
+        }
+
+        if (models.length > 0) break;
+      } catch (e) {
+        lastError = e;
+        continue;
+      }
+    }
+
+    if (models.length === 0) {
+      throw lastError || new Error('未找到可用模型');
+    }
+
+    // 提取模型ID并排序
+    const modelIds = models
+      .map(m => (typeof m === 'string' ? m : m.id || m.name || ''))
+      .filter(Boolean)
+      .sort((a, b) => {
+        // 常用模型排在前面
+        const priority = ['gpt-4', 'gpt-3.5', 'claude', 'gemini', 'deepseek', 'qwen', 'glm'];
+        const aP = priority.findIndex(p => a.toLowerCase().includes(p));
+        const bP = priority.findIndex(p => b.toLowerCase().includes(p));
+        if (aP !== -1 && bP === -1) return -1;
+        if (aP === -1 && bP !== -1) return 1;
+        if (aP !== -1 && bP !== -1) return aP - bP;
+        return a.localeCompare(b);
+      });
+
+    // 填充下拉框
+    const $sel = $('#bb-api-model');
+    $sel.empty();
+    $sel.append('<option value="" disabled>— 选择模型 —</option>');
+
+    modelIds.forEach(id => {
+      $sel.append(`<option value="${id}">${id}</option>`);
     });
-    s.api_model = models[0].id || models[0];
-    $('#bb-api-model').val(s.api_model);
+
+    // 如果之前有保存的模型且在列表中，恢复选择
+    if (s.api_model && modelIds.includes(s.api_model)) {
+      $sel.val(s.api_model);
+    } else {
+      // 否则选第一个
+      s.api_model = modelIds[0];
+      $sel.val(modelIds[0]);
+      saveSettings();
+    }
+
+    // 保存模型列表到设置中（方便下次恢复）
+    s.available_models = modelIds;
     saveSettings();
-    $('#bb-api-status').html(`<span class="bb-text-success">✅ 连接成功！获取到${models.length} 个模型</span>`);toastr.success(`🔗 已连接，默认模型: ${s.api_model}`);
+
+    $('#bb-api-status').html(
+      `<span class="bb-text-success">✅ 连接成功！获取到 ${modelIds.length} 个模型</span>`
+    );
+    toastr.success(`🔗 已连接，获取到 ${modelIds.length} 个模型，当前: ${s.api_model}`);
+
   } catch (err) {
-    $('#bb-api-status').html(`<span class="bb-text-error">❌ 连接失败: ${err.message}</span>`);
-    toastr.error(`连接失败: ${err.message}`);
+    $('#bb-api-status').html(
+      `<span class="bb-text-error">❌ 获取模型失败: ${err.message}</span>`
+    );
+    toastr.error(`获取模型失败: ${err.message}`);
+  } finally {
+    $('#bb-fetch-models').prop('disabled', false);
   }
 }
+
+// 保留旧函数名兼容
+async function testAPIConnection() {
+  await fetchModelList();
+}
+
 
 async function callSubAPI(messages, maxTokens = 500, temperature = 0.85) {
   const s = getSettings();
