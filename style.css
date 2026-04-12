@@ -1252,37 +1252,38 @@
    移动端适配
    ═══════════════════════════════════════════ */
 
+/* ═══════════════════════════════════════════
+   移动端适配（修复 - 防止动画冲突）
+   ═══════════════════════════════════════════ */
+
 @media (max-width: 768px) {
   /* 手机端主面板 - 改为90%高度，保留部分背景 */
   .bb-main-panel,
   #bb-main-panel {
-    width: 95vw;
-    max-width: 95vw;
-    max-height: 90vh;
-    height: auto;
+    width: 95vw !important;
+    max-width: 95vw !important;
+    max-height: 90vh !important;
+    height: auto !important;
     min-height: 80vh;
-    border-radius: 16px 16px 0 0; /* 顶部圆角，底部方形 */
-    top: auto;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    /* 添加从底部滑入动画 */
-    animation: bb-slide-up 0.3s ease-out;
-  }
-  
-  /* 主面板滑入动画 */
-  @keyframes bb-slide-up {
-    from {
-      transform: translateX(-50%) translateY(100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
+    border-radius: 16px 16px 0 0 !important;
+    /* 定位固定在底部 */
+    position: fixed !important;
+    top: auto !important;
+    bottom: 0 !important;
+    left: 2.5vw !important;
+    right: 2.5vw !important;
+    /* 移除所有 transform */
+    transform: none !important;
+    /* 使用 transition 实现平滑效果 */
+    transition: opacity 0.3s ease, bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   }
   
   /* 面板头部增加拖动指示器 */
+  .bb-panel-header {
+    padding-top: 24px !important;
+    position: relative;
+  }
+  
   .bb-panel-header::before {
     content: '';
     position: absolute;
@@ -1295,33 +1296,36 @@
     border-radius: 2px;
   }
   
-  .bb-panel-header {
-    padding-top: 20px; /* 为指示器留空间 */
-    position: relative;
-  }
-
+  /* OOC窗口移动端适配 */
   .bb-ooc-win,
   #bb-ooc-win {
-    width: 100vw;
-    max-width: 100vw;
-    height: 100vh;
-    max-height: 100vh;
-    border-radius: 0;
-    top: 0;
-    left: 0;
-    transform: none;
+    width: 95vw !important;
+    max-width: 95vw !important;
+    height: 90vh !important;
+    max-height: 90vh !important;
+    border-radius: 16px 16px 0 0 !important;
+    position: fixed !important;
+    top: auto !important;
+    bottom: 0 !important;
+    left: 2.5vw !important;
+    right: 2.5vw !important;
+    transform: none !important;
   }
 
+  /* 其他子窗口适配 */
   .bb-sub-window,
   #bb-bf-win {
-    width: 100vw;
-    max-width: 100vw;
-    height: 100vh;
-    max-height: 100vh;
-    border-radius: 0;
-    top: 0;
-    left: 0;
-    transform: none;
+    width: 95vw !important;
+    max-width: 95vw !important;
+    height: 90vh !important;
+    max-height: 90vh !important;
+    border-radius: 16px 16px 0 0 !important;
+    position: fixed !important;
+    top: auto !important;
+    bottom: 0 !important;
+    left: 2.5vw !important;
+    right: 2.5vw !important;
+    transform: none !important;
   }
 
   .bb-tab-nav {
