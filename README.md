@@ -5,8 +5,7 @@
 > ✨ 作者：shadow 玉元一 ✨
 
 <p align="center">
-  <img src="https://img.shields.io/badge/SillyTavern-插件-8A2BE2?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTEgMTVoLTJ2LTJoMnYyem0wLTRoLTJWN2gydjZ6Ii8+PC9zdmc+" />
-  <img src="https://img.shields.io/badge/版本-0.8.0-beta-ff69b4?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/版本-0.80-beta-ff69b4?style=for-the-badge" />
   <img src="https://img.shields.io/badge/理念-赋予血液-crimson?style=for-the-badge" />
 </p>
 
@@ -20,7 +19,7 @@
 ## 🌙 序言 · 骨与血之理念
 
 **骨为架，血为魂。**  
-每一个角色都应当拥有心跳、秘密、即兴的喜怒哀乐，以及与世界共振的偶然性。  
+每一个角色都拥有心跳、秘密、即兴的喜怒哀乐，以及与世界共振的偶然性。  
 **“骨与血”** 不是单纯的工具集 —— 而是一个让 RP 长出 **真实血肉** 的生态系统。
 
 - 🦴 **骨架**：稳定的副API架构，不影响主窗口生成，关闭界面仍在后台低语。  
@@ -84,7 +83,7 @@
 - 📊 **聊天统计**：自动记录聊天条数，推测你们共度的总时长 (⏱️ “你们已经聊了23小时16分钟…”)。  
 - 🌦️ **天气小组件**：看看今天角色窗外是晴是雨。  
 - 💭 **氛围分析（读心术）**：实时洞察角色的内心状态 —— “他似乎有一丝犹豫”。  
-- 🎲 **命运之骰**：一个神秘按钮，随时触发随机事件（可配置概率池）。
+- 🎲 **命运之骰**：一个神秘按钮，随时触发随机事件。
 
 ---
 
@@ -94,18 +93,14 @@
 - 📖 **日记本**：支持设定“每天/每N条对话后自动写日记”，也可手动点按 —— 看着角色慢慢长出内心独白。  
 - 👥 **NPC模块**：看看酒馆里的路人、城门口的卫兵此时在做什么，他们也有自己的小剧场。  
 - 🔮 **破墙聊天室**：可以预设“吐槽模式/鼓励模式/深夜电台模式”，氛围词条自由编辑。  
-- 💝 **情侣空间**：设置纪念日 → 当天插件会主动弹出祝福和特殊事件。
+- 💝 **情侣空间**：设置纪念日 
 
 ---
 
 ## 🚀 快速开始 · 让骨血流动
 
 1. **下载插件**  
-   将本仓库放入 SillyTavern 的 `plugins` 目录下。  
-   ```bash
-   cd SillyTavern/plugins
-   git clone https://github.com/你的用户名/SillyTavern-BoneandBloodbyshadow.git
-   ```
+   复制网页在扩展区域下载~
 
 2. **配置API（可选但推荐）**  
    - 日记/情报/命运盘/观测站 → 需要 LLM API（OpenAI/Claude/本地）。  
@@ -119,24 +114,16 @@
    - 在情报站里点一下“世界频率”，一则奇闻就会浮现。
 
 4. **自定义你的风格**  
-   - 进入风格预设，选择「琥珀之夜 / 苍蓝梦境 / 绯红剧院 / 翠绿深林」四种主题之一。  
+   - 进入风格预设，
    - 上传背景图，调整CSS，导出/导入预设与他人分享。
-
----
-
-## 📸 一瞥 · 预览 (即将上线更多截图)
-
-> ✨ *目前插件正在打磨细节，后续会补充实机演示动图。*  
-> 但你可以先想象：  
-> 左边是主聊天窗，右边悬浮小窗里 NPC 正在偷吃面包，下方唱片机转动着你收藏的金句，忽然一声提示音——“日记已更新，角色画了一幅画给你”。
 
 ---
 
 ## 🤝 贡献与反馈
 
-- 🐛 遇到Bug？ 请开Issue，带上日志。  
-- 💡 有奇思妙想？ 欢迎PR，让我们一起让RP世界更丰饶。  
-- 📧 联系作者：shadow玉元一 (可在SillyTavern社区或GitHub找到)
+- 🐛 遇到Bug？ 简要描述bug的形态，或F12打开控制台。  
+- 💡 有奇思妙想？ 欢迎DM，让我们一起让RP世界更丰饶。  
+- 📧 联系作者：shadow玉元一 (可在SillyTavern社区或MOM，奇迹之夜，锦鲤等社区找到我)
 
 ---
 
