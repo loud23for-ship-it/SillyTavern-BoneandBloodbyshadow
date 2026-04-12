@@ -1782,6 +1782,122 @@
    END OF 音乐播放器样式
    ============================================================ */
 
+/* ═══════════════════════════════════════════
+   移动端适配（主面板全屏）
+   ═══════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .bb-main-panel,
+  #bb-main-panel {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    height: 100vh !important;
+    border-radius: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: auto !important;
+    right: auto !important;
+    transform: none !important;
+    margin: 0 !important;padding: 0 !important;z-index: 99999 !important;
+  }
+
+  .bb-ooc-win,
+  #bb-ooc-win {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    transform: none !important;
+    z-index: 100000 !important;
+  }
+
+  .bb-sub-window,
+  #bb-bf-win {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    transform: none !important;
+    z-index: 100000 !important;
+  }
+
+  #bb-main-panel .bb-tab-nav {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 8px 10px !important;
+  }
+  #bb-main-panel .bb-tab-btn {
+    font-size: 11px !important;
+    padding: 5px 10px !important;
+    flex: 0 0 auto !important;white-space: nowrap !important;}
+
+  #bb-main-panel .bb-tab-content {
+    flex: 1 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    min-height: 0 !important;
+  }
+
+  .bb-trigger-btn,
+  #bb-trigger-btn {
+    display: none !important;
+  }
+
+  .bb-gallery-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .bb-dashboard-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  .bb-home-top-row {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }.bb-home-link-emoji {
+    font-size: 32px !important;
+  }
+
+  .bb-modal-content {
+    margin: 10px !important;
+    padding: 16px !important;
+  }
+
+  /* 输入框防止iOS缩放 */
+  #bb-main-panel .bb-input,
+  #bb-main-panel .bb-textarea,
+  #bb-main-panel select {
+    font-size: 16px !important;
+  }
+
+  /* 按钮增大触摸区域 */
+  #bb-main-panel .bb-sm-btn,
+  #bb-main-panel .bb-big-btn {
+    min-height: 40px !important;
+    padding: 8px 14px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  #bb-main-panel .bb-tab-content {
+    padding: 10px !important;
+  }
+  .bb-gallery-grid {
+    grid-template-columns: 1fr 1fr !important;gap: 6px !important;
+  }
+  .bb-sticker-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
 
 /* ============================================================
    END OF style.css — 骨与血(Bone & Blood) v7.1
