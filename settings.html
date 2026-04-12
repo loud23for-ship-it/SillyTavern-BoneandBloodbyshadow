@@ -357,7 +357,9 @@
    ═══════════════════════════════════════════ */
 
 /* 引入字体 */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Noto+Serif+SC:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap');
+/* 引入字体 — 哥特 +衬线 + 等宽 */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&family=MedievalSharp&family=UnifrakturMaguntia&family=Noto+Serif+SC:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
 
 /* 作者区块特殊样式 */
 .bbs-author-section {
@@ -400,10 +402,10 @@
 }
 
 .bbs-author-title-text {
-  font-family: 'Orbitron', 'JetBrains Mono', monospace;
+  font-family: 'Cinzel Decorative', 'Cinzel', serif;
   font-weight: 700;
-  font-size: 13px;
-  letter-spacing: 1.5px;
+  font-size: 14px;
+  letter-spacing: 2px;
   background: linear-gradient(135deg, var(--bbs-accent, #c9a0dc), #f0a8c8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -469,13 +471,13 @@
 }
 
 .bbs-author-name {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Cinzel','Noto Serif SC', serif;
   font-weight: 700;
-  font-size: 15px;
+  font-size: 16px;
   color: var(--bbs-text-bright, #eee);
-  letter-spacing: 1px;
+  letter-spacing: 2px;
 }
-
+     
 .bbs-author-sub {
   font-family: 'Noto Serif SC', serif;
   font-size: 11px;
@@ -484,13 +486,15 @@
   font-weight: 400;
 }
 
+
 .bbs-author-tagline {
   font-family: 'Noto Serif SC', serif;
   font-size: 12px;
   color: var(--bbs-text-dim, #888);
   margin-top: 4px;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   opacity: 0.8;
+  font-style: italic;
 }
 
 /* 快捷链接按钮 */
@@ -515,7 +519,7 @@
   cursor: pointer;
   transition: all 0.2s;
   text-decoration: none;
-  font-family: 'Noto Serif SC', system-ui, sans-serif;
+  font-family: 'Cinzel', 'JetBrains Mono', serif;
 }
 
 .bbs-author-link-btn:hover {
@@ -541,7 +545,7 @@
   border-radius: 8px;
   font-size: 13px;
   line-height: 1.7;
-  font-family: 'Noto Serif SC', serif;
+  font-family: 'Cinzel', 'JetBrains Mono', serif;
   animation: bbs-msg-appear 0.3s ease;position: relative;
 }
 
@@ -645,7 +649,7 @@
 }
 
 .bbs-changelog-ver {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Cinzel', 'JetBrains Mono', serif;
   font-size: 13px;
   font-weight: 600;
   color: var(--bbs-accent, #c9a0dc);
@@ -731,11 +735,12 @@
 }
 
 .bbs-murmur-title {
-  font-family: 'Noto Serif SC', serif;
+  font-family: 'Cinzel', 'Noto Serif SC', serif;
   font-size: 13px;
   font-weight: 600;
   color: var(--bbs-text-bright, #eee);
   margin-bottom: 8px;
+  letter-spacing: 1px;
 }
 
 .bbs-author-murmur p {
@@ -755,6 +760,171 @@
   text-indent: 0 !important;
   margin-top: 8px !important;
 }
+
+     /* ═══════════════════════════════════════════
+   作品展示
+   ═══════════════════════════════════════════ */
+
+.bbs-author-works {
+  padding: 12px;
+  border-bottom: 1px solid var(--bbs-border);
+}
+
+.bbs-works-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: 'Cinzel Decorative', 'Cinzel', serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--bbs-text-dim, #888);
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.bbs-works-cross {
+  color: var(--bbs-accent, #c9a0dc);
+  opacity: 0.5;
+  font-size: 10px;
+}
+
+.bbs-works-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bbs-work-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--bbs-bg-input, #1a1a1a);
+  border: 1px solid var(--bbs-border, rgba(255,255,255,0.06));
+  cursor: pointer;
+  transition: all 0.25s;position: relative;
+  overflow: hidden;
+}
+
+.bbs-work-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  border-radius: 3px 0 0 3px;
+  transition: all 0.25s;
+}
+
+.bbs-work-gemini::before {
+  background: linear-gradient(180deg, #7b68ee, #4169e1);
+}
+
+.bbs-work-claude::before {
+  background: linear-gradient(180deg, #d4a574, #c87533);
+}
+
+.bbs-work-fire::before {
+  background: linear-gradient(180deg, #e85050, #c03030);
+}
+
+.bbs-work-card:hover {
+  border-color: rgba(255,255,255,0.12);
+  transform: translateX(4px);
+  background: var(--bbs-bg-hover, #222);
+}
+
+.bbs-work-card:hover::before {
+  width: 4px;
+  box-shadow: 0 0 12px currentColor;
+}
+
+.bbs-work-gemini:hover::before { box-shadow: 0 0 12px rgba(123,104,238,0.4); }
+.bbs-work-claude:hover::before { box-shadow: 0 0 12px rgba(212,165,116,0.4); }
+.bbs-work-fire:hover::before { box-shadow: 0 0 12px rgba(232,80,80,0.4); }
+
+.bbs-work-icon {
+  font-size: 22px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  flex-shrink: 0;
+}
+
+.bbs-work-info {
+  flex: 1;min-width: 0;
+}
+
+.bbs-work-name {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--bbs-text-bright, #eee);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.5px;
+}
+
+.bbs-work-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--bbs-text-muted, #666);
+  margin-top: 2px;
+  letter-spacing: 0.5px;
+}
+
+.bbs-work-gemini .bbs-work-tag { color: #7b68ee; }
+.bbs-work-claude .bbs-work-tag { color: #d4a574; }
+.bbs-work-fire .bbs-work-tag { color: #e87878; }
+
+.bbs-work-arrow {
+  font-size: 18px;
+  color: var(--bbs-text-muted, #666);
+  flex-shrink: 0;transition: transform 0.2s;
+}
+
+.bbs-work-card:hover .bbs-work-arrow {
+  transform: translateX(3px);
+  color: var(--bbs-text-dim, #888);
+}
+     /* ═══════════════════════════════════════════
+   自定义字体预览
+   ═══════════════════════════════════════════ */
+
+.bbs-font-preview {
+  padding: 14px;
+  margin: 8px 0;
+  border: 1px solid var(--bbs-border);
+  border-radius: 8px;
+  background: var(--bbs-bg-input);
+  text-align: center;
+}
+
+#bb-font-preview-text {
+  font-size: 18px;
+  color: var(--bbs-text-bright);
+  line-height: 1.6;
+  letter-spacing: 1px;
+}
+
+.bbs-font-quick {
+  transition: all 0.15s !important;
+}
+
+.bbs-font-quick:hover {
+  border-color: var(--bbs-accent) !important;
+  color: var(--bbs-accent) !important;
+  transform: translateY(-1px);
+}
+
 
 </style>
 
@@ -819,6 +989,44 @@
           <div id="bb-author-msg-area" class="bbs-author-msg-area" style="display:none;">
             <div id="bb-author-msg-content" class="bbs-author-msg-content"></div>
           </div>
+                       <!-- 作品展示 -->
+          <div class="bbs-author-works">
+            <div class="bbs-works-title">
+              <span class="bbs-works-cross">✦</span>
+              <span>SHADOW's Works</span>
+              <span class="bbs-works-cross">✦</span>
+            </div>
+
+            <div class="bbs-works-grid">
+              <div class="bbs-work-card bbs-work-gemini" onclick="window.open('','_blank')">
+                <div class="bbs-work-icon">🌙</div>
+                <div class="bbs-work-info">
+                  <div class="bbs-work-name">安息日的个人演出show!</div>
+                  <div class="bbs-work-tag">Gemini 预设</div>
+                </div>
+                <div class="bbs-work-arrow">›</div>
+              </div>
+
+              <div class="bbs-work-card bbs-work-claude" onclick="window.open('','_blank')">
+                <div class="bbs-work-icon">⚡</div>
+                <div class="bbs-work-info">
+                  <div class="bbs-work-name">过载 is online</div>
+                  <div class="bbs-work-tag">Claude 预设</div>
+                </div>
+                <div class="bbs-work-arrow">›</div>
+              </div>
+
+              <div class="bbs-work-card bbs-work-fire" onclick="window.open('','_blank')">
+                <div class="bbs-work-icon">📻</div>
+                <div class="bbs-work-info">
+                  <div class="bbs-work-name">您已连接失真的电台</div>
+                  <div class="bbs-work-tag">焚星者 · 破墙 Gemini 预设</div>
+                </div>
+                <div class="bbs-work-arrow">›</div>
+              </div>
+            </div>
+          </div>
+
 
           <!-- 更新日志 /碎碎念 -->
           <div class="bbs-author-changelog">
@@ -1108,6 +1316,55 @@
               <option value="monochrome">🖤 黑白</option></select>
           </div></div>
       </div>
+               <!-- ═══ 9. 自定义字体 ═══ -->
+      <div class="bbs-section">
+        <div class="bbs-section-header" onclick="$(this).parent().toggleClass('open')">
+          <span class="bbs-section-title">🔤 自定义字体</span>
+          <span class="bbs-section-arrow">▼</span>
+        </div>
+        <div class="bbs-section-body">
+          <div class="bbs-field">
+            <label class="bbs-label">字体URL（Google Fonts / 其他CDN）</label>
+            <input type="text" id="bb-custom-font-url" placeholder="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" /><span class="bbs-hint">粘贴 Google Fonts 的@import URL，或任意CSS 字体文件链接</span>
+          </div>
+          <div class="bbs-field">
+            <label class="bbs-label">字体名称（填入 font-family 的值）</label>
+            <input type="text" id="bb-custom-font-name" placeholder="Ma Shan Zheng" /><span class="bbs-hint">必须和字体URL中的名称一致</span>
+          </div>
+          <div class="bbs-field">
+            <label class="bbs-label">应用范围</label>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <label class="bbs-checkbox"><input type="checkbox" id="bb-font-apply-panel" /><span>主面板全局</span></label>
+              <label class="bbs-checkbox"><input type="checkbox" id="bb-font-apply-title" /><span>标题 & Tab按钮</span></label>
+              <label class="bbs-checkbox"><input type="checkbox" id="bb-font-apply-content" /><span>内容 & 日记& 总结</span></label>
+              <label class="bbs-checkbox"><input type="checkbox" id="bb-font-apply-ooc" /><span>OOC聊天窗口</span></label>
+            </div>
+          </div>
+
+          <!-- 预设字体快捷选择 -->
+          <div class="bbs-field">
+            <label class="bbs-label">快捷选择</label>
+            <div class="bbs-btn-row" style="flex-wrap:wrap;">
+              <button class="bbs-btn bbs-btn-sm bbs-font-quick" data-url="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" data-name="Ma Shan Zheng" style="font-family:'Ma Shan Zheng',cursive;">毛笔·马善政</button>
+              <button class="bbs-btn bbs-btn-sm bbs-font-quick" data-url="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" data-name="ZCOOL KuaiLe" style="font-family:'ZCOOL KuaiLe',cursive;">快乐体</button>
+              <button class="bbs-btn bbs-btn-sm bbs-font-quick" data-url="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&display=swap" data-name="ZCOOL QingKe HuangYou">清刻黄油</button>
+              <button class="bbs-btn bbs-btn-sm bbs-font-quick" data-url="https://fonts.googleapis.com/css2?family=Long+Cang&display=swap" data-name="Long Cang">龙藏</button>
+              <button class="bbs-btn bbs-btn-sm bbs-font-quick" data-url="https://fonts.googleapis.com/css2?family=Zhi+Mang+Xing&display=swap" data-name="Zhi Mang Xing">指尖行书</button>
+              <button class="bbs-btn bbs-btn-sm bbs-font-quick" data-url="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap" data-name="UnifrakturMaguntia" style="font-family:'UnifrakturMaguntia',cursive;">Gothic</button>
+              <button class="bbs-btn bbs-btn-sm bbs-font-quick" data-url="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" data-name="MedievalSharp" style="font-family:'MedievalSharp',cursive;">Medieval</button>
+              <button class="bbs-btn bbs-btn-sm bbs-font-quick" data-url="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap" data-name="Cinzel Decorative" style="font-family:'Cinzel Decorative',serif;">Cinzel</button>
+            </div>
+          </div><div id="bb-font-preview" class="bbs-font-preview" style="display:none;">
+            <div id="bb-font-preview-text">骨承载记忆 · 血书写故事 — Bone & Blood</div>
+          </div>
+
+          <div class="bbs-btn-row">
+            <button class="bbs-btn bbs-btn-primary" id="bb-font-apply">✅ 应用字体</button>
+            <button class="bbs-btn bbs-btn-danger" id="bb-font-reset">🗑️ 恢复默认</button>
+          </div>
+        </div>
+      </div>
+
       <!-- ═══ 9. 自定义CSS ═══ -->
       <div class="bbs-section">
         <div class="bbs-section-header" onclick="$(this).parent().toggleClass('open')">
