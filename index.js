@@ -4239,7 +4239,11 @@ function incrementMessageCounter() {
 async function autoGenerate() {
   console.log('[骨与血]🔄 触发自动生成...');
   toastr.info('🔄 自动生成日记和总结中...');
-  await generateDiary(); await generateSummary();
+  await generateDiary();
+  await generateSummary();
+  renderDiary();      // ← 新增
+  renderSummary();    // ← 新增
+  updateAutoSummaryBar(); // ← 新增
 }
 
 // ── 按钮注入 ──
