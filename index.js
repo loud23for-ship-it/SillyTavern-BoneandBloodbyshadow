@@ -1037,7 +1037,7 @@ function injectFloatingUI() {
   floatBtn.className = 'bb-trigger-btn';
   floatBtn.innerHTML = '🦴';
   floatBtn.title = '骨与血 Bone & Blood';
-  floatBtn.style.display = s.enabled ? 'flex' : 'none';
+  floatBtn.style.display = (s.enabled && s.show_float_button !== false) ? 'flex' : 'none';
   floatBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     e.preventDefault();
