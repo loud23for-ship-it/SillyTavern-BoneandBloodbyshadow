@@ -3023,6 +3023,22 @@ function bindMainPanelEvents(panel) {
   // 关闭按钮
   $(panel).find('#bb-close-btn').on('click', () => $('#bb-main-panel').fadeOut(200));
 
+  // ──────────────────────────────────────────
+  // 音乐播放器事件（新增 - MP3播放器）
+  // ──────────────────────────────────────────
+  $(panel).off('click.bbmusictoggle').on('click.bbmusictoggle', '#bb-music-toggle', bbPlayerToggle);
+  $(panel).off('click.bbmusicprev').on('click.bbmusicprev', '#bb-music-prev', bbPlayerPrev);
+  $(panel).off('click.bbmusicnext').on('click.bbmusicnext', '#bb-music-next', bbPlayerNext);
+  
+  // 进度条点击跳转
+  $(panel).off('click.bbmusicprogress').on('click.bbmusicprogress', '.bb-music-progress-mini', function(e) {
+    if (!bbPlayer.audio || !bbPlayer.audio.duration) return;
+    const rect = this.getBoundingClientRect();
+    const percent = (e.clientX - rect.left) / rect.width;
+    bbPlayerSeek(bbPlayer.audio.duration * percent);
+  });
+  // ──────────────────────────────────────────
+
   // Tab切换 — 使用 bb-tab-pane 和 bb-hidden
   $(panel).off('click.bbtab').on('click.bbtab', '.bb-tab-btn', function () {
     const tab = $(this).data('tab');
