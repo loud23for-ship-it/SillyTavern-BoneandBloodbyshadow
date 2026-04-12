@@ -3735,15 +3735,41 @@ async function loadSettingsHTML() {
 function bindSettingsPanelEvents() {
   const s = () => extension_settings[EXTENSION_NAME];
 
-  // 基础开关
+    // 基础开关
   $('#bb-enabled').prop('checked', s().enabled).on('change', function () {
     s().enabled = this.checked; saveSettingsDebounced();
     if (this.checked) {
-      $('#bb-trigger-btn').show(); toastr.success('骨与血已启用 🦴');
+      if (s().show_float_button !== false) {
+        $('#bb-trigger-btn').show();
+        $('#bb-mobile-float').show();
+      }
+      toastr.success('骨与血已启用 🦴');
     } else {
-      $('#bb-trigger-btn').hide();$('#bb-main-panel').fadeOut(200);
+      $('#bb-trigger-btn').hide();
+      $('#bb-mobile-float').hide();
+      $('#bb-main-panel').fadeOut(200);
       toastr.info('骨与血已禁用');
     }
+  });
+
+  // 悬浮球显示开关
+  $('#bb-show-float').prop('checked', s().show_float_button !== false).on('change', function () {
+    s().show_float_button = this.checked;
+    saveSettingsDebounced();
+    if (this.checked) {
+      $('#bb-trigger-btn').show();
+      $('#bb-mobile-float').show();
+      toastr.info('悬浮球已显示');
+    } else {
+      $('#bb-trigger-btn').hide();
+      $('#bb-mobile-float').hide();
+      toastr.info('悬浮球已隐藏，可通过设置面板底部按钮打开主面板');
+    }
+  });
+
+  // 备用入口按钮（无悬浮球时使用）
+  $('#bb-open-panel-btn').on('click', function () {
+    toggleMainPanel();
   });
 
   $('#bb-auto-diary').prop('checked', s().auto_diary_enabled).on('change', function () {
