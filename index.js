@@ -3331,6 +3331,8 @@ function downloadPoster() {
 function renderAll() {
   renderScrapbook();
   renderDiary();
+  renderSummary();          // ← 新增
+  updateAutoSummaryBar();   // ← 新增renderIntel();
   renderIntel();
   renderParallel();
   renderFateHistory();
