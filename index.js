@@ -3744,23 +3744,32 @@ function registerAllMacros() {
   } catch (e) { console.error('[骨与血] 宏注册失败:', e); }
 }
 
-// ── 动态CSS注入 ──
+// ── 动态CSS注入 ── 手机端适配修改过
 
 function injectDynamicCSS() {
   if ($('#bb-dynamic-style').length > 0) return;
-  $('head').append(`
-    <style id="bb-dynamic-style">
-      @keyframes bb-scroll {
-        0% { transform: translateX(100%); }
-        100% { transform: translateX(-100%); }
+  
+  const styleContent = `
+    @keyframes bb-scroll {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+    @keyframes bb-float-pulse {
+      0%, 100% { 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.4), 0 0 0 0 rgba(102,126,234,0.5); 
       }
-      @keyframes bb-float-pulse {
-        0%, 100% { box-shadow: 0 4px 15px rgba(0,0,0,0.4), 0 0 0 0rgba(102,126,234,0.5); }
-        50% { box-shadow: 0 4px 15px rgba(0,0,0,0.4), 0 0 0 12px rgba(102,126,234,0); }
+      50% { 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.4), 0 0 0 12px rgba(102,126,234,0); 
       }
-    </style>
-  `);
+    }
+  `;
+  
+  const styleEl = document.createElement('style');
+  styleEl.id = 'bb-dynamic-style';
+  styleEl.textContent = styleContent;
+  document.head.appendChild(styleEl);
 }
+
 
 function buildAndBindMainPanel() {
   const panel = document.getElementById('bb-main-panel');
