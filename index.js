@@ -265,6 +265,7 @@ const DEFAULT_SETTINGS = {
   ],
   active_ooc_preset: 0,
   custom_css: '',
+  music_search_api_tested: false,
   img_provider: 'placeholder',
   img_api_key: '',
   img_api_base: '',
@@ -807,6 +808,202 @@ function bbPlayerLoadPlaylist() {
     console.error('[骨与血] 加载歌单失败:', e);
   }
 }
+//────────────────────────────────────────────
+// 音乐搜索API功能（新增）
+// ────────────────────────────────────────────
+
+async function bbMusicSearch(keyword) {
+  const s = getSettings();
+  const apiUrl = s.music_search_api;
+  if (!apiUrl) {
+    toastr.warning('请先在设置面板中配置音乐搜索API地址');
+    return [];
+  }
+  
+  try {
+    // 替换 {keyword} 占位符
+    const url = apiUrl.replace('{keyword}', encodeURIComponent(keyword));
+    toastr.info(`🔍 搜索中: ${keyword}...`);
+    
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    
+    // 尝试多种常见API返回格式
+    let songs = [];
+    if (Array.isArray(json)) {
+      songs = json;
+    } else if (json.data && Array.isArray(json.data)) {
+      songs = json.data;
+    } else if (json.result && Array.isArray(json.result)) {
+      songs = json.result;
+    } else if (json.songs && Array.isArray(json.songs)) {
+      songs = json.songs;
+    } else if (json.result && json.result.songs) {
+      songs = json.result.songs;
+    }
+    
+    // 标准化歌曲数据
+    return songs.slice(0, 20).map(song => ({
+      name: song.name || song.title || song.songname || '未知歌曲',
+      artist: song.artist || song.singer || (song.artists ? song.artists.map(a => a.name).join('/') : '') || '未知歌手',
+      src: song.url || song.src || song.playUrl || song.mp3 || '',
+      lrc: song.lrc || song.lyric || '',
+      cover: song.cover || song.pic || song.album?.picUrl || '',
+      id: song.id || '',}));
+  } catch (err) {
+    console.error('[骨与血] 音乐搜索失败:', err);
+    toastr.error(`搜索失败: ${err.message}`);
+    return [];
+  }
+}
+
+async function bbMusicTestAPI() {
+  const s = getSettings();
+  const apiUrl = s.music_search_api;
+  if (!apiUrl) {
+    toastr.warning('请先填写音乐搜索API地址');
+    return false;
+  }
+  
+  try {
+    const testUrl = apiUrl.replace('{keyword}', encodeURIComponent('test'));
+    const res = await fetch(testUrl);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    s.music_search_api_tested = true;
+    saveSettings();
+    toastr.success('✅ 音乐搜索API连接成功！');
+    return true;
+  } catch (err) {
+    s.music_search_api_tested = false;
+    saveSettings();
+    toastr.error(`❌ API测试失败: ${err.message}`);
+    return false;
+  }
+}
+
+function showMusicSearchModal() {
+  const modal = $(`
+    <div class="bb-modal-overlay">
+      <div class="bb-modal-content bb-modal-lg bb-modal-scroll">
+        <h3 class="bb-modal-title">🔍 搜索音乐</h3>
+        <div class="bb-form-col">
+          <div class="bb-btn-row" style="gap:8px;">
+            <input id="bb-music-search-input" type="text" class="bb-input bb-flex-1" placeholder="输入歌名或歌手..." />
+            <button class="bb-sm-btn bb-btn-primary" id="bb-music-search-go">🔍 搜索</button>
+          </div><div id="bb-music-search-results" class="bb-scroll-list" style="max-height:400px;margin-top:8px;"><div class="bb-empty">输入关键词开始搜索</div>
+          </div>
+        </div>
+        <div class="bb-btn-row bb-mt-md">
+          <button class="bb-sm-btn bb-btn-secondary bb-w-full" id="bb-music-search-close">关闭</button>
+        </div>
+      </div>
+    </div>`);
+  
+  $('body').append(modal);
+  async function doSearch() {
+    const keyword = $('#bb-music-search-input').val().trim();
+    if (!keyword) { toastr.warning('请输入搜索关键词'); return; }
+    
+    const $results = $('#bb-music-search-results');
+    $results.html('<div class="bb-empty">🔍 搜索中...</div>');
+    
+    const songs = await bbMusicSearch(keyword);
+    
+    if (songs.length === 0) {
+      $results.html('<div class="bb-empty">未找到结果，请尝试其他关键词</div>');
+      return;
+    }
+    
+    let html = '';
+    songs.forEach((song, i) => {
+      const hasSrc = song.src ? '' : 'bb-text-muted';
+      html += `
+        <div class="bb-music-search-item" data-index="${i}" style="display:flex;align-items:center;gap:10px;padding:10px;margin-bottom:6px;background:var(--bb-bg-card);border:1px solid var(--bb-border-light);border-radius:8px;cursor:pointer;transition:all 0.2s;">
+          ${song.cover ? `<img src="${esc(song.cover)}" style="width:40px;height:40px;border-radius:6px;object-fit:cover;flex-shrink:0;" />` : '<div style="width:40px;height:40px;border-radius:6px;background:var(--bb-bg-secondary);display:flex;align-items:center;justify-content:center;flex-shrink:0;">🎵</div>'}
+          <div style="flex:1;min-width:0;">
+            <div class="${hasSrc}" style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(song.name)}</div>
+            <div class="bb-text-muted bb-text-xs">${esc(song.artist)}</div>
+          </div>
+          <div style="display:flex;gap:4px;flex-shrink:0;">
+            ${song.src ? `<button class="bb-sm-btn bb-btn-xs bb-music-search-preview" data-idx="${i}" title="试听">▶</button>` : ''}
+            ${song.src ? `<button class="bb-sm-btn bb-btn-xs bb-btn-primary bb-music-search-add" data-idx="${i}" title="添加到歌单">➕</button>` : `<span class="bb-text-muted bb-text-xs">无链接</span>`}
+          </div>
+        </div>`;
+    });
+    
+    $results.html(html);
+    
+    // 存储搜索结果供后续使用
+    $results.data('songs', songs);
+    
+    // 试听
+    $results.find('.bb-music-search-preview').on('click', function(e) {
+      e.stopPropagation();
+      const idx = $(this).data('idx');
+      const song = songs[idx];
+      if (!song || !song.src) return;
+      
+      // 使用临时audio试听
+      let previewAudio = $results.data('previewAudio');
+      if (previewAudio) {
+        previewAudio.pause();
+        previewAudio = null;
+      }
+      previewAudio = new Audio(song.src);
+      previewAudio.volume = 0.5;
+      previewAudio.play().catch(err => toastr.error('试听失败'));
+      $results.data('previewAudio', previewAudio);
+      
+      // 30秒后自动停止
+      setTimeout(() => { if (previewAudio) previewAudio.pause(); }, 30000);
+      
+      toastr.info(`🎧 试听: ${song.name}`);
+    });
+    
+    // 添加到歌单
+    $results.find('.bb-music-search-add').on('click', function(e) {
+      e.stopPropagation();
+      const idx = $(this).data('idx');
+      const song = songs[idx];
+      if (!song || !song.src) return;
+      
+      bbPlayerAddSong(
+        `${song.name} - ${song.artist}`,
+        song.src,
+        song.lrc || ''
+      );
+    });
+  }
+  
+  modal.find('#bb-music-search-go').on('click', doSearch);
+  modal.find('#bb-music-search-input').on('keypress', function(e) {
+    if (e.which === 13) doSearch();
+  });
+  
+  modal.find('#bb-music-search-close').on('click', function() {
+    // 停止试听
+    const previewAudio = $('#bb-music-search-results').data('previewAudio');
+    if (previewAudio) previewAudio.pause();
+    modal.remove();
+  });
+  
+  modal.on('click', function(e) {
+    if ($(e.target).hasClass('bb-modal-overlay')) {
+      const previewAudio = $('#bb-music-search-results').data('previewAudio');
+      if (previewAudio) previewAudio.pause();
+      modal.remove();
+    }
+  });
+  
+  // 自动聚焦
+  setTimeout(() => $('#bb-music-search-input').focus(), 100);
+}
+
+// ────────────────────────────────────────────
+// 音乐搜索API功能结束
+// ────────────────────────────────────────────
 
 // ────────────────────────────────────────────
 // 音乐播放器核心逻辑结束
@@ -1023,16 +1220,18 @@ function buildMainPanelHTML() {
         ${buildHomeLayout(layout)}
       </div>
 
-      <!-- 🌟 唱片机 -->
+          <!--🌟 唱片机 -->
       <div id="bb-pane-scrapbook" class="bb-tab-pane bb-hidden">
-        <div class="bb-action-bar">
+        <div class="bb-action-bar bb-action-wrap">
+          <button class="bb-sm-btn" id="bb-btn-music-search">🔍 搜索音乐</button>
           <button class="bb-sm-btn" id="bb-btn-export-md">📄 导出MD</button>
           <button class="bb-sm-btn" id="bb-btn-export-json">📦 导出JSON</button>
           <button class="bb-sm-btn" id="bb-btn-export-poster">🖼️ 导出海报</button>
         </div>
-        <div id="bb-scrap-empty" class="bb-empty">暂无收藏的语录<br/>点击消息旁的 🌟 收藏</div>
+        <div id="bb-scrap-empty" class="bb-empty">暂无收藏的语录<br/>点击消息旁的🌟 收藏</div>
         <div id="bb-records-list"></div>
       </div>
+
 
       <!-- 📖 日记本 -->
       <div id="bb-pane-diary" class="bb-tab-pane bb-hidden">
@@ -2013,16 +2212,58 @@ function bindOOCWindowPresetEvents() {
     toastr.success(`OOC预设「${name}」已创建`);
   });
 
-  $('#bb-ooc-win-preset-edit').on('click', function () {
+    $('#bb-ooc-win-preset-edit').on('click', function () {
     const preset = s().ooc_presets?.[s().active_ooc_preset];
     if (!preset) return;
-    const newPrompt = prompt('编辑系统提示词:', preset.system_prompt);
-    if (newPrompt !== null) {
-      preset.system_prompt = newPrompt;
-      saveSettingsDebounced();
-      toastr.success('OOC预设已更新');
+    
+    // 检查是否已有编辑面板展开
+    if ($('#bb-ooc-win-edit-panel').length > 0) {
+      $('#bb-ooc-win-edit-panel').remove();
+      return;
     }
+    
+    const editPanel = $(`
+      <div id="bb-ooc-win-edit-panel" class="bb-ooc-edit-panel">
+        <div class="bb-form-col" style="gap:8px;">
+          <label class="bb-label">预设名称：</label>
+          <input id="bb-ooc-win-pe-name" type="text" class="bb-input" value="${esc(preset.name)}" />
+          <label class="bb-label">系统提示词：</label>
+          <textarea id="bb-ooc-win-pe-system" class="bb-textarea" rows="6" style="min-height:120px;">${esc(preset.system_prompt || '')}</textarea>
+          
+          <div class="bb-btn-row" style="gap:6px;">
+            <div class="bb-form-col" style="flex:1;gap:4px;">
+              <label class="bb-label bb-text-xs">Temperature</label>
+              <input id="bb-ooc-win-pe-temp" type="number" class="bb-input" step="0.1" min="0" max="2" value="${preset.temperature ?? 0.8}" />
+            </div>
+            <div class="bb-form-col" style="flex:1;gap:4px;">
+              <label class="bb-label bb-text-xs">Max Tokens</label>
+              <input id="bb-ooc-win-pe-tokens" type="number" class="bb-input" min="50" max="4000" value="${preset.max_tokens ?? 800}" />
+            </div></div>
+          
+          <div class="bb-btn-row" style="gap:6px;">
+            <button class="bb-sm-btn bb-btn-primary bb-flex-1" id="bb-ooc-win-pe-save">💾 保存</button>
+            <button class="bb-sm-btn bb-btn-secondary" id="bb-ooc-win-pe-cancel">取消</button>
+          </div>
+        </div>
+      </div>
+    `);
+    
+    $('#bb-ooc-preset-content').append(editPanel);
+    
+    editPanel.find('#bb-ooc-win-pe-save').on('click', function() {
+      preset.name = $('#bb-ooc-win-pe-name').val().trim() || preset.name;
+      preset.system_prompt = $('#bb-ooc-win-pe-system').val();
+      preset.temperature = parseFloat($('#bb-ooc-win-pe-temp').val()) ||0.8;
+      preset.max_tokens = parseInt($('#bb-ooc-win-pe-tokens').val()) || 800;
+      saveSettingsDebounced();
+      refreshWinPresetSelect();
+      editPanel.remove();
+      toastr.success(`OOC预设「${preset.name}」已保存`);
+    });
+    
+    editPanel.find('#bb-ooc-win-pe-cancel').on('click', () => editPanel.remove());
   });
+
 
   $('#bb-ooc-win-preset-delete').on('click', function () {
     if (!s().ooc_presets || s().ooc_presets.length <= 1) { toastr.warning('至少保留一个OOC预设'); return; }
@@ -3061,6 +3302,8 @@ function bindMainPanelEvents(panel) {
     bbPlayerSeek(bbPlayer.audio.duration * percent);
   });
   // ──────────────────────────────────────────
+    // 音乐搜索
+  $(panel).off('click.bbmusicsearch').on('click.bbmusicsearch', '#bb-btn-music-search', showMusicSearchModal);
 
   // Tab切换 — 使用 bb-tab-pane 和 bb-hidden
   $(panel).off('click.bbtab').on('click.bbtab', '.bb-tab-btn', function () {
@@ -3368,17 +3611,128 @@ function bindSettingsPanelEvents() {
     if (!confirm(`确定删除预设「${s().prompt_presets[idx]?.name}」？`)) return;
     s().prompt_presets.splice(idx, 1); s().active_preset = 0; saveSettingsDebounced(); refreshPresetSelect(); toastr.info('预设已删除');
   });
-  $('#bb-preset-edit').on('click', function () {
-    const preset = s().prompt_presets?.[s().active_preset]; if (!preset) return;
-    $('#bb-pe-name').val(preset.name); $('#bb-pe-global').val(preset.global || ''); $('#bb-pe-blacklist').val(preset.blacklist || '');
-    const p = preset.prompts || {};
-    $('#bb-pe-diary').val(p.diary || ''); $('#bb-pe-summary').val(p.summary || ''); $('#bb-pe-weather').val(p.weather || '');
-    $('#bb-pe-vibe').val(p.vibe || ''); $('#bb-pe-npc').val(p.npc || ''); $('#bb-pe-chaos').val(p.chaos || '');
-    $('#bb-pe-parallel').val(p.parallel || ''); $('#bb-pe-world').val(p.world || ''); $('#bb-pe-couple').val(p.couple || '');
-    $('#bb-preset-editor-title').text(`编辑预设: ${preset.name}`);
-    $('#bb-preset-editor').slideDown(200);
+    $('#bb-preset-edit').on('click', function () {
+    const preset = s().prompt_presets?.[s().active_preset];
+    if (!preset) return;
+    
+    // 如果编辑器已存在，先移除
+    $('#bb-preset-editor-inline').remove();
+    
+    const editorHTML = `
+      <div id="bb-preset-editor-inline" class="bb-preset-editor-inline" style="margin-top:10px; padding:12px; border:1px solid rgba(255,255,255,0.1); border-radius:8px; background:rgba(0,0,0,0.15);">
+        <h5 id="bb-preset-editor-title" style="color:var(--bb-primary,#c9a0dc); margin:0 0 10px;">编辑预设: ${esc(preset.name)}</h5>
+        
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="bb-field">
+            <label class="bb-field-label">预设名称</label>
+            <input id="bb-pe-name" type="text" class="text_pole" value="${esc(preset.name)}" />
+          </div>
+          
+          <div class="bb-field">
+            <label class="bb-field-label">🌐 全局氛围提示词</label>
+            <textarea id="bb-pe-global" class="text_pole" rows="3" placeholder="全局氛围提示词，会附加到所有AI调用前">${esc(preset.global || '')}</textarea>
+          </div>
+          
+          <hr style="border:none;border-top:1px solid rgba(255,255,255,0.08);margin:4px 0;">
+          <div class="bb-field-label" style="font-weight:600;">📝 各功能提示词</div>
+          
+          <div class="bb-field">
+            <label class="bb-field-label">📖 日记</label>
+            <textarea id="bb-pe-diary" class="text_pole" rows="2">${esc(preset.prompts?.diary || '')}</textarea>
+          </div>
+          
+          <div class="bb-field">
+            <label class="bb-field-label">📜 总结</label>
+            <textarea id="bb-pe-summary" class="text_pole" rows="2">${esc(preset.prompts?.summary || '')}</textarea>
+          </div>
+          
+          <div class="bb-field">
+            <label class="bb-field-label">☁️ 环境</label>
+            <textarea id="bb-pe-weather" class="text_pole" rows="2">${esc(preset.prompts?.weather || '')}</textarea>
+          </div>
+          
+          <div class="bb-field">
+            <label class="bb-field-label">❤️ 氛围</label>
+            <textarea id="bb-pe-vibe" class="text_pole" rows="2">${esc(preset.prompts?.vibe || '')}</textarea>
+          </div>
+          
+          <div class="bb-field">
+            <label class="bb-field-label">🧑‍🤝‍🧑 NPC</label>
+            <textarea id="bb-pe-npc" class="text_pole" rows="2">${esc(preset.prompts?.npc || '')}</textarea>
+          </div>
+          
+          <div class="bb-field">
+            <label class="bb-field-label">🎲 命运</label>
+            <textarea id="bb-pe-chaos" class="text_pole" rows="2">${esc(preset.prompts?.fate || preset.prompts?.chaos || '')}</textarea>
+          </div>
+          
+          <div class="bb-field">
+            <label class="bb-field-label">🦋 平行宇宙</label>
+            <textarea id="bb-pe-parallel" class="text_pole" rows="2">${esc(preset.prompts?.butterfly || preset.prompts?.parallel || '')}</textarea>
+          </div>
+          
+          <div class="bb-field">
+            <label class="bb-field-label">📻 世界频段</label>
+            <textarea id="bb-pe-world" class="text_pole" rows="2">${esc(preset.prompts?.world || '')}</textarea>
+          </div>
+          
+          <div class="bb-field">
+            <label class="bb-field-label">💕 情侣空间</label>
+            <textarea id="bb-pe-couple" class="text_pole" rows="2">${esc(preset.prompts?.couple || '')}</textarea>
+          </div>
+          
+          <div class="bb-field">
+            <label class="bb-field-label">🚫屏蔽词（逗号分隔）</label>
+            <input id="bb-pe-blacklist" type="text" class="text_pole" value="${esc(Array.isArray(preset.blacklist) ? preset.blacklist.join(',') : (preset.blacklist || ''))}" placeholder="词1,词2,词3" />
+          </div>
+          
+          <div class="bb-btn-group" style="margin-top:6px;">
+            <button class="menu_button bb-btn-primary" id="bb-pe-save">💾 保存预设</button>
+            <button class="menu_button" id="bb-pe-cancel">取消</button>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // 插入到预设选择器后面
+    const $target = $('#bb-preset-edit').closest('.bb-settings-section, .bb-btn-group, div').parent();
+    if ($target.length) {
+      $target.append(editorHTML);
+    } else {
+      $('#bb-preset-edit').parent().after(editorHTML);
+    }
+    
+    // 绑定保存和取消
+    $('#bb-pe-save').on('click', function () {
+      const idx = s().active_preset;
+      const p = s().prompt_presets?.[idx];
+      if (!p) return;
+      p.name = $('#bb-pe-name').val().trim() || p.name;
+      p.global = $('#bb-pe-global').val();
+      const bl = $('#bb-pe-blacklist').val();
+      p.blacklist = bl ? bl.split(',').map(w => w.trim()).filter(Boolean) : [];
+      p.prompts = {
+        diary: $('#bb-pe-diary').val(),
+        summary: $('#bb-pe-summary').val(),
+        weather: $('#bb-pe-weather').val(),
+        vibe: $('#bb-pe-vibe').val(),
+        npc: $('#bb-pe-npc').val(),
+        fate: $('#bb-pe-chaos').val(),
+        chaos: $('#bb-pe-chaos').val(),
+        butterfly: $('#bb-pe-parallel').val(),
+        parallel: $('#bb-pe-parallel').val(),
+        world: $('#bb-pe-world').val(),
+        couple: $('#bb-pe-couple').val(),
+        ooc: p.prompts?.ooc || '',};
+      saveSettingsDebounced();
+      refreshPresetSelect();
+      $('#bb-preset-editor-inline').remove();
+      toastr.success(`预设「${p.name}」已保存`);
+    });
+    
+    $('#bb-pe-cancel').on('click', () => $('#bb-preset-editor-inline').remove());
   });
-  $('#bb-pe-cancel').on('click', () => $('#bb-preset-editor').slideUp(200));
+
   $('#bb-pe-save').on('click', function () {
     const idx = s().active_preset; const preset = s().prompt_presets?.[idx]; if (!preset) return;
     preset.name = $('#bb-pe-name').val().trim() || preset.name;
@@ -3430,14 +3784,71 @@ function bindSettingsPanelEvents() {
     if (!confirm(`确定删除OOC预设「${s().ooc_presets[idx]?.name}」？`)) return;
     s().ooc_presets.splice(idx, 1); s().active_ooc_preset = 0; saveSettingsDebounced(); refreshOOCPresetSelect(); toastr.info('OOC预设已删除');
   });
-  $('#bb-ooc-preset-edit').on('click', function () {
-    const preset = s().ooc_presets?.[s().active_ooc_preset]; if (!preset) return;
-    $('#bb-ooc-pe-name').val(preset.name); $('#bb-ooc-pe-system').val(preset.system_prompt || '');
-    $('#bb-ooc-pe-temp').val(preset.temperature ?? 0.8); $('#bb-ooc-pe-tokens').val(preset.max_tokens ?? 800);
-    $('#bb-ooc-pe-title').text(`编辑OOC预设: ${preset.name}`);
-    $('#bb-ooc-preset-editor').slideDown(200);
+   $('#bb-ooc-preset-edit').on('click', function () {
+    const preset = s().ooc_presets?.[s().active_ooc_preset];
+    if (!preset) return;
+    
+    // 如果编辑器已存在，先移除
+    $('#bb-ooc-preset-editor-inline').remove();
+    
+    const editorHTML = `
+      <div id="bb-ooc-preset-editor-inline" style="margin-top:10px; padding:12px; border:1px solid rgba(255,255,255,0.1); border-radius:8px; background:rgba(0,0,0,0.15);">
+        <h5 id="bb-ooc-pe-title" style="color:var(--bb-primary,#c9a0dc); margin:0 0 10px;">编辑OOC预设: ${esc(preset.name)}</h5>
+        
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="bb-field">
+            <label class="bb-field-label">预设名称</label>
+            <input id="bb-ooc-pe-name" type="text" class="text_pole" value="${esc(preset.name)}" />
+          </div>
+          
+          <div class="bb-field">
+            <label class="bb-field-label">系统提示词</label>
+            <textarea id="bb-ooc-pe-system" class="text_pole" rows="6" style="min-height:120px;">${esc(preset.system_prompt || '')}</textarea>
+          </div>
+          
+          <div style="display:flex;gap:8px;">
+            <div class="bb-field" style="flex:1;">
+              <label class="bb-field-label">Temperature</label>
+              <input id="bb-ooc-pe-temp" type="number" class="text_pole" step="0.1" min="0" max="2" value="${preset.temperature ?? 0.8}" />
+            </div>
+            <div class="bb-field" style="flex:1;">
+              <label class="bb-field-label">Max Tokens</label>
+              <input id="bb-ooc-pe-tokens" type="number" class="text_pole" min="50" max="4000" value="${preset.max_tokens ?? 800}" />
+            </div>
+          </div>
+          
+          <div class="bb-btn-group" style="margin-top:6px;">
+            <button class="menu_button bb-btn-primary" id="bb-ooc-pe-save">💾 保存</button>
+            <button class="menu_button" id="bb-ooc-pe-cancel">取消</button>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    const $target = $('#bb-ooc-preset-edit').closest('.bb-settings-section, div').parent();
+    if ($target.length) {
+      $target.append(editorHTML);
+    } else {
+      $('#bb-ooc-preset-edit').parent().after(editorHTML);
+    }
+    
+    $('#bb-ooc-pe-save').on('click', function () {
+      const idx = s().active_ooc_preset;
+      const p = s().ooc_presets?.[idx];
+      if (!p) return;
+      p.name = $('#bb-ooc-pe-name').val().trim() || p.name;
+      p.system_prompt = $('#bb-ooc-pe-system').val();
+      p.temperature = parseFloat($('#bb-ooc-pe-temp').val()) || 0.8;
+      p.max_tokens = parseInt($('#bb-ooc-pe-tokens').val()) || 800;
+      saveSettingsDebounced();
+      refreshOOCPresetSelect();
+      $('#bb-ooc-preset-editor-inline').remove();
+      toastr.success(`OOC预设「${p.name}」已保存`);
+    });
+    
+    $('#bb-ooc-pe-cancel').on('click', () => $('#bb-ooc-preset-editor-inline').remove());
   });
-  $('#bb-ooc-pe-cancel').on('click', () => $('#bb-ooc-preset-editor').slideUp(200));
+
   $('#bb-ooc-pe-save').on('click', function () {
     const idx = s().active_ooc_preset; const preset = s().ooc_presets?.[idx]; if (!preset) return;
     preset.name = $('#bb-ooc-pe-name').val().trim() || preset.name;
@@ -3529,6 +3940,17 @@ function bindSettingsPanelEvents() {
     });
   });
   $('#bb-css-ai-prompt-preview').text(CSS_AI_PROMPT);
+  
+    // 音乐搜索API配置
+  $('#bb-music-search-api').val(s().music_search_api || '').on('input', function() {
+    s().music_search_api = this.value.trim();
+    s().music_search_api_tested = false;
+    saveSettingsDebounced();
+  });
+  $('#bb-music-test-search-api').on('click', async function() {
+    await bbMusicTestAPI();
+  });
+
     // 音乐播放器设置（新增 - MP3播放器）
   bbPlayerLoadPlaylist();
   bbPlayerRenderPlaylist();
