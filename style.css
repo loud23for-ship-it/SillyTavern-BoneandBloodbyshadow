@@ -1253,29 +1253,32 @@
    ═══════════════════════════════════════════ */
 
 /* ═══════════════════════════════════════════
-   移动端适配（修复 - 防止动画冲突）
+   移动端适配（完整修复版）
    ═══════════════════════════════════════════ */
 
 @media (max-width: 768px) {
-  /* 手机端主面板 - 改为90%高度，保留部分背景 */
+  /* 手机端主面板 - 90%高度，底部弹出 */
   .bb-main-panel,
   #bb-main-panel {
     width: 95vw !important;
     max-width: 95vw !important;
     max-height: 90vh !important;
     height: auto !important;
-    min-height: 80vh;
+    min-height: 70vh;
     border-radius: 16px 16px 0 0 !important;
-    /* 定位固定在底部 */
+    /* 定位：底部居中 */
     position: fixed !important;
     top: auto !important;
     bottom: 0 !important;
-    left: 2.5vw !important;
-    right: 2.5vw !important;
-    /* 移除所有 transform */
-    transform: none !important;
-    /* 使用 transition 实现平滑效果 */
-    transition: opacity 0.3s ease, bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    left: 50% !important;
+    right: auto !important;
+    /* 水平居中 - 关键！*/
+    transform: translateX(-50%) !important;
+    /* 平滑过渡 */
+    transition: opacity 0.2s ease !important;
+    /* 防止内容溢出 */
+    overflow-y: auto;
+    overflow-x: hidden;
   }
   
   /* 面板头部增加拖动指示器 */
@@ -1307,9 +1310,9 @@
     position: fixed !important;
     top: auto !important;
     bottom: 0 !important;
-    left: 2.5vw !important;
-    right: 2.5vw !important;
-    transform: none !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
   }
 
   /* 其他子窗口适配 */
@@ -1323,41 +1326,93 @@
     position: fixed !important;
     top: auto !important;
     bottom: 0 !important;
-    left: 2.5vw !important;
-    right: 2.5vw !important;
-    transform: none !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
   }
 
+  /* Tab导航横向滚动 */
   .bb-tab-nav {
     flex-wrap: nowrap;
     overflow-x: auto;
+    overflow-y: hidden;
     padding: 8px 10px;
+    -webkit-overflow-scrolling: touch;
   }
-  .bb-tab-btn { font-size: 11px; padding: 5px 10px; }
+  
+  .bb-tab-nav::-webkit-scrollbar {
+    height: 3px;
+  }
+  
+  .bb-tab-btn { 
+    font-size: 11px; 
+    padding: 6px 12px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
 
+  /* 隐藏桌面端悬浮球 */
   .bb-trigger-btn,
-  #bb-trigger-btn { display: none !important; }
+  #bb-trigger-btn { 
+    display: none !important; 
+  }
 
+  /* 画廊网格 */
   .bb-gallery-grid {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  .bb-dashboard-grid {
-    grid-template-columns: 1fr 1fr;
     gap: 8px;
   }
 
-  .bb-home-top-row { flex-direction: column; gap: 12px; }
-  .bb-home-link-emoji { font-size: 32px; }
+  /* 仪表盘网格 */
+  .bb-dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
 
-  .bb-modal-content { margin: 10px; padding: 16px; }
+  /* 主页顶部 */
+  .bb-home-top-row { 
+    flex-direction: column; 
+    gap: 12px; 
+  }
+  
+  .bb-home-link-emoji { 
+    font-size: 28px; 
+  }
+
+  /* 模态框 */
+  .bb-modal-content { 
+    margin: 10px; 
+    padding: 16px;
+    max-width: 95vw;
+  }
+  
+  /* Tab内容区 */
+  .bb-tab-content {
+    padding: 14px;
+  }
 }
 
+/* 超小屏幕（小于480px） */
 @media (max-width: 480px) {
-  .bb-tab-content { padding: 12px; }
-  .bb-gallery-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
-  .bb-sticker-grid { grid-template-columns: repeat(3, 1fr); }
+  .bb-tab-content { 
+    padding: 12px; 
+  }
+  
+  .bb-gallery-grid { 
+    grid-template-columns: 1fr 1fr; 
+    gap: 6px; 
+  }
+  
+  .bb-sticker-grid { 
+    grid-template-columns: repeat(3, 1fr); 
+  }
+  
+  .bb-tab-btn {
+    font-size: 10px;
+    padding: 5px 10px;
+  }
 }
+
 /* =============================================================
    骨与血 —扩展设置面板样式 (#bb-settings-panel)
    这些样式只作用于 SillyTavern 扩展栏中的设置面板，
