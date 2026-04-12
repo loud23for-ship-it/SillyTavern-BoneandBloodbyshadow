@@ -45,7 +45,6 @@ const STYLE_PRESETS = {
     gallery: '🖼️ 画廊', couple: '🤍 情侣空间',},
 };
 
-};
 
 
 const TAB_KEYS = ['home','scrapbook','diary','npc','weather','vibe','parallel','fate','ooc','world','achievements','gallery','couple'];
@@ -1305,7 +1304,7 @@ function buildMainPanelHTML() {
         </div>
         <div id="bb-fate-result" class="bb-box bb-text-center">点击上方按钮，让命运降临...</div>
         <div class="bb-section">
-          <h4class="bb-section-title">📜 命运历史</h4>
+         <h4 class="bb-section-title">📜 命运历史</h4>
           <div id="bb-fate-history-list"></div>
         </div>
       </div>
@@ -1791,7 +1790,7 @@ function renderSummary() {
             <button class="bb-sm-btn bb-btn-xs bb-btn-danger bb-del-summary" data-idx="${realIdx}" title="删除">🗑️</button>
           </span>
         </div>
-        <div class="bb-diary-body">${formatText(s.content)}</div>
+<div class="bb-diary-body">${renderSafeHTML(s.content)}</div>
       </div>
     `);
   });
@@ -3331,8 +3330,8 @@ function downloadPoster() {
 function renderAll() {
   renderScrapbook();
   renderDiary();
-  renderSummary();          // ← 新增
-  updateAutoSummaryBar();   // ← 新增renderIntel();
+  renderSummary();
+  updateAutoSummaryBar();
   renderIntel();
   renderParallel();
   renderFateHistory();
