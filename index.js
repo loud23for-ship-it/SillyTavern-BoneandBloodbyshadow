@@ -4283,7 +4283,7 @@ function registerAllMacros() {
   }
 }
 
-// ── 动态CSS注入 ── 手机端适配修改过
+//── 动态CSS注入 ──
 
 function injectDynamicCSS() {
   if ($('#bb-dynamic-style').length > 0) return;
@@ -4294,30 +4294,16 @@ function injectDynamicCSS() {
       100% { transform: translateX(-100%); }
     }
     @keyframes bb-float-pulse {
-      0%, 100% { box-shadow: 0 4px 15px rgba(0,0,0,0.4), 0 0 0 0 rgba(102,126,234,0.5); }
-      50% { box-shadow: 0 4px 15px rgba(0,0,0,0.4), 0 0 0 12px rgba(102,126,234,0); }
-    }
-
-    /*═══ 移动端适配 ═══ */
-   function injectDynamicCSS() {
-  if ($('#bb-dynamic-style').length > 0) return;
-  
-  const styleContent = `
-    @keyframes bb-scroll {
-      0% { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
-    }
-    @keyframes bb-float-pulse {
       0%, 100% { box-shadow: 0 4px 15px rgba(0,0,0,0.4), 0 0 0 0rgba(102,126,234,0.5); }
       50% { box-shadow: 0 4px 15px rgba(0,0,0,0.4), 0 0 0 12px rgba(102,126,234,0); }
-    }
-  `;
+    }`;
   
   const styleEl = document.createElement('style');
   styleEl.id = 'bb-dynamic-style';
   styleEl.textContent = styleContent;
   document.head.appendChild(styleEl);
 }
+
 
 
 // ══════════════════════════════════════
