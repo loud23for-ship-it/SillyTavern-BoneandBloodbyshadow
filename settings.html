@@ -370,6 +370,109 @@
         <button class="bbs-btn bbs-btn-sm bbs-settings-theme" data-theme="ocean">🌊 海洋</button>
         <button class="bbs-btn bbs-btn-sm bbs-settings-theme" data-theme="monochrome">⬜ 黑白</button>
       </div>
+               <!--═══ 0. 作者的话 ═══ -->
+      <div class="bbs-section bbs-author-section">
+        <div class="bbs-section-header" onclick="$(this).parent().toggleClass('open')">
+          <span class="bbs-section-title">
+            <span class="bbs-author-icon">🦴</span>
+            <span class="bbs-author-title-text">SHADOW's Note</span>
+            <span class="bbs-version-badge">v7.1</span>
+          </span>
+          <span class="bbs-section-arrow">▼</span>
+        </div>
+        <div class="bbs-section-body" style="padding:0;">
+
+          <!-- 作者卡片头部 -->
+          <div class="bbs-author-header">
+            <div class="bbs-author-avatar">影|shadow|玉元一</div>
+            <div class="bbs-author-info">
+              <div class="bbs-author-name">SHADOW<span class="bbs-author-sub">安息之影</span></div>
+              <div class="bbs-author-tagline">「骨承载记忆，血书写故事 」</div>
+            </div>
+          </div>
+
+          <!-- 快捷链接 -->
+          <div class="bbs-author-links">
+            <a href="https://github.com/loud23for-ship-it/SillyTavern-BoneandBloodbyshadow/blob/main/README.md" target="_blank" class="bbs-author-link-btn">
+              <span class="bbs-link-icon">📖</span>
+              <span>使用文档</span>
+            </a>
+            <button class="bbs-author-link-btn" id="bb-author-bug">
+              <span class="bbs-link-icon">🐛</span>
+              <span>反馈BUG</span>
+            </button>
+            <button class="bbs-author-link-btn" id="bb-author-group">
+              <span class="bbs-link-icon">💬</span>
+              <span>交流群</span>
+            </button>
+            <button class="bbs-author-link-btn" id="bb-author-support">
+              <span class="bbs-link-icon">☕</span>
+              <span>支持作者</span>
+            </button>
+          </div>
+
+          <!-- 弹出信息区 -->
+          <div id="bb-author-msg-area" class="bbs-author-msg-area" style="display:none;">
+            <div id="bb-author-msg-content" class="bbs-author-msg-content"></div>
+          </div>
+
+          <!-- 更新日志 /碎碎念 -->
+          <div class="bbs-author-changelog">
+            <div class="bbs-changelog-title">
+              <span class="bbs-changelog-dot"></span>
+              <span>更新日志 & 碎碎念</span>
+              <span class="bbs-changelog-date">2026.04.12</span>
+            </div>
+            <div class="bbs-changelog-body">
+
+              <!-- ═══════════════════════════════════✏️ 每次更新只需要修改这里面的内容！
+                   ═══════════════════════════════════ -->
+
+              <div class="bbs-changelog-entry">
+                <div class="bbs-changelog-ver">v7.1 <span class="bbs-changelog-tag bbs-tag-new">NEW</span></div>
+                <ul class="bbs-changelog-list">
+                  <li>🎉 全新暗黑风格设置面板，支持5种主题切换</li>
+                  <li>🔌 API连接后自动获取模型列表，下拉框选择</li>
+                  <li>📝 提示词预设编辑器完全重做，直接在面板内编辑</li>
+                  <li>💬 OOC预设编辑改为完整面板，支持多行系统提示词</li>
+                  <li>🔍 新增音乐搜索API功能</li>
+                  <li>📜 自动总结功能UI回归，实时显示进度</li>
+                  <li>📱 修复移动端主界面无法全屏显示的问题</li>
+                  <li>🔧 宏注册系统重写，改用事件监听方式</li>
+                </ul>
+              </div>
+
+              <div class="bbs-changelog-entry">
+                <div class="bbs-changelog-ver">v7.0</div>
+                <ul class="bbs-changelog-list">
+                  <li>🦴 15区块架构重构</li>
+                  <li>🏠 三种主页布局</li>
+                  <li>🎵 内置音乐播放器</li>
+                </ul>
+              </div>
+
+              <!--碎碎念 -->
+              <div class="bbs-author-murmur">
+                <div class="bbs-murmur-title">💭 碎碎念</div>
+                <p>
+                  修改了之前API必须要手填的问题，现在可以直接使用下拉栏了！
+                     因为改代码来来回回改了很多次，所以总是丢三落四的呜呜
+                </p>
+                <p>希望你玩的开心！
+                </p>
+                <p class="bbs-murmur-sign">—— SHADOW ·凌晨三点的碎碎念</p>
+              </div>
+
+              <!-- ═══════════════════════════════════
+                   ✏️ 修改到这里结束
+                   ═══════════════════════════════════ -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
 
       <!-- ═══ 1. 基础设置 ═══ -->
       <div class="bbs-section open">
