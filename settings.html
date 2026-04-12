@@ -352,6 +352,410 @@
   --bbs-accent: #999;
   --bbs-accent-dark: #666;
 }
+     /*═══════════════════════════════════════════
+   作者的话 — 样式
+   ═══════════════════════════════════════════ */
+
+/* 引入字体 */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Noto+Serif+SC:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* 作者区块特殊样式 */
+.bbs-author-section {
+  border: 1px solid rgba(201, 160, 220, 0.12) !important;
+  overflow: hidden;
+  position: relative;
+}
+
+.bbs-author-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent,
+    var(--bbs-accent, #c9a0dc) 20%,
+    var(--bbs-accent, #c9a0dc) 80%,
+    transparent
+  );opacity: 0.6;
+}
+
+.bbs-author-section .bbs-section-header {
+  background: linear-gradient(135deg,
+    rgba(201, 160, 220, 0.05),
+    rgba(240, 168, 200, 0.03)
+  );
+}
+
+/* 标题 */
+.bbs-author-icon {
+  font-size: 18px;
+  animation: bb-bone-pulse 3s ease-in-out infinite;
+}
+
+@keyframes bb-bone-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+.bbs-author-title-text {
+  font-family: 'Orbitron', 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  background: linear-gradient(135deg, var(--bbs-accent, #c9a0dc), #f0a8c8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.bbs-version-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: rgba(201, 160, 220, 0.15);
+  color: var(--bbs-accent, #c9a0dc);
+  border: 1px solid rgba(201, 160, 220, 0.2);
+  margin-left: 6px;
+}
+
+/* 作者卡片头部 */
+.bbs-author-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: linear-gradient(135deg,
+    rgba(201, 160, 220, 0.06),
+    rgba(0, 0, 0, 0.2)
+  );
+  border-bottom: 1px solid var(--bbs-border);
+}
+
+.bbs-author-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #a374c0, #d87ea8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: #fff;
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 700;flex-shrink: 0;box-shadow: 0 4px 15px rgba(163, 116, 192, 0.3);
+  position: relative;
+}
+
+.bbs-author-avatar::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 14px;
+  border: 1px solid rgba(201, 160, 220, 0.3);
+  animation: bb-avatar-glow 4s ease-in-out infinite;
+}
+
+@keyframes bb-avatar-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 160, 220, 0); }
+  50% { box-shadow: 0 0 12px 2px rgba(201, 160, 220, 0.2); }
+}
+
+.bbs-author-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.bbs-author-name {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--bbs-text-bright, #eee);
+  letter-spacing: 1px;
+}
+
+.bbs-author-sub {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 11px;
+  color: var(--bbs-text-dim, #888);
+  margin-left: 6px;
+  font-weight: 400;
+}
+
+.bbs-author-tagline {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 12px;
+  color: var(--bbs-text-dim, #888);
+  margin-top: 4px;
+  letter-spacing: 2px;
+  opacity: 0.8;
+}
+
+/* 快捷链接按钮 */
+.bbs-author-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 12px;
+  border-bottom: 1px solid var(--bbs-border);
+}
+
+.bbs-author-link-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--bbs-bg-input, #1a1a1a);
+  border: 1px solid var(--bbs-border, rgba(255,255,255,0.06));
+  color: var(--bbs-text, #ccc);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  font-family: 'Noto Serif SC', system-ui, sans-serif;
+}
+
+.bbs-author-link-btn:hover {
+  background: var(--bbs-bg-hover, #222);
+  border-color: var(--bbs-accent, #c9a0dc);
+  color: var(--bbs-accent, #c9a0dc);transform: translateY(-1px);box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.bbs-link-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* 弹出信息区 */
+.bbs-author-msg-area {
+  padding: 0 12px;
+  overflow: hidden;
+}
+
+.bbs-author-msg-content {
+  padding: 12px 14px;
+  margin: 8px 0;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.7;
+  font-family: 'Noto Serif SC', serif;
+  animation: bbs-msg-appear 0.3s ease;position: relative;
+}
+
+@keyframes bbs-msg-appear {
+  from { opacity: 0; transform: translateY(-8px); max-height: 0; }
+  to { opacity: 1; transform: translateY(0); max-height: 200px; }
+}
+
+.bbs-author-msg-content.bbs-msg-bug {
+  background: rgba(232, 120, 120, 0.08);
+  border: 1px solid rgba(232, 120, 120, 0.2);color: #f0a0a0;
+}
+
+.bbs-author-msg-content.bbs-msg-group {
+  background: rgba(100, 180, 220, 0.08);
+  border: 1px solid rgba(100, 180, 220, 0.2);
+  color: #90c8e8;
+}
+
+.bbs-author-msg-content.bbs-msg-support {
+  background: rgba(201, 160, 220, 0.08);
+  border: 1px solid rgba(201, 160, 220, 0.2);
+  color: var(--bbs-accent, #c9a0dc);
+}
+
+.bbs-author-msg-content .bbs-msg-close {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  cursor: pointer;
+  opacity: 0.5;
+  font-size: 14px;
+}
+
+.bbs-author-msg-content .bbs-msg-close:hover {
+  opacity: 1;
+}
+
+/* 更新日志 */
+.bbs-author-changelog {
+  padding: 12px;
+}
+
+.bbs-changelog-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Orbitron','JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--bbs-text-bright, #eee);
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.bbs-changelog-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--bbs-accent, #c9a0dc);
+  box-shadow: 0 0 8px var(--bbs-accent, #c9a0dc);
+  animation: bb-dot-blink 2s ease-in-out infinite;
+}
+
+@keyframes bb-dot-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.bbs-changelog-date {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--bbs-text-dim, #888);
+  font-weight: 400;
+}
+
+.bbs-changelog-body {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.bbs-changelog-body::-webkit-scrollbar {
+  width: 3px;
+}
+
+.bbs-changelog-body::-webkit-scrollbar-thumb {
+  background: rgba(201, 160, 220, 0.2);
+  border-radius: 2px;
+}
+
+.bbs-changelog-entry {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--bbs-border);
+}
+
+.bbs-changelog-entry:last-of-type {
+  border-bottom: none;
+}
+
+.bbs-changelog-ver {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--bbs-accent, #c9a0dc);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bbs-changelog-tag {
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.bbs-tag-new {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.bbs-tag-fix {
+  background: rgba(255, 152, 0, 0.2);
+  color: #ff9800;
+  border: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+.bbs-tag-breaking {
+  background: rgba(232, 120, 120, 0.2);
+  color: #e87878;
+  border: 1px solid rgba(232, 120, 120, 0.3);
+}
+
+.bbs-changelog-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bbs-changelog-list li {
+  font-size: 12px;
+  color: var(--bbs-text, #ccc);
+  padding: 3px 0 3px 16px;
+  position: relative;
+  line-height: 1.5;
+  font-family: 'Noto Serif SC', system-ui, sans-serif;
+}
+
+.bbs-changelog-list li::before {
+  content: '›';
+  position: absolute;
+  left: 4px;
+  color: var(--bbs-accent, #c9a0dc);
+  font-weight: bold;
+}
+
+/* 碎碎念 */
+.bbs-author-murmur {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 8px;
+  background: linear-gradient(135deg,
+    rgba(201, 160, 220, 0.04),
+    rgba(240, 168, 200, 0.02)
+  );
+  border: 1px solid rgba(201, 160, 220, 0.08);
+  position: relative;
+}
+
+.bbs-author-murmur::before {
+  content: '"';
+  position: absolute;
+  top: 4px;
+  left: 10px;
+  font-size: 36px;
+  font-family: 'Noto Serif SC', serif;
+  color: var(--bbs-accent, #c9a0dc);
+  opacity: 0.15;
+  line-height: 1;
+}
+
+.bbs-murmur-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--bbs-text-bright, #eee);
+  margin-bottom: 8px;
+}
+
+.bbs-author-murmur p {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 12px;
+  color: var(--bbs-text-dim, #888);
+  line-height: 1.8;
+  margin: 0 0 6px 0;
+  text-indent: 2em;
+}
+
+.bbs-murmur-sign {
+  text-align: right;
+  font-style: italic;
+  color: var(--bbs-text-muted, #666) !important;
+  font-size: 11px !important;
+  text-indent: 0 !important;
+  margin-top: 8px !important;
+}
+
 </style>
 
 <div id="bb-settings-panel">
