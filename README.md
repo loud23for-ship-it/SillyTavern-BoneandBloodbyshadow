@@ -5,7 +5,7 @@
 > ✨ 作者：shadow 玉元一 ✨
 
 <p align="center">
-  <img src="https://img.shields.io/badge/版本-0.80-beta-ff69b4?style=for-the-badge" />
+   <img src="https://img.shields.io/badge/SillyTavern-插件-8A2BE2?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTEgMTVoLTJ2LTJoMnYyem0wLTRoLTJWN2gydjZ6Ii8+PC9zdmc+" />
   <img src="https://img.shields.io/badge/理念-赋予血液-crimson?style=for-the-badge" />
 </p>
 
