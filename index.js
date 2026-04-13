@@ -5164,8 +5164,64 @@ function bindSettingsPanelEvents() {
     $parent.find(`#bb-subtab-${targetSubTab}`).removeClass('bb-hidden');
   });
 
-  // 编年史事件绑定
-  bindChroniclePanelEvents();
+    // ═══════════════════════════════════════════
+  // ⭐ 编年史设置绑定
+  // ═══════════════════════════════════════════
+  if ($('#bb-set-chronicle-enabled').length > 0) {
+    const ch = s().chronicle || {};
+
+    $('#bb-set-chronicle-enabled').prop('checked', ch.enabled !== false);
+    $('#bb-set-chronicle-auto').prop('checked', ch.auto_extract !== false);
+    $('#bb-set-chronicle-interval').val(ch.extract_interval || 20);
+    $('#bb-set-chronicle-auto-chapter').prop('checked', ch.auto_chapter !== false);
+    $('#bb-set-chronicle-chapter-threshold').val(ch.chapter_threshold || 5);
+    $('#bb-set-chronicle-export-format').val(ch.export_format || 'markdown');
+
+    $('#bb-set-chronicle-enabled').on('change', function () {
+      if (!s().chronicle) s().chronicle = {};
+      s().chronicle.enabled = $(this).is(':checked');
+      saveSettingsDebounced();
+      toastr.info(s().chronicle.enabled ? '编年史已启用' : '编年史已关闭');
+    });
+
+    $('#bb-set-chronicle-auto').on('change', function () {
+      if (!s().chronicle) s().chronicle = {};
+      s().chronicle.auto_extract = $(this).is(':checked');
+      saveSettingsDebounced();
+      if ($(this).is(':checked') && typeof hookChronicleToMessageCounter === 'function') {
+        hookChronicleToMessageCounter();
+        toastr.info('编年史自动提取已启用');
+      } else {
+        toastr.info('编年史自动提取已关闭');
+      }
+    });
+
+    $('#bb-set-chronicle-interval').on('change', function () {
+      if (!s().chronicle) s().chronicle = {};
+      s().chronicle.extract_interval = parseInt($(this).val()) || 20;
+      saveSettingsDebounced();
+    });
+
+    $('#bb-set-chronicle-auto-chapter').on('change', function () {
+      if (!s().chronicle) s().chronicle = {};
+      s().chronicle.auto_chapter = $(this).is(':checked');
+      saveSettingsDebounced();
+    });
+
+    $('#bb-set-chronicle-chapter-threshold').on('change', function () {
+      if (!s().chronicle) s().chronicle = {};
+      s().chronicle.chapter_threshold = parseInt($(this).val()) || 5;
+      saveSettingsDebounced();
+    });
+
+    $('#bb-set-chronicle-export-format').on('change', function () {
+      if (!s().chronicle) s().chronicle = {};
+      s().chronicle.export_format = $(this).val();
+      saveSettingsDebounced();
+    });
+
+    console.log('[骨与血] 编年史设置绑定完成');
+  }
 
 }
 
