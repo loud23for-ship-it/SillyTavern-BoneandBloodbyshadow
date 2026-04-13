@@ -2859,6 +2859,9 @@ async function generateWorldFeed() {
     });
     saveChatData(); renderWorldFeed(); updateMarquee();
     toastr.success(`📻 已生成 ${messages.length} 条消息`);
+    bbNotify('world', '世界频段更新', `生成了 ${messages.length} 条消息`);
+    playNotificationSound('success');
+
   }
 }
 
@@ -2940,6 +2943,9 @@ function unlockAchievement(ach) {
   pluginData.achievements.push({ id: ach.id, unlocked: true, date: new Date().toLocaleString('zh-CN') });
   saveChatData(); showAchievementPopup(ach);
   toastr.success(`🏆 解锁成就：${ach.name}`, '', { timeOut: 5000 });
+  bbNotify('achievement', `解锁成就：${ach.name}`, ach.desc);
+  playNotificationSound('success');
+
 }
 
 function showAchievementPopup(ach) {
