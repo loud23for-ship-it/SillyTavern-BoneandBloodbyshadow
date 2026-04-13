@@ -3722,6 +3722,9 @@ function renderAll() {
   updateMarquee();
   applyHomeBackground();
   applyCustomFont();
+  renderErrorLog();
+  renderNotifications();
+
 }
 
 // ── 主面板事件绑定 ──
