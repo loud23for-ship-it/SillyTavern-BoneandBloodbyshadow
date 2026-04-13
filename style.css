@@ -1898,6 +1898,84 @@
     grid-template-columns: repeat(3, 1fr) !important;
   }
 }
+/* ═══════════════════════════════════════════
+   错误日志 & 通知栏 Tab 样式
+   ═══════════════════════════════════════════ */
+
+/* ── 角标（Tab按钮上的数字标记） ── */
+.bb-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+  color: #fff;
+  pointer-events: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+}
+.bb-badge-error {
+  background: #e74c3c;
+}
+.bb-badge-notif {
+  background: linear-gradient(135deg, var(--bb-primary-dark), var(--bb-accent-dark));
+}
+
+/* ── Tab按钮需要relative定位来承载角标 ── */
+.bb-tab-btn {
+  position: relative;
+}
+
+/* ── 通知栏未读项高亮 ── */
+.bb-notif-unread {
+  font-weight: 500;
+}
+
+/* ── 错误日志项的左边框 ── */
+.bb-error-item {
+  border-left: 3px solid var(--bb-accent, #f0a8c8);
+}
+
+/* ── 通知/错误列表滚动 ── */
+#bb-error-list,
+#bb-notif-list {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* ── 通知项点击标记已读的小链接 ── */
+.bb-notif-read,
+.bb-notif-del,
+.bb-error-del {
+  color: var(--bb-text-muted);
+  cursor: pointer;
+  transition: color var(--bb-transition);
+}
+.bb-notif-read:hover {
+  color: var(--bb-primary);
+}
+.bb-notif-del:hover,
+.bb-error-del:hover {
+  color: #e87878;
+}
+
+/* ── 移动端适配 ── */
+@media screen and (max-width: 768px) {
+  .bb-badge {
+    top: -3px;
+    right: -3px;
+    min-width: 14px;
+    height: 14px;
+    font-size: 9px;line-height: 14px;
+  }
+}
+
 
 /* ============================================================
    END OF style.css — 骨与血(Bone & Blood) v7.1
