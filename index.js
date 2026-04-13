@@ -5010,16 +5010,46 @@ function injectDynamicCSS() {
       100% { transform: translateX(-100%); }
     }
     @keyframes bb-float-pulse {
-      0%, 100% { box-shadow: 0 4px 15px rgba(0,0,0,0.4), 0 0 0 0rgba(102,126,234,0.5); }
+      0%, 100% { box-shadow: 0 4px 15px rgba(0,0,0,0.4), 0 0 0 0 rgba(102,126,234,0.5); }
       50% { box-shadow: 0 4px 15px rgba(0,0,0,0.4), 0 0 0 12px rgba(102,126,234,0); }
-    }`;
+    }
+    
+    .bb-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+      border-radius: 8px;
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 16px;
+      text-align: center;
+      color: #fff;
+      pointer-events: none;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+      z-index: 2;
+    }
+    .bb-badge-error {
+      background: #e74c3c;
+    }
+    .bb-badge-notif {
+      background: linear-gradient(135deg, var(--bb-primary-dark), var(--bb-accent-dark));
+    }
+    .bb-notif-unread {
+      font-weight: 500;
+    }
+    .bb-tab-btn {
+      position: relative;
+    }
+  `;
   
   const styleEl = document.createElement('style');
   styleEl.id = 'bb-dynamic-style';
   styleEl.textContent = styleContent;
   document.head.appendChild(styleEl);
 }
-
 
 
 // ══════════════════════════════════════
