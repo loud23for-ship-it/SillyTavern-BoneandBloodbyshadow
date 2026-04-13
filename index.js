@@ -4010,6 +4010,9 @@ function renderAll() {
   refreshAmberCategoryFilter();
   renderAmberFacts();
   updateAmberStats();
+    // 编年史
+  renderChronicleTimeline();
+  updateChronicleStats();
 }
 
 // ── 主面板事件绑定 ──
