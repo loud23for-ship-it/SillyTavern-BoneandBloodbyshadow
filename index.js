@@ -342,6 +342,35 @@ const FACT_CATEGORIES = {
   custom: { name: '自定义', icon: '✨', color: '#c0c0c0', weight: 1.0 },
 };
 
+// ═══════════════════════════════════════════
+// 时间线编年史系统常量
+// ═══════════════════════════════════════════
+
+const CHRONICLE_CATEGORIES = {
+  milestone:{ name: '里程碑',icon: '⭐', color: '#ffd700' },
+  conflict:       { name: '冲突',     icon: '⚔️', color: '#e74c3c' },
+  reconciliation: { name: '和解',     icon: '🤝', color: '#4caf50' },
+  fate:           { name: '命运',     icon: '🎲', color: '#9b59b6' },
+  memory:         { name: '记忆',     icon: '💭', color: '#3498db' },
+  romance:        { name: '情感',     icon: '💕', color: '#f0a8c8' },
+  discovery:      { name: '发现',     icon: '🔍', color: '#e67e22' },
+  loss:           { name: '失去',     icon: '🥀', color: '#7f8c8d' },
+  growth:         { name: '成长',     icon: '🌱', color: '#2ecc71' },
+  custom:         { name: '自定义',   icon: '✨', color: '#c0c0c0' },
+};
+
+const CHRONICLE_IMPORTANCE = {
+  1: { name: '琐事',label: '★☆☆☆☆' },
+  2: { name: '普通',   label: '★★☆☆☆' },
+  3: { name: '重要',   label: '★★★☆☆' },
+  4: { name: '关键',   label: '★★★★☆' },
+  5: { name: '史诗',   label: '★★★★★' },
+};
+
+//编年史运行时数据
+let chronicleExtracting = false;
+
+
 const FACT_STATUS = {
   active: { name: '活跃', color: '#4caf50' },
   outdated: { name: '过时', color: '#888' },
