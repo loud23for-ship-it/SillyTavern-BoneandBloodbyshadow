@@ -418,6 +418,7 @@ const CHRONICLE_IMPORTANCE = {
 
 //编年史运行时数据
 let chronicleExtracting = false;
+let chronicleMessageCounter = 0;
 
 
 const FACT_STATUS = {
@@ -8018,8 +8019,6 @@ function generateChronicleMacro() {
 // ────────────────────────────────────────────
 // P9. 自动提取钩子
 // ────────────────────────────────────────────
-
-let chronicleMessageCounter = 0;
 
 /**
  * 将编年史提取挂钩到消息计数器
