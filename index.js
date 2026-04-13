@@ -3654,8 +3654,6 @@ async function fetchModelList() {
 async function testAPIConnection() {
   await fetchModelList();
 }
-
-
 async function callSubAPI(messages, maxTokens = 500, temperature = 0.85) {
   const s = getSettings();
   const base = s.api_base.replace(/\/+$/, '');
@@ -3666,6 +3664,23 @@ async function callSubAPI(messages, maxTokens = 500, temperature = 0.85) {
   if (preset.global) {
     messages = [{ role: 'system', content: preset.global }, ...messages];
   }
+
+  // 记忆琥珀：对非事实提取/冲突解决类请求，自动注入事实上下文到第一条system消息
+  const isAmberInternalCall = messages.some(m =>
+    m.content && (
+      m.content.includes('提取关键事实') ||
+      m.content.includes('事实存在冲突') ||
+      m.content.includes('记忆分析助手') ||
+      m.content.includes('逻辑分析助手')
+    )
+  );
+  if (!isAmberInternalCall && typeof injectAmberContext === 'function') {
+    const sysMsg = messages.find(m => m.role === 'system');
+    if (sysMsg) {
+      sysMsg.content = injectAmberContext(sysMsg.content);
+    }
+  }
+
   try {
     const url = base.includes('/v1') ? `${base}/chat/completions` : `${base}/v1/chat/completions`;
     const res = await fetch(url, {
@@ -3676,15 +3691,29 @@ async function callSubAPI(messages, maxTokens = 500, temperature = 0.85) {
     if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
     const json = await res.json();
     let content = json.choices?.[0]?.message?.content || '';
-    if (preset.blacklist && preset.blacklist.length > 0) {
-      preset.blacklist.forEach((word) => {
-        const reg = new RegExp(word, 'gi');
-        content = content.replace(reg, '***');
+
+    // 屏蔽词处理（防御性：确保blacklist是数组）
+    let blacklist = preset.blacklist || [];
+    if (typeof blacklist === 'string') {
+      blacklist = blacklist.split(',').map(w => w.trim()).filter(Boolean);
+    }
+    if (Array.isArray(blacklist) && blacklist.length > 0) {
+      blacklist.forEach((word) => {
+        if (word) {
+          const reg = new RegExp(word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+          content = content.replace(reg, '***');
+        }
       });
     }
+
     return content.trim();
-   } catch (err) {
-    bbLogError('API调用', `${err.message}`, `模型: ${model}, URL: ${url}`);
+  } catch (err) {
+    if (typeof bbLogError === 'function') {
+      bbLogError('API调用', `${err.message}`, `模型: ${model}, URL: ${base}`);
+    }
+    if (typeof playNotificationSound === 'function') {
+      playNotificationSound('error');
+    }
     toastr.error(`API 调用失败: ${err.message}`);
     return null;
   }
