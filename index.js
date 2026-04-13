@@ -339,25 +339,6 @@ const DEFAULT_SETTINGS = {
     default_importance: 3,
     export_format: 'markdown',
   },
-  
-  // 日历系统设置  ← 然后添加日历配置
-  calendar: {
-    enabled: true,
-    mode: 'real',
-    template_id: 'gregorian',
-    custom_templates: [],
-    default_view: 'month',
-    show_holidays: true,
-    show_solar_terms: true,
-    show_seasons: true,
-    show_aggregation: true,
-    holiday_auto_inject: true,
-    season_auto_inject: true,
-    custom_holidays: [],
-    time_anchor: null,
-    rp_current_date: null,
-    week_start: 0,
-  },
 };
 
 const PET_TYPES = [
