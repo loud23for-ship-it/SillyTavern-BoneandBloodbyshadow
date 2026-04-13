@@ -2100,6 +2100,9 @@ async function generateWeather() {
     pluginData.weather = result; saveChatData();
     $('#bb-weather-box').html(esc(result));
     toastr.success('☁️ 环境雷达已更新！');
+    bbNotify('weather', '环境雷达已更新', result.substring(0, 80));
+    playNotificationSound('success');
+
   }
 }
 
@@ -2113,6 +2116,9 @@ async function generateVibe() {
     pluginData.vibe = result; saveChatData();
     $('#bb-vibe-box').html(esc(result));
     toastr.success('❤️ 氛围心电图已更新！');
+    bbNotify('vibe', '氛围心电图已更新', result.substring(0, 80));
+    playNotificationSound('success');
+
   }
 }
 
@@ -2254,6 +2260,9 @@ async function rollFate() {
       <div class="bb-fate-hint">使用宏<code>{{bb_chaos_event}}</code> 插入到对话中<br/>（宏读取后会自动清空，只能使用一次）</div>`);
     saveChatData(); renderFateHistory();
     toastr.success('🎲 命运已降临！');
+    bbNotify('fate', '命运已降临！', result.substring(0, 80));
+    playNotificationSound('success');
+
     checkAchievements();
   }
 }
