@@ -21,13 +21,16 @@ const STYLE_PRESETS = {
     npc: '🧑‍🤝‍🧑 情报站', weather: '☁️ 环境雷达', vibe: '❤️ 氛围心电图',
     parallel: '🦋 平行宇宙', fate: '🎲 命运盘', ooc: '💬 Burning Star',
     world: '📻 世界频段', achievements: '🏆 成就殿堂',
-    gallery: '🖼️ 画廊', couple: '💕 情侣空间',},
+    gallery: '🖼️ 画廊', couple: '💕 情侣空间',
+    errorlog: '⚠️ 错误日志', notifications: '🔔 通知栏',
+},
   ancient: {
     home: '🏮 归处', scrapbook: '📜拾遗录', diary: '🖋️ 手札',
     npc: '👤 人物志', weather: '🌸 时节录', vibe: '💭 心境图',
     parallel: '🌀镜花水月', fate: '🎴卦象台', ooc: '💌 私语阁',
     world: '📰 江湖传闻', achievements: '🎖️ 功绩榜',
     gallery: '🎨 丹青阁', couple: '🌙鸳鸯谱',
+    errorlog: '⚠️ 异闻录', notifications: '🔔 飞鸽传书'
   },
 
   gothic: {
@@ -36,18 +39,21 @@ const STYLE_PRESETS = {
     parallel: '🌑暗面分支', fate: '🗡️ 命运之骰', ooc: '🚪 Burning Star',
     world: '📡亡者电台', achievements: '💀 死亡勋章',
     gallery: '🖤暗影画廊', couple: '🥀 血契空间',
+    errorlog: '💀 死亡日志', notifications: '🦇暗影通报',
   },
   monochrome: {
     home: '🏠 主页', scrapbook: '📀唱片机', diary: '📓 日记本',
     npc: '👥 情报站', weather: '🌫️ 环境雷达', vibe: '🤍 氛围心电图',
     parallel: '🔲 平行宇宙', fate: '🎲 命运盘', ooc: '💬 Burning Star',
     world: '📡 世界频段', achievements: '🏅 成就殿堂',
-    gallery: '🖼️ 画廊', couple: '🤍 情侣空间',},
+    gallery: '🖼️ 画廊', couple: '🤍 情侣空间',
+    errorlog: '⚠️ 错误日志', notifications: '🔔 通知栏',
+  },
 };
 
 
 
-const TAB_KEYS = ['home','scrapbook','diary','npc','weather','vibe','parallel','fate','ooc','world','achievements','gallery','couple'];
+const TAB_KEYS = ['home','scrapbook','diary','npc','weather','vibe','parallel','fate','ooc','world','achievements','gallery','couple','errorlog','notifications'];
 
 const HOME_LAYOUTS = {
   together: { name: '🎧 一起听', desc: '仿音乐软件一起听界面' },
@@ -304,6 +310,9 @@ const PET_TYPES = [
 let pluginData = null;
 let butterflySession = { active: false, originFloor: null, originText: '', history: [] };
 let oocSession = { active: false, history: [] };
+// 错误日志和通知栏运行时数据
+let bbErrorLog = [];// [{timestamp, source, message, detail}]
+let bbNotifications = []; // [{timestamp, type, title, content, read}]
 
 // ═══════════════ 区块 A结束 ═══════════════
 
@@ -1021,7 +1030,118 @@ function showMusicSearchModal() {
 // ────────────────────────────────────────────
 // 音乐播放器核心逻辑结束
 // ────────────────────────────────────────────
+// ────────────────────────────────────────────
+// 错误日志系统
+// ────────────────────────────────────────────
 
+function bbLogError(source, message, detail = '') {
+  const entry = {
+    timestamp: new Date().toLocaleString('zh-CN'),
+    source: source,
+    message: message,
+    detail: typeof detail === 'object' ? JSON.stringify(detail) : String(detail),
+  };
+  bbErrorLog.unshift(entry); // 最新的在前面
+  if (bbErrorLog.length > 100) bbErrorLog.pop(); // 最多保留100条
+  renderErrorLog();
+  updateErrorBadge();
+  console.error(`[骨与血] [${source}] ${message}`, detail);
+}
+
+function updateErrorBadge() {
+  const count = bbErrorLog.length;
+  const $badge = $('#bb-error-badge');
+  if (count > 0) {
+    if ($badge.length === 0) {
+      // 在错误日志tab按钮上添加角标
+      const $btn = $(`.bb-tab-btn[data-tab="errorlog"]`);
+      $btn.css('position', 'relative');
+      $btn.append(`<span id="bb-error-badge" class="bb-badge bb-badge-error">${count}</span>`);
+    } else {
+      $badge.text(count);
+    }
+  } else {
+    $badge.remove();
+  }
+}
+
+// ────────────────────────────────────────────
+// 通知栏系统
+// ────────────────────────────────────────────
+
+function bbNotify(type, title, content = '') {
+  const entry = {
+    id: generateId(),
+    timestamp: new Date().toLocaleString('zh-CN'),
+    type: type, // 'diary', 'vibe', 'weather', 'fate', 'ooc', 'achievement', 'world', 'system'
+    title: title,
+    content: content,
+    read: false,
+  };
+  bbNotifications.unshift(entry);
+  if (bbNotifications.length > 200) bbNotifications.pop();
+  renderNotifications();
+  updateNotificationBadge();
+  
+  // 可选：播放提示音
+  playNotificationSound();
+}
+
+function updateNotificationBadge() {
+  const unread = bbNotifications.filter(n => !n.read).length;
+  const $badge = $('#bb-notif-badge');
+  if (unread > 0) {
+    if ($badge.length === 0) {
+      const $btn = $(`.bb-tab-btn[data-tab="notifications"]`);
+      $btn.css('position', 'relative');
+      $btn.append(`<span id="bb-notif-badge" class="bb-badge bb-badge-notif">${unread}</span>`);
+    } else {
+      $badge.text(unread);
+    }
+  } else {
+    $badge.remove();
+  }
+}
+
+function markAllNotificationsRead() {
+  bbNotifications.forEach(n => n.read = true);
+  renderNotifications();
+  updateNotificationBadge();
+}
+
+function clearAllNotifications() {
+  bbNotifications = [];
+  renderNotifications();
+  updateNotificationBadge();
+}
+
+function clearErrorLog() {
+  bbErrorLog = [];
+  renderErrorLog();
+  updateErrorBadge();
+}
+
+//提示音（使用Web Audio API生成简短提示音，无需外部文件）
+function playNotificationSound() {
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    
+    oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // A5
+    oscillator.frequency.setValueAtTime(1100, audioCtx.currentTime + 0.1); // 上升
+    gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+    
+    oscillator.start(audioCtx.currentTime);
+    oscillator.stop(audioCtx.currentTime + 0.3);
+  } catch (e) {
+    // 静默失败，不影响功能
+  }
+}
 // ═══════════════ 区块 B 结束 ═══════════════
 
 
@@ -1362,6 +1482,26 @@ function buildMainPanelHTML() {
       <!-- 💕 情侣空间 -->
       <div id="bb-pane-couple" class="bb-tab-pane bb-hidden">
         ${buildCoupleSpaceHTML()}
+      </div>
+      <!-- ⚠️ 错误日志 -->
+            <div id="bb-pane-errorlog" class="bb-tab-pane bb-hidden">
+        <div class="bb-action-bar">
+          <button class="bb-sm-btn" id="bb-btn-clear-errors">🗑️ 清空日志</button>
+          <span class="bb-text-muted bb-text-xs" id="bb-error-count-label">共 0 条</span>
+        </div>
+        <div id="bb-error-list" class="bb-scroll-list"><div class="bb-empty">暂无错误 ✅<br/>一切运行正常</div>
+        </div>
+      </div>
+
+      <!-- 🔔 通知栏 -->
+      <div id="bb-pane-notifications" class="bb-tab-pane bb-hidden">
+        <div class="bb-action-bar bb-action-wrap">
+          <button class="bb-sm-btn" id="bb-btn-mark-all-read">✅ 全部已读</button>
+          <button class="bb-sm-btn" id="bb-btn-clear-notifs">🗑️ 清空通知</button><span class="bb-text-muted bb-text-xs" id="bb-notif-count-label">共 0 条</span>
+        </div>
+        <div id="bb-notif-list" class="bb-scroll-list">
+          <div class="bb-empty">暂无通知 🔔<br/>新内容生成时会在这里提醒你</div>
+        </div>
       </div>
     </div>`;
 }
@@ -3126,6 +3266,95 @@ function renderCouplePhotos() {
     if (!confirm('确认删除这张照片?')) return;
     pluginData.couple_space.photo_wall.splice(idx, 1);
     saveChatData(); renderCouplePhotos();
+  });
+}
+// ── 错误日志渲染 ──
+
+function renderErrorLog() {
+  const $list = $('#bb-error-list');
+  if ($list.length === 0) return;
+  $list.empty();
+  
+  if (bbErrorLog.length === 0) {
+    $list.html('<div class="bb-empty">暂无错误 ✅<br/>一切运行正常</div>');
+    $('#bb-error-count-label').text('共 0 条');
+    return;
+  }
+  
+  $('#bb-error-count-label').text(`共 ${bbErrorLog.length} 条`);
+  
+  bbErrorLog.forEach((err, idx) => {
+    const detailHtml = err.detail ? `<div class="bb-text-xs bb-text-muted" style="margin-top:4px;word-break:break-all;">${esc(err.detail.substring(0, 300))}</div>` : '';
+    $list.append(`
+      <div class="bb-record-item" style="border-left:3px solid var(--bb-accent,#f0a8c8);">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="bb-text-xs bb-text-dim">⚠️ [${esc(err.source)}] ${err.timestamp}</span>
+          <span class="bb-error-del bb-clickable bb-text-xs" data-idx="${idx}" title="删除">✖</span>
+        </div><div class="bb-text-sm" style="margin-top:4px;color:var(--bb-accent,#f0a8c8);">${esc(err.message)}</div>
+        ${detailHtml}
+      </div>
+    `);
+  });
+  
+  $list.find('.bb-error-del').on('click', function() {
+    const idx = $(this).data('idx');
+    bbErrorLog.splice(idx, 1);
+    renderErrorLog();
+    updateErrorBadge();
+  });
+}
+
+// ── 通知栏渲染 ──
+
+function renderNotifications() {
+  const $list = $('#bb-notif-list');
+  if ($list.length === 0) return;
+  $list.empty();
+  
+  if (bbNotifications.length === 0) {
+    $list.html('<div class="bb-empty">暂无通知 🔔<br/>新内容生成时会在这里提醒你</div>');
+    $('#bb-notif-count-label').text('共 0 条');
+    return;
+  }
+  
+  const unread = bbNotifications.filter(n => !n.read).length;
+  $('#bb-notif-count-label').text(`共 ${bbNotifications.length} 条 · ${unread} 条未读`);
+  
+  const typeIcons = {
+    diary: '📖', vibe: '❤️', weather: '☁️', fate: '🎲',
+    ooc: '💬', achievement: '🏆', world: '📻', system: '⚙️',npc: '🧑‍🤝‍🧑', parallel: '🦋', couple: '💕', gallery: '🖼️',
+    summary: '📜', scrapbook: '🌟',
+  };
+  
+  bbNotifications.forEach((notif, idx) => {
+    const icon = typeIcons[notif.type] || '🔔';
+    const unreadClass = notif.read ? '' : 'bb-notif-unread';
+    $list.append(`
+      <div class="bb-record-item ${unreadClass}" data-notif-idx="${idx}" style="${notif.read ? '' : 'border-left:3px solid var(--bb-primary,#c9a0dc);background:rgba(201,160,220,0.05);'}">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="bb-text-sm">${icon} <strong>${esc(notif.title)}</strong></span>
+          <span class="bb-text-xs bb-text-dim">${notif.timestamp}</span>
+        </div>
+        ${notif.content ? `<div class="bb-text-xs bb-text-muted" style="margin-top:4px;">${esc(notif.content.substring(0, 150))}</div>` : ''}<div style="display:flex;justify-content:flex-end;gap:6px;margin-top:4px;">
+          ${!notif.read ? `<span class="bb-notif-read bb-clickable bb-text-xs" data-idx="${idx}">标为已读</span>` : ''}
+          <span class="bb-notif-del bb-clickable bb-text-xs" data-idx="${idx}" title="删除">✖</span>
+        </div>
+      </div>
+    `);
+  });
+  
+  $list.find('.bb-notif-read').on('click', function() {
+    const idx = $(this).data('idx');
+    bbNotifications[idx].read = true;
+    renderNotifications();
+    updateNotificationBadge();
+  });
+  
+  $list.find('.bb-notif-del').on('click', function() {
+    const idx = $(this).data('idx');
+    bbNotifications.splice(idx, 1);
+    renderNotifications();
+    updateNotificationBadge();
   });
 }
 
