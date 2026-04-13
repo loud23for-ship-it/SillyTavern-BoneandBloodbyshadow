@@ -7122,12 +7122,6 @@ function injectAmberContext(prompt) {
  */
 function initMemoryAmber() {
   const s = extension_settings[EXTENSION_NAME];
-    // 18. 初始化编年史系统
-  if (typeof initChronicle === 'function') {
-    initChronicle();
-  }
-
-  
   if (!s.memory_amber) {
     s.memory_amber = {
       enabled: true,
