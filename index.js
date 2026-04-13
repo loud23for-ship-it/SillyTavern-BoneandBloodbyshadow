@@ -5430,7 +5430,29 @@ function replaceBBMacros(text) {
     if (!pluginData.world_feed || pluginData.world_feed.length === 0) return '(暂无世界频段消息)';
     return pluginData.world_feed.slice(-3).map(f => f.content).join('\n');
   });
-  
+    // {{bb_facts}} — 记忆琥珀事实摘要
+  text = text.replace(/\{\{bb_facts\}\}/gi, () => {
+    if (typeof generateFactsMacro === 'function') {
+      return generateFactsMacro() || '(暂无事实记录)';
+    }
+    return '(记忆琥珀未加载)';
+  });
+
+  // {{bb_facts:角色名}} — 指定角色的事实
+  text = text.replace(/\{\{bb_facts:([^:}]+)\}\}/gi, (match, charName) => {
+    if (typeof generateFactsMacro === 'function') {
+      return generateFactsMacro(charName.trim()) || `(暂无${charName.trim()}的事实)`;
+    }
+    return '(记忆琥珀未加载)';
+  });
+
+  // {{bb_facts:category:xxx}} — 指定分类的事实
+  text = text.replace(/\{\{bb_facts:category:([^}]+)\}\}/gi, (match, cat) => {
+    if (typeof generateFactsMacro === 'function') {
+      return generateFactsMacro(null, { category: cat.trim() }) || `(暂无${cat.trim()}分类事实)`;
+    }
+    return '(记忆琥珀未加载)';
+  });
   return text;
 }
 
