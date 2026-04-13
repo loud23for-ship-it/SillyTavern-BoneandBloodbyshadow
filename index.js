@@ -5547,6 +5547,11 @@ jQuery(async () => {
   // 15. 启动世界频段
   startWorldFeed();
 
+  // 15.5初始化记忆琥珀系统
+  if (typeof initMemoryAmber === 'function') {
+    initMemoryAmber();
+  }
+
   // 16. 检查成就
   checkAchievements();
 
