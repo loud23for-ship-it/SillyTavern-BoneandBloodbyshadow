@@ -4017,7 +4017,6 @@ function renderAll() {
 }
 
 // ── 主面板事件绑定 ──
-
 function bindMainPanelEvents(panel) {
   if (!panel) panel = document.getElementById('bb-main-panel');
   if (!panel) return;
@@ -4029,15 +4028,6 @@ function bindMainPanelEvents(panel) {
   $(panel).find('#bb-btn-gen-summary-tab').on('click', async () => {
     await generateSummary();
     renderSummary();
-  });
-
-  // 清空总结
-  $(panel).find('#bb-btn-clear-summaries').on('click', () => {
-    if (!confirm('确定清空所有总结？')) return;
-    pluginData.summaries = [];
-    saveChatData();
-    renderSummary();
-    toastr.info('总结已清空');
   });
 
   // 自动记录开关
@@ -4053,12 +4043,8 @@ function bindMainPanelEvents(panel) {
   $(panel).off('click.bbsubtab').on('click.bbsubtab', '.bb-sub-tab-btn', function () {
     const targetSubTab = $(this).data('subtab');
     const $parent = $(this).closest('.bb-tab-pane');
-
-    // 切换按钮高亮
     $parent.find('.bb-sub-tab-btn').removeClass('bb-sub-tab-active');
     $(this).addClass('bb-sub-tab-active');
-
-    // 切换面板
     $parent.find('.bb-sub-tab-pane').addClass('bb-hidden');
     $parent.find(`#bb-subtab-${targetSubTab}`).removeClass('bb-hidden');
   });
@@ -4068,30 +4054,22 @@ function bindMainPanelEvents(panel) {
 
   // 编年史事件绑定
   bindChroniclePanelEvents();
-}
 
-  
-
-
-  // ──────────────────────────────────────────
-  // 音乐播放器事件（新增 - MP3播放器）
-  // ──────────────────────────────────────────
+  // ── 音乐播放器事件 ──
   $(panel).off('click.bbmusictoggle').on('click.bbmusictoggle', '#bb-music-toggle', bbPlayerToggle);
   $(panel).off('click.bbmusicprev').on('click.bbmusicprev', '#bb-music-prev', bbPlayerPrev);
   $(panel).off('click.bbmusicnext').on('click.bbmusicnext', '#bb-music-next', bbPlayerNext);
-  
-  // 进度条点击跳转
+
   $(panel).off('click.bbmusicprogress').on('click.bbmusicprogress', '.bb-music-progress-mini', function(e) {
     if (!bbPlayer.audio || !bbPlayer.audio.duration) return;
     const rect = this.getBoundingClientRect();
     const percent = (e.clientX - rect.left) / rect.width;
     bbPlayerSeek(bbPlayer.audio.duration * percent);
   });
-  // ──────────────────────────────────────────
-    // 音乐搜索
+
   $(panel).off('click.bbmusicsearch').on('click.bbmusicsearch', '#bb-btn-music-search', showMusicSearchModal);
 
-  // Tab切换 — 使用 bb-tab-pane 和 bb-hidden
+  // ── Tab切换 ──
   $(panel).off('click.bbtab').on('click.bbtab', '.bb-tab-btn', function () {
     const tab = $(this).data('tab');
     $(panel).find('.bb-tab-btn').removeClass('active');
@@ -4100,7 +4078,7 @@ function bindMainPanelEvents(panel) {
     $(panel).find(`#bb-pane-${tab}`).removeClass('bb-hidden').addClass('active');
   });
 
-  // 情侣空间子Tab切换
+  // ── 情侣空间子Tab ──
   $(panel).off('click.bbctab').on('click.bbctab', '.bb-couple-tab', function () {
     const ctab = $(this).data('ctab');
     $(panel).find('.bb-couple-tab').removeClass('active');
@@ -4109,7 +4087,7 @@ function bindMainPanelEvents(panel) {
     $(panel).find(`#bb-couple-${ctab}`).removeClass('bb-hidden').addClass('active');
   });
 
-  // 首页：头像点击
+  // ── 首页：头像点击 ──
   $(panel).off('click.bbavatar').on('click.bbavatar', '.bb-avatar-clickable', function () {
     const avatarEl = $(this);
     const isUser = $(this).attr('id') === 'bb-home-user-avatar';
@@ -4156,7 +4134,7 @@ function bindMainPanelEvents(panel) {
     modal.on('click', function (e) { if ($(e.target).hasClass('bb-modal-overlay')) modal.remove(); });
   });
 
-  // 首页：设置背景图
+  // ── 首页：设置背景图 ──
   $(panel).off('click.bbbg').on('click.bbbg', '#bb-btn-set-home-bg', function () {
     const modal = $(`
       <div class="bb-modal-overlay">
@@ -4183,7 +4161,7 @@ function bindMainPanelEvents(panel) {
     modal.on('click', function (e) { if ($(e.target).hasClass('bb-modal-overlay')) modal.remove(); });
   });
 
-  // 首页：保存配置
+  // ── 首页：保存配置 ──
   $(panel).off('click.bbsavehome').on('click.bbsavehome', '#bb-btn-save-home', function () {
     pluginData.home_config.link_emoji = $('#bb-home-link-emoji').text();
     pluginData.home_config.user_bubble = $('#bb-home-user-bubble').text();
@@ -4192,7 +4170,7 @@ function bindMainPanelEvents(panel) {
     saveChatData(); toastr.success('💾 首页配置已保存');
   });
 
-  // 仪表盘快捷操作
+  // ── 仪表盘快捷操作 ──
   $(panel).off('click.bbquick').on('click.bbquick', '.bb-quick-action', function () {
     const action = $(this).data('action');
     switch (action) {
@@ -4208,12 +4186,12 @@ function bindMainPanelEvents(panel) {
     }
   });
 
-  // 导出按钮
+  // ── 导出按钮 ──
   $(panel).off('click.bbexmd').on('click.bbexmd', '#bb-btn-export-md', exportAsMarkdown);
   $(panel).off('click.bbexjson').on('click.bbexjson', '#bb-btn-export-json', exportAsJSON);
   $(panel).off('click.bbexposter').on('click.bbexposter', '#bb-btn-export-poster', showPosterEditor);
 
-  // 生成按钮
+  // ── 生成按钮 ──
   $(panel).off('click.bbgendiary').on('click.bbgendiary', '#bb-btn-gen-diary-tab', generateDiary);
   $(panel).off('click.bbgendiaryimg').on('click.bbgendiaryimg', '#bb-btn-gen-diary-img', async function () {
     if (pluginData.diary_blood.length === 0) { toastr.warning('请先生成日记'); return; }
@@ -4234,7 +4212,7 @@ function bindMainPanelEvents(panel) {
   $(panel).off('click.bbgenvibe').on('click.bbgenvibe', '#bb-btn-gen-vibe-tab', generateVibe);
   $(panel).off('click.bbrollfate').on('click.bbrollfate', '#bb-btn-roll-fate', rollFate);
 
-  // 破墙聊天室
+  // ── 破墙聊天室 ──
   $(panel).off('click.bbopenooc').on('click.bbopenooc', '#bb-btn-open-ooc-win', () => $('#bb-ooc-win').removeClass('bb-hidden'));
   $(panel).off('click.bbexportooc').on('click.bbexportooc', '#bb-btn-export-ooc', exportOOCChat);
   $(panel).off('click.bbclearooc').on('click.bbclearooc', '#bb-btn-clear-ooc', () => {
@@ -4243,19 +4221,20 @@ function bindMainPanelEvents(panel) {
     saveChatData(); renderOOCPreview(); toastr.info('🗑️ 已清空');
   });
 
-  // 世界频段
+  // ── 世界频段 ──
   $(panel).off('click.bbaddfeed').on('click.bbaddfeed', '#bb-btn-add-feed', () => {
     const content = prompt('输入消息内容:');
     if (!content) return;
     pluginData.world_feed.push({ type: 'custom', content, timestamp: new Date().toLocaleString('zh-CN') });
     saveChatData(); renderWorldFeed(); updateMarquee();
-  });$(panel).off('click.bbgenfeed').on('click.bbgenfeed', '#bb-btn-gen-feed', generateWorldFeed);
+  });
+  $(panel).off('click.bbgenfeed').on('click.bbgenfeed', '#bb-btn-gen-feed', generateWorldFeed);
   $(panel).off('click.bbclearfeed').on('click.bbclearfeed', '#bb-btn-clear-feed', () => {
     if (!confirm('确认清空世界频段?')) return;
     pluginData.world_feed = []; saveChatData(); renderWorldFeed(); updateMarquee(); toastr.info('🗑️ 已清空');
   });
 
-  // 画廊
+  // ── 画廊 ──
   $(panel).off('click.bbgenimg').on('click.bbgenimg', '#bb-btn-gen-gallery-img', async function () {
     const p = prompt('输入生图提示词:');
     if (p) await generateAndSaveImage(p, 'manual');
@@ -4265,40 +4244,28 @@ function bindMainPanelEvents(panel) {
     pluginData.gallery = []; saveChatData(); renderGallery(); toastr.info('🗑️ 画廊已清空');
   });
 
-  // 情侣空间事件
+  // ── 情侣空间 ──
   bindCoupleSpaceEvents();
-    });
 
-  // ──────────────────────────────────────────
-  // 【新增】错误日志 & 通知栏 按钮事件
-  // ──────────────────────────────────────────
-
-  // 错误日志 — 清空
+  // ── 错误日志 & 通知栏 ──
   $(panel).off('click.bbclearerrors').on('click.bbclearerrors', '#bb-btn-clear-errors', () => {
     if (!confirm('确认清空所有错误日志？')) return;
     clearErrorLog();
     toastr.info('错误日志已清空');
   });
 
-  // 通知栏 — 全部已读
   $(panel).off('click.bbmarkread').on('click.bbmarkread', '#bb-btn-mark-all-read', () => {
     markAllNotificationsRead();
     toastr.info('已全部标为已读');
   });
 
-  // 通知栏 — 清空
   $(panel).off('click.bbclearnotifs').on('click.bbclearnotifs', '#bb-btn-clear-notifs', () => {
     if (!confirm('确认清空所有通知？')) return;
     clearAllNotifications();
     toastr.info('通知已清空');
   });
 
-  // ──────────────────────────────────────────
-  // 【新增结束】
-  // ──────────────────────────────────────────
-
-
-  // 语录编辑
+  // ── 语录编辑 ──
   $(panel).on('click', '.bb-record-edit-btn', function () {
     const item = $(this).closest('.bb-record-item');
     item.find('.bb-record-display').addClass('bb-hidden');
