@@ -418,7 +418,7 @@ const CHRONICLE_IMPORTANCE = {
 
 //编年史运行时数据
 let chronicleExtracting = false;
-let chronicleMessageCounter = 0;
+// chronicleMessageCounter 已在第374行声明
 
 
 const FACT_STATUS = {
